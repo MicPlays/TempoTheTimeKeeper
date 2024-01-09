@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://befiqwdkkto3g"]
+
+[node name="DebugRoot" type="Node2D"]

@@ -1,3 +1,8 @@
 ea4bc82a6ad023ab7ee23ee620429895
-::res://::1704827016
+::res://::1704842442
 icon.svg::CompressedTexture2D::1136808187817165902::1704827008::1704827017::1::::<><>::
+README.md::TextFile::-1::1704827187::0::1::::<><>::
+::res://scenes/::1704842336
+debug_root.tscn::PackedScene::2678013416276737454::1704842336::0::1::::<><>::
+::res://scripts/::1704827644
+test_script.cs::CSharpScript::-1::1704827644::0::1::::<><>::
