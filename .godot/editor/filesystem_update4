@@ -1,8 +1,0 @@
-res://scripts/test_script.cs
-res://scripts/GameObject.cs
-res://scenes/debug_root.tscn
-res://components/object.tscn
-res://new_tile_set.tres
-res://tilesets/debugset.tres
-res://scripts/Sensor.cs
-res://components/sensor.tscn
