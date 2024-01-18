@@ -4,9 +4,13 @@ using System;
 public partial class Sensor : Node2D
 {
     [Export]
-    private Vector2 anchorPoint;
-    [Export]
-    public int direction;
+    public string direction;
+    private TileMap tileMap;
+
+    public override void _Ready()
+    {
+        
+    }
 
     //will return an array later
     public int checkTile() {

@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://dircvqlc5m7yk"]
+
+[ext_resource type="PackedScene" uid="uid://bx43awye2fypy" path="res://components/object.tscn" id="1_t4hfw"]
+[ext_resource type="PackedScene" uid="uid://cecegkc1uohgb" path="res://components/sensor.tscn" id="2_7vpx6"]
+[ext_resource type="Texture2D" uid="uid://qgxcg4p6l2le" path="res://icon.svg" id="3_15yha"]
+
+[node name="Player" type="Node2D"]
+
+[node name="Object" parent="." instance=ExtResource("1_t4hfw")]
+
+[node name="Sensors" type="Node" parent="."]
+
+[node name="LSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+position = Vector2(-66, 0)
+
+[node name="RSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+position = Vector2(66, 0)
+
+[node name="TLSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+position = Vector2(-66, -66)
+
+[node name="TRSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+position = Vector2(66, -66)
+
+[node name="BLSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+position = Vector2(-66, 66)
+
+[node name="BRSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+position = Vector2(66, 66)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("3_15yha")
+metadata/_edit_lock_ = true
