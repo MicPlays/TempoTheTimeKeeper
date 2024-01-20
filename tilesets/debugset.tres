@@ -6,7 +6,6 @@
 texture = ExtResource("1_kplo4")
 margins = Vector2i(8, 8)
 separation = Vector2i(8, 8)
-texture_region_size = Vector2i(32, 32)
 0:0/0 = 0
 0:0/0/custom_data_0 = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
 0:0/0/custom_data_1 = PackedInt32Array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
@@ -241,7 +240,6 @@ texture_region_size = Vector2i(32, 32)
 15:13/0 = 0
 
 [resource]
-tile_size = Vector2i(32, 32)
 custom_data_layer_0/name = "height_array"
 custom_data_layer_0/type = 30
 custom_data_layer_1/name = "width_array"

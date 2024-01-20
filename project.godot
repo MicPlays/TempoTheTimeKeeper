@@ -25,3 +25,7 @@ window/stretch/scale_mode="integer"
 [dotnet]
 
 project/assembly_name="Tempo The Time Keeper"
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/sonictilemap/plugin.cfg")
