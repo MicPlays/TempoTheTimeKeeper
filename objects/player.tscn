@@ -1,10 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://dircvqlc5m7yk"]
+[gd_scene load_steps=5 format=3 uid="uid://dircvqlc5m7yk"]
 
+[ext_resource type="Script" path="res://scripts/Player.cs" id="1_73kcx"]
 [ext_resource type="PackedScene" uid="uid://bx43awye2fypy" path="res://components/object.tscn" id="1_t4hfw"]
 [ext_resource type="PackedScene" uid="uid://cecegkc1uohgb" path="res://components/sensor.tscn" id="2_7vpx6"]
 [ext_resource type="Texture2D" uid="uid://qgxcg4p6l2le" path="res://icon.svg" id="3_15yha"]
 
 [node name="Player" type="Node2D"]
+script = ExtResource("1_73kcx")
 
 [node name="Object" parent="." instance=ExtResource("1_t4hfw")]
 
