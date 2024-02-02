@@ -1,5 +1,4 @@
 using Godot;
-using Godot.NativeInterop;
 using System;
 
 public partial class Sensor : Node2D
@@ -8,7 +7,7 @@ public partial class Sensor : Node2D
     public string direction;
     private TileMap tileMap;
 
-    //for debug
+    //for debug drawing of sensors
     private int mode = 0;
 
     public override void _Ready()
@@ -30,12 +29,16 @@ public partial class Sensor : Node2D
         }
     }
 
-    public override void _PhysicsProcess(double delta)
+    //will seperate into another function that is called by parent object. will return data for collision
+    public int[] CheckForTile()
     {
         mode = 0;
         Vector2I currentGridCell = new Vector2I((int)GlobalPosition.X/16, (int)GlobalPosition.Y/16);
-        int detectedHeight = GetHeight(currentGridCell);
-        //extension
+        int[] distanceData = GetHeight(currentGridCell);
+        int index = distanceData[0];
+        int detectedHeight = distanceData[1];
+
+        //extension (if detected tile is empty, extend out by one tile in sensor's direction)
         if (detectedHeight == 0)
         {
             mode = 1;
@@ -59,24 +62,35 @@ public partial class Sensor : Node2D
                 }
                 case "down":
                 {
-
                     newGridCell = new Vector2I(currentGridCell.X, currentGridCell.Y + 1);
                     break;
                 }
             }
-            int newDetectedHeight = GetHeight(newGridCell);
-            if (newDetectedHeight > 1) 
+            int[] newDistanceData = GetHeight(newGridCell);
+            int newIndex = newDistanceData[0];
+            int newDetectedHeight = newDistanceData[1];
+
+            //if second tile is not empty, return that tile's data. else return the distance to the end of the second tile
+            if (newDetectedHeight >= 1) 
             {
                 QueueRedraw();
-                //GD.Print(Name + " Extension returned:" + newDetectedHeight);
+                int[] data = new int[3];
+                data[0] = GetDistance(newIndex, newDetectedHeight, newGridCell);
+                data[1] = (int)tileMap.GetCellTileData(-1, newGridCell).GetCustomData("angle");
+                data[2] = tileMap.GetCellSourceId(-1, newGridCell);
+                return data;
             }
             else
             {
                 QueueRedraw();
-                //GD.Print(Name + " Extension could not find tile");
+                int[] data = new int[3];
+                data[0] = GetDistance(newIndex, 0, newGridCell);
+                data[1] = -1;
+                data[2] = -1;
+                return data;
             }
         }
-        //regression
+        //regression (if detected tile is a full block, pull back one tile in sensor's direction)
         else if (detectedHeight == 16)
         {
             mode = 2;
@@ -104,32 +118,52 @@ public partial class Sensor : Node2D
                     break;
                 }
             }
-            int newDetectedHeight = GetHeight(newGridCell);
-            if (newDetectedHeight > 1) 
+            int[] newDistanceData = GetHeight(newGridCell);
+            int newIndex = newDistanceData[0];
+            int newDetectedHeight = newDistanceData[1];
+
+            //if second tile is not empty, return that tile's collision data. else, original tile
+            //must be the ground so return original tile's data
+            if (newDetectedHeight >= 1) 
             {
                 QueueRedraw();
-                //GD.Print(Name + " Regression returned:" + newDetectedHeight);  
+                int[] data = new int[3];
+                data[0] = GetDistance(newIndex, newDetectedHeight, newGridCell);
+                data[1] = (int)tileMap.GetCellTileData(-1, newGridCell).GetCustomData("angle");
+                data[2] = tileMap.GetCellSourceId(-1, newGridCell);
+                return data;
             }
             else
             {
                 mode = 0;
                 QueueRedraw();
-                //GD.Print(Name + " Regression Using 1st Surface:" + detectedHeight);
+                int[] data = new int[3];
+                data[0] = GetDistance(index, detectedHeight, currentGridCell);
+                data[1] = (int)tileMap.GetCellTileData(-1, currentGridCell).GetCustomData("angle");
+                data[2] = tileMap.GetCellSourceId(-1, currentGridCell);
+                return data;
             }
         }
         //normal case
         else 
         {
-            QueueRedraw();
             mode = 0;
-            //GD.Print(Name + " Normal Case:" + detectedHeight);  
+            QueueRedraw();
+            int[] data = new int[3];
+            data[0] = GetDistance(index, detectedHeight, currentGridCell);
+            data[1] = (int)tileMap.GetCellTileData(-1, currentGridCell).GetCustomData("angle");
+            data[2] = tileMap.GetCellSourceId(-1, currentGridCell);  
+            return data;
         }
     }
 
-    private int GetHeight(Vector2I gridSquare)
+    //calculate the detected height of a tile using either its width or height array.
+    //returns both the detected height and the index used in the calculation.
+    //returns zeroes if tile is undefined or tile cannot be detected by the given sensor.
+    private int[] GetHeight(Vector2I gridSquare)
     {
         TileData tileData = tileMap.GetCellTileData(-1, gridSquare);
-        if (tileData == null) return 0;
+        if (tileData == null) return new int[] {0, 0};
         String detection = (String)tileData.GetCustomData("sensors");
         int[] tileArray;
         bool canDetect = false;
@@ -165,9 +199,28 @@ public partial class Sensor : Node2D
                 index = (int)(GlobalPosition.Y - tilePos.Y);
             else
                 index = (int)(GlobalPosition.X - tilePos.X);
-            return tileArray[index];
+            return new int[] {index, tileArray[index]};
         }
-        else return 0;
+        else return new int[] {0, 0};
+    }
+    
+    //calculate distance between tile surface and sensor location
+    public int GetDistance(int index, int detectedHeight, Vector2I gridCell)
+    {
+        Vector2I tileSurface = new Vector2I(0, 0);
+
+            if (direction == "left" || direction == "right")
+            {
+                tileSurface.Y = (gridCell.X * 16) + index;
+                tileSurface.X = ((gridCell.Y * 16) + 16) - detectedHeight;
+                return (int)(tileSurface.X - GlobalPosition.X);
+            }
+            else
+            {
+                tileSurface.X = (gridCell.X * 16) + index;
+                tileSurface.Y = ((gridCell.Y * 16) + 16) - detectedHeight;
+                return (int)(tileSurface.Y - GlobalPosition.Y);
+            }
     }
 
     public override void _Draw()
@@ -235,4 +288,6 @@ public partial class Sensor : Node2D
             }
         }
     }
+
+
 }

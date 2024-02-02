@@ -11,31 +11,30 @@ script = ExtResource("1_73kcx")
 [node name="Object" parent="." instance=ExtResource("1_t4hfw")]
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.07, 0.148)
 texture = ExtResource("3_15yha")
 metadata/_edit_lock_ = true
 
 [node name="Sensors" type="Node2D" parent="."]
 
-[node name="LSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
-position = Vector2(-66, 0)
-direction = "left"
-
-[node name="RSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
-position = Vector2(66, 0)
-direction = "right"
-
-[node name="TLSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
-position = Vector2(-66, -66)
-direction = "up"
-
-[node name="TRSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
-position = Vector2(66, -66)
-direction = "up"
-
 [node name="BLSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
-position = Vector2(-66, 66)
 direction = "down"
 
 [node name="BRSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
-position = Vector2(66, 66)
 direction = "down"
+
+[node name="TLSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+visible = false
+direction = "up"
+
+[node name="TRSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+visible = false
+direction = "up"
+
+[node name="LSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+visible = false
+direction = "left"
+
+[node name="RSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+visible = false
+direction = "right"
