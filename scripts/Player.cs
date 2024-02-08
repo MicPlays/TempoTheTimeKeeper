@@ -2,22 +2,26 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class Player : Node2D
+public partial class Player : SolidObject
 {
+    //constants
+    private const float ACC_SPEED = 0.046875f;
+    private const float DEC_SPEED = 0.5f;
+    private const float FRICTION_SPEED = 0.046875f;
+    private const int TOP_SPEED = 6;
+
     private String state;
-    private SolidObject playerObject;
-    public int pushRadius = 10;
+    public int pushRadius = 9;
     Dictionary<string, Sensor> sensorTable;
     public override void _Ready()
     {
         //set player object properties (might make export vars later)
-        playerObject = (SolidObject)this.FindChild("Object");
-        playerObject.xSpeed = 0f;
-        playerObject.ySpeed = 0f;
-        playerObject.groundAngle = 0f;
-        playerObject.groundSpeed = 0f;
-        playerObject.widthRadius = 9;
-        playerObject.heightRadius = 19;
+        xSpeed = 0f;
+        ySpeed = 0f;
+        groundAngle = 0f;
+        groundSpeed = 0f;
+        widthRadius = 10;
+        heightRadius = 19;
 
         //get player's sensors
         var sensors = this.FindChild("Sensors").GetChildren();
@@ -32,19 +36,101 @@ public partial class Player : Node2D
         };
 
         //move sensors to relative locations
-        sensorTable["A"].Position = new Vector2(-playerObject.widthRadius, playerObject.heightRadius/2);
-        sensorTable["B"].Position = new Vector2(playerObject.widthRadius, playerObject.heightRadius/2);
-        sensorTable["C"].Position = new Vector2(-playerObject.widthRadius, -playerObject.heightRadius/2);
-        sensorTable["D"].Position = new Vector2(playerObject.widthRadius, -playerObject.heightRadius/2);
+        sensorTable["A"].Position = new Vector2(-widthRadius, heightRadius/2);
+        sensorTable["B"].Position = new Vector2(widthRadius, heightRadius/2);
+        sensorTable["C"].Position = new Vector2(-widthRadius, -heightRadius/2);
+        sensorTable["D"].Position = new Vector2(widthRadius, -heightRadius/2);
         sensorTable["E"].Position = new Vector2(-pushRadius, 0);
         sensorTable["F"].Position = new Vector2(pushRadius, 0);
 
     }
 
-    public override void _PhysicsProcess(double delta)
+    public override void _Process(double delta)
+    {
+        //ground running input
+        if (Input.IsActionPressed("left"))
+        {
+            if (groundSpeed > 0)
+                groundSpeed -= DEC_SPEED;
+                
+            else if (groundSpeed > -TOP_SPEED)
+            {
+                groundSpeed -= ACC_SPEED;
+                if (groundSpeed <= -TOP_SPEED)
+                    groundSpeed = -TOP_SPEED;
+            }
+            
+        }
+        else if (Input.IsActionPressed("right"))
+        {
+            if (groundSpeed < 0)
+                groundSpeed += DEC_SPEED;
+                
+            else if (groundSpeed < TOP_SPEED)
+            {
+                groundSpeed += ACC_SPEED;
+                if (groundSpeed >= TOP_SPEED)
+                    groundSpeed = TOP_SPEED;
+            }
+        }
+        else 
+        {
+            groundSpeed -= Mathf.Min(Mathf.Abs(groundSpeed), FRICTION_SPEED) * Mathf.Sign(groundSpeed);
+        }
+
+        int wallDistance = PushCollisionProcess();
+
+        //calculate X and Y speed from Ground Speed and Angle
+        xSpeed = groundSpeed * Mathf.Cos(Mathf.DegToRad(groundAngle)) + wallDistance;
+        ySpeed = groundSpeed * -Mathf.Sin(Mathf.DegToRad(groundAngle));
+
+        //Move player pos
+        Position = new Vector2(GlobalPosition.X + xSpeed, GlobalPosition.Y + ySpeed);
+
+        GroundCollisionProcess();
+
+        //if on flat ground, move sensors down to account for low steps
+        if (groundAngle == 0)
+        {
+            sensorTable["E"].Position = new Vector2(-pushRadius, 4);
+            sensorTable["F"].Position = new Vector2(pushRadius, 4);
+        }
+    }
+
+    public int PushCollisionProcess()
+    {
+        //if player isn't moving, don't check sensors
+        if (groundSpeed != 0)
+        {
+            Sensor activeSensor;
+            //get active sensor
+            if (groundSpeed > 0)
+                activeSensor = sensorTable["F"];
+            else 
+                activeSensor = sensorTable["E"];
+            //player will not have moved yet, move push sensors to account for this
+            activeSensor.Position = new Vector2(activeSensor.Position.X + xSpeed, activeSensor.Position.Y + ySpeed);
+
+            int[] data = activeSensor.CheckForTile();
+            
+            if (data[0] < 0)
+            {
+                GD.Print(data[0]);
+                groundSpeed = 0;
+                if (activeSensor.direction == "left")
+                    return -data[0];
+                else 
+                    return data[0];
+            }
+            else return 0;
+        }
+        else return 0;
+    }
+
+    public void GroundCollisionProcess()
     {
         bool groundCollision = true;
-        int groundDistance, groundAngle;
+        int groundDistance, newGroundAngle;
         int[] groundAData = sensorTable["A"].CheckForTile();
         int[] groundBData = sensorTable["B"].CheckForTile();
 
@@ -52,43 +138,39 @@ public partial class Player : Node2D
         if (groundAData[0] == groundBData[0])
         {
             groundDistance = groundAData[0];
-            groundAngle = groundAData[0];
+            newGroundAngle = groundAData[1];
         }
             
         else if (groundAData[0] < groundBData[0])
         {
             groundDistance = groundAData[0];
-            groundAngle = groundAData[0];
+            newGroundAngle = groundAData[1];
         }
         else 
         {
             groundDistance = groundBData[0];
-            groundAngle = groundBData[0];
-        }
+            newGroundAngle = groundBData[1];
+        }        
 
         //if player is too far off the ground, they won't collide. this formula
         //takes player speed into account. the faster they move, the further they can
         //be off the ground and still collide
-        if (groundDistance > Mathf.Min(Mathf.Abs(playerObject.xSpeed) + 4, 14))
-            //GD.Print(groundDistance);
+        if (groundDistance > Mathf.Min(Mathf.Abs(xSpeed) + 4, 14))
+        {
             groundCollision = false;
+        }
 
         //eventually, collision calculation will be based off of the current mode.
         //for now, just assume floor mode
         if (groundCollision)
         {
-            Position = new Vector2(GlobalPosition.X, GlobalPosition.Y + groundDistance); 
-            playerObject.groundAngle = groundAngle;
+            //Position = new Vector2(GlobalPosition.X, GlobalPosition.Y + groundDistance); 
+            groundAngle = newGroundAngle;
         }
+    }
 
-        //shitty input (will change later)
-        if (Input.IsKeyPressed(Key.A))
-        {
-            Position = new Vector2(Position.X - 1, Position.Y);
-        }
-        else if (Input.IsKeyPressed(Key.D))
-        {
-            Position = new Vector2(Position.X + 1, Position.Y);
-        }
+    public override void _Input(InputEvent @event)
+    {
+        
     }
 }

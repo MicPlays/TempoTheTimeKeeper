@@ -84,7 +84,7 @@ public partial class Sensor : Node2D
             {
                 QueueRedraw();
                 int[] data = new int[3];
-                data[0] = GetDistance(newIndex, 0, newGridCell);
+                data[0] = GetDistance(0, 0, newGridCell);
                 data[1] = -1;
                 data[2] = -1;
                 return data;
@@ -209,30 +209,36 @@ public partial class Sensor : Node2D
     {
         Vector2I tileSurface = new Vector2I(0, 0);
 
-            if (direction == "left" || direction == "right")
+            if (direction == "right")
             {
-                tileSurface.Y = (gridCell.X * 16) + index;
-                tileSurface.X = ((gridCell.Y * 16) + 16) - detectedHeight;
+                tileSurface.Y = (gridCell.Y * 16) + index + 1;
+                tileSurface.X = ((gridCell.X * 16) + 16) - detectedHeight;
                 return (int)(tileSurface.X - GlobalPosition.X);
+            }
+            else if (direction == "left")
+            {
+                tileSurface.Y = (gridCell.Y * 16) + index + 1;
+                tileSurface.X = (gridCell.X * 16) + detectedHeight;
+                return (int)(GlobalPosition.X - tileSurface.X);
             }
             else
             {
-                tileSurface.X = (gridCell.X * 16) + index;
+                tileSurface.X = (gridCell.X * 16) + index + 1;
                 tileSurface.Y = ((gridCell.Y * 16) + 16) - detectedHeight;
                 return (int)(tileSurface.Y - GlobalPosition.Y);
             }
     }
-
     public override void _Draw()
     {
         //normal draw
-        if (mode == 0)
-        {
+        //if (mode == 0)
+        //{
             if (direction == "left" || direction == "right") 
                 DrawLine(Vector2.Zero, new Vector2(-Position.X, 0), Colors.Green, 1);
             else
                 DrawLine(Vector2.Zero, new Vector2(0, -Position.Y), Colors.Green, 1);
-        }
+        //}
+        /*
         //extension draw
         else if (mode == 1)
         {
@@ -287,6 +293,7 @@ public partial class Sensor : Node2D
                 }
             }
         }
+        */
     }
 
 

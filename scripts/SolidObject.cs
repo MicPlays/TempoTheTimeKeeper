@@ -1,13 +1,13 @@
 using Godot;
 using System;
 
-public partial class SolidObject : Node2D
+public abstract partial class SolidObject : Node2D
 {
-    public float xSpeed;
-    public float ySpeed;
-    public float groundSpeed;
-    public float groundAngle;
-    public int widthRadius;
-    public int heightRadius;
+    public float xSpeed = 0;
+    public float ySpeed = 0;
+    public float groundSpeed = 0;
+    public float groundAngle = 0;
+    public int widthRadius = 5;
+    public int heightRadius = 5;
 
 }
