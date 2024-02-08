@@ -11,7 +11,7 @@ public partial class Player : SolidObject
     private const int TOP_SPEED = 6;
 
     private String state;
-    public int pushRadius = 9;
+    public int pushRadius = 10;
     Dictionary<string, Sensor> sensorTable;
     public override void _Ready()
     {
@@ -20,7 +20,7 @@ public partial class Player : SolidObject
         ySpeed = 0f;
         groundAngle = 0f;
         groundSpeed = 0f;
-        widthRadius = 10;
+        widthRadius = 9;
         heightRadius = 19;
 
         //get player's sensors
@@ -78,11 +78,16 @@ public partial class Player : SolidObject
             groundSpeed -= Mathf.Min(Mathf.Abs(groundSpeed), FRICTION_SPEED) * Mathf.Sign(groundSpeed);
         }
 
-        int wallDistance = PushCollisionProcess();
+        float wallDistance = PushCollisionProcess();
 
         //calculate X and Y speed from Ground Speed and Angle
-        xSpeed = groundSpeed * Mathf.Cos(Mathf.DegToRad(groundAngle)) + wallDistance;
+        xSpeed = (groundSpeed * Mathf.Cos(Mathf.DegToRad(groundAngle))) + wallDistance;
         ySpeed = groundSpeed * -Mathf.Sin(Mathf.DegToRad(groundAngle));
+
+        if (wallDistance != 0)
+        {
+            groundSpeed = 0;
+        }
 
         //Move player pos
         Position = new Vector2(GlobalPosition.X + xSpeed, GlobalPosition.Y + ySpeed);
@@ -97,7 +102,7 @@ public partial class Player : SolidObject
         }
     }
 
-    public int PushCollisionProcess()
+    public float PushCollisionProcess()
     {
         //if player isn't moving, don't check sensors
         if (groundSpeed != 0)
@@ -109,14 +114,11 @@ public partial class Player : SolidObject
             else 
                 activeSensor = sensorTable["E"];
             //player will not have moved yet, move push sensors to account for this
-            activeSensor.Position = new Vector2(activeSensor.Position.X + xSpeed, activeSensor.Position.Y + ySpeed);
-
-            int[] data = activeSensor.CheckForTile();
-            
+            activeSensor.Position = new Vector2(activeSensor.Position.X + groundSpeed, activeSensor.Position.Y + groundSpeed);
+            float[] data = activeSensor.CheckForTile();
+            activeSensor.Position = new Vector2(activeSensor.Position.X - xSpeed, activeSensor.Position.Y - ySpeed);
             if (data[0] < 0)
             {
-                GD.Print(data[0]);
-                groundSpeed = 0;
                 if (activeSensor.direction == "left")
                     return -data[0];
                 else 
@@ -130,9 +132,9 @@ public partial class Player : SolidObject
     public void GroundCollisionProcess()
     {
         bool groundCollision = true;
-        int groundDistance, newGroundAngle;
-        int[] groundAData = sensorTable["A"].CheckForTile();
-        int[] groundBData = sensorTable["B"].CheckForTile();
+        float groundDistance, newGroundAngle;
+        float[] groundAData = sensorTable["A"].CheckForTile();
+        float[] groundBData = sensorTable["B"].CheckForTile();
 
         //use lowest distance between ground sensors
         if (groundAData[0] == groundBData[0])
@@ -164,7 +166,7 @@ public partial class Player : SolidObject
         //for now, just assume floor mode
         if (groundCollision)
         {
-            //Position = new Vector2(GlobalPosition.X, GlobalPosition.Y + groundDistance); 
+            Position = new Vector2(GlobalPosition.X, GlobalPosition.Y + groundDistance); 
             groundAngle = newGroundAngle;
         }
     }

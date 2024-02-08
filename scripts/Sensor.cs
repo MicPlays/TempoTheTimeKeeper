@@ -30,7 +30,7 @@ public partial class Sensor : Node2D
     }
 
     //will seperate into another function that is called by parent object. will return data for collision
-    public int[] CheckForTile()
+    public float[] CheckForTile()
     {
         mode = 0;
         Vector2I currentGridCell = new Vector2I((int)GlobalPosition.X/16, (int)GlobalPosition.Y/16);
@@ -73,20 +73,21 @@ public partial class Sensor : Node2D
             //if second tile is not empty, return that tile's data. else return the distance to the end of the second tile
             if (newDetectedHeight >= 1) 
             {
-                QueueRedraw();
-                int[] data = new int[3];
-                data[0] = GetDistance(newIndex, newDetectedHeight, newGridCell);
-                data[1] = (int)tileMap.GetCellTileData(-1, newGridCell).GetCustomData("angle");
-                data[2] = tileMap.GetCellSourceId(-1, newGridCell);
+                bool hFlip = false, vFlip = false;
+                if (newDistanceData[2] > 0)
+                    hFlip = true;
+                if (newDistanceData[3] > 0)
+                    vFlip = true;
+                float[] data = new float[2];
+                data[0] = GetDistance(newIndex, newDetectedHeight, newGridCell, hFlip, vFlip);
+                data[1] = (float)tileMap.GetCellTileData(-1, newGridCell).GetCustomData("angle");
                 return data;
             }
             else
             {
-                QueueRedraw();
-                int[] data = new int[3];
-                data[0] = GetDistance(0, 0, newGridCell);
-                data[1] = -1;
-                data[2] = -1;
+                float[] data = new float[2];
+                data[0] = GetDistance(0, 0, newGridCell, false, false);
+                data[1] = -1f;
                 return data;
             }
         }
@@ -126,33 +127,40 @@ public partial class Sensor : Node2D
             //must be the ground so return original tile's data
             if (newDetectedHeight >= 1) 
             {
-                QueueRedraw();
-                int[] data = new int[3];
-                data[0] = GetDistance(newIndex, newDetectedHeight, newGridCell);
-                data[1] = (int)tileMap.GetCellTileData(-1, newGridCell).GetCustomData("angle");
-                data[2] = tileMap.GetCellSourceId(-1, newGridCell);
+                bool hFlip = false, vFlip = false;
+                if (newDistanceData[2] > 0)
+                    hFlip = true;
+                if (newDistanceData[3] > 0)
+                    vFlip = true;
+                float[] data = new float[2];
+                data[0] = GetDistance(newIndex, newDetectedHeight, newGridCell, hFlip, vFlip);
+                data[1] = (float)tileMap.GetCellTileData(-1, newGridCell).GetCustomData("angle");
                 return data;
             }
             else
             {
-                mode = 0;
-                QueueRedraw();
-                int[] data = new int[3];
-                data[0] = GetDistance(index, detectedHeight, currentGridCell);
-                data[1] = (int)tileMap.GetCellTileData(-1, currentGridCell).GetCustomData("angle");
-                data[2] = tileMap.GetCellSourceId(-1, currentGridCell);
+                bool hFlip = false, vFlip = false;
+                if (distanceData[2] > 0)
+                    hFlip = true;
+                if (distanceData[3] > 0)
+                    vFlip = true;
+                float[] data = new float[2];
+                data[0] = GetDistance(index, detectedHeight, currentGridCell, hFlip, vFlip);
+                data[1] = (float)tileMap.GetCellTileData(-1, currentGridCell).GetCustomData("angle");
                 return data;
             }
         }
         //normal case
         else 
         {
-            mode = 0;
-            QueueRedraw();
-            int[] data = new int[3];
-            data[0] = GetDistance(index, detectedHeight, currentGridCell);
-            data[1] = (int)tileMap.GetCellTileData(-1, currentGridCell).GetCustomData("angle");
-            data[2] = tileMap.GetCellSourceId(-1, currentGridCell);  
+            bool hFlip = false, vFlip = false;
+            if (distanceData[2] > 0)
+                hFlip = true;
+            if (distanceData[3] > 0)
+                vFlip = true;
+            float[] data = new float[2];
+            data[0] = GetDistance(index, detectedHeight, currentGridCell, hFlip, vFlip);
+            data[1] = (float)(tileMap.GetCellTileData(-1, currentGridCell).GetCustomData("angle"));
             return data;
         }
     }
@@ -163,7 +171,7 @@ public partial class Sensor : Node2D
     private int[] GetHeight(Vector2I gridSquare)
     {
         TileData tileData = tileMap.GetCellTileData(-1, gridSquare);
-        if (tileData == null) return new int[] {0, 0};
+        if (tileData == null) return new int[] {0, 0, 0, 0};
         String detection = (String)tileData.GetCustomData("sensors");
         int[] tileArray;
         bool canDetect = false;
@@ -187,8 +195,11 @@ public partial class Sensor : Node2D
         }
         if (canDetect)
         {
-            if (direction == "left" || direction == "right") 
-                tileArray = (int[])tileData.GetCustomData("width_array");
+            if (direction == "left" || direction == "right")
+            {
+                tileArray = (int[])tileData.GetCustomData("width_array"); 
+            }
+                
             else 
                 tileArray = (int[])tileData.GetCustomData("height_array");
             
@@ -196,37 +207,51 @@ public partial class Sensor : Node2D
             Vector2 tilePos = new Vector2(gridSquare.X * 16, gridSquare.Y * 16);
             int index;
             if (direction == "left" || direction == "right")
-                index = (int)(GlobalPosition.Y - tilePos.Y);
+                index = (int)(GlobalPosition.Y - tilePos.Y);    
             else
                 index = (int)(GlobalPosition.X - tilePos.X);
-            return new int[] {index, tileArray[index]};
+
+            //get tile flip
+            int hFlip = -1;
+            int vFlip = -1;
+            if (tileData.FlipH)
+                hFlip = 1;
+            if (tileData.FlipV)
+                vFlip = 1;
+            return new int[] {index, tileArray[index], hFlip, vFlip};
         }
-        else return new int[] {0, 0};
+        else return new int[] {0, 0, 0, 0};
     }
     
-    //calculate distance between tile surface and sensor location
-    public int GetDistance(int index, int detectedHeight, Vector2I gridCell)
+    //calculate distance between tile surface and sensor location. assumes tiles are built from bottom to top (height) and
+    //right to left (width) by default.
+    public float GetDistance(int index, int detectedHeight, Vector2I gridCell, bool hFlip, bool vFlip)
     {
         Vector2I tileSurface = new Vector2I(0, 0);
-
-            if (direction == "right")
-            {
-                tileSurface.Y = (gridCell.Y * 16) + index + 1;
-                tileSurface.X = ((gridCell.X * 16) + 16) - detectedHeight;
-                return (int)(tileSurface.X - GlobalPosition.X);
-            }
-            else if (direction == "left")
-            {
-                tileSurface.Y = (gridCell.Y * 16) + index + 1;
-                tileSurface.X = (gridCell.X * 16) + detectedHeight;
-                return (int)(GlobalPosition.X - tileSurface.X);
-            }
+        if (direction == "right")
+        {
+            tileSurface.Y = (gridCell.Y * 16) + index + 1;
+            if (hFlip)
+                tileSurface.X = ((gridCell.X * 16) + 16) - (16 - detectedHeight) - detectedHeight;
             else
-            {
-                tileSurface.X = (gridCell.X * 16) + index + 1;
-                tileSurface.Y = ((gridCell.Y * 16) + 16) - detectedHeight;
-                return (int)(tileSurface.Y - GlobalPosition.Y);
-            }
+                tileSurface.X = ((gridCell.X * 16) + 16) - detectedHeight;
+            return tileSurface.X - GlobalPosition.X;
+        }
+        else if (direction == "left")
+        {
+            tileSurface.Y = (gridCell.Y * 16) + index + 1;
+            if (hFlip)
+                tileSurface.X = (gridCell.X * 16) + detectedHeight;
+            else
+                tileSurface.X = (gridCell.X * 16) + ((16 - detectedHeight) + detectedHeight);
+            return GlobalPosition.X - tileSurface.X;
+        }
+        else
+        {
+            tileSurface.X = (gridCell.X * 16) + index + 1;
+            tileSurface.Y = ((gridCell.Y * 16) + 16) - detectedHeight;
+            return tileSurface.Y - GlobalPosition.Y;
+        }
     }
     public override void _Draw()
     {
