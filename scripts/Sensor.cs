@@ -196,10 +196,7 @@ public partial class Sensor : Node2D
         if (canDetect)
         {
             if (direction == "left" || direction == "right")
-            {
                 tileArray = (int[])tileData.GetCustomData("width_array"); 
-            }
-                
             else 
                 tileArray = (int[])tileData.GetCustomData("height_array");
             
