@@ -4,6 +4,8 @@ using System;
 public partial class Sensor : Node2D
 {
     [Export]
+    public string tileDetection;
+    [Export]
     public string direction;
     private TileMap tileMap;
 
@@ -30,7 +32,7 @@ public partial class Sensor : Node2D
     }
 
     //will seperate into another function that is called by parent object. will return data for collision
-    public float[] CheckForTile()
+    public SolidTileData CheckForTile()
     {
         mode = 0;
         Vector2I currentGridCell = new Vector2I((int)GlobalPosition.X/16, (int)GlobalPosition.Y/16);
@@ -78,17 +80,17 @@ public partial class Sensor : Node2D
                     hFlip = true;
                 if (newDistanceData[3] > 0)
                     vFlip = true;
-                float[] data = new float[2];
-                data[0] = GetDistance(newIndex, newDetectedHeight, newGridCell, hFlip, vFlip);
-                data[1] = (float)tileMap.GetCellTileData(-1, newGridCell).GetCustomData("angle");
-                return data;
+                float distance = GetDistance(newIndex, newDetectedHeight, newGridCell, hFlip, vFlip);
+                float angle = (float)tileMap.GetCellTileData(-1, newGridCell).GetCustomData("angle");
+                bool flagged = (bool)tileMap.GetCellTileData(-1, newGridCell).GetCustomData("flagged");
+                return new SolidTileData(distance, angle, flagged);
             }
             else
             {
-                float[] data = new float[2];
-                data[0] = GetDistance(0, 0, newGridCell, false, false);
-                data[1] = -1f;
-                return data;
+                float distance = GetDistance(0, 0, newGridCell, false, false);
+                float angle = -1f;
+                bool flagged = false;
+                return new SolidTileData(distance, angle, flagged);
             }
         }
         //regression (if detected tile is a full block, pull back one tile in sensor's direction)
@@ -132,10 +134,10 @@ public partial class Sensor : Node2D
                     hFlip = true;
                 if (newDistanceData[3] > 0)
                     vFlip = true;
-                float[] data = new float[2];
-                data[0] = GetDistance(newIndex, newDetectedHeight, newGridCell, hFlip, vFlip);
-                data[1] = (float)tileMap.GetCellTileData(-1, newGridCell).GetCustomData("angle");
-                return data;
+                float distance = GetDistance(newIndex, newDetectedHeight, newGridCell, hFlip, vFlip);
+                float angle = (float)tileMap.GetCellTileData(-1, newGridCell).GetCustomData("angle");
+                bool flagged = (bool)tileMap.GetCellTileData(-1, newGridCell).GetCustomData("flagged");
+                return new SolidTileData(distance, angle, flagged);
             }
             else
             {
@@ -145,9 +147,10 @@ public partial class Sensor : Node2D
                 if (distanceData[3] > 0)
                     vFlip = true;
                 float[] data = new float[2];
-                data[0] = GetDistance(index, detectedHeight, currentGridCell, hFlip, vFlip);
-                data[1] = (float)tileMap.GetCellTileData(-1, currentGridCell).GetCustomData("angle");
-                return data;
+                float distance = GetDistance(index, detectedHeight, currentGridCell, hFlip, vFlip);
+                float angle = (float)tileMap.GetCellTileData(-1, currentGridCell).GetCustomData("angle");
+                bool flagged = (bool)tileMap.GetCellTileData(-1, currentGridCell).GetCustomData("flagged");
+                return new SolidTileData(distance, angle, flagged);
             }
         }
         //normal case
@@ -158,10 +161,10 @@ public partial class Sensor : Node2D
                 hFlip = true;
             if (distanceData[3] > 0)
                 vFlip = true;
-            float[] data = new float[2];
-            data[0] = GetDistance(index, detectedHeight, currentGridCell, hFlip, vFlip);
-            data[1] = (float)(tileMap.GetCellTileData(-1, currentGridCell).GetCustomData("angle"));
-            return data;
+            float distance = GetDistance(index, detectedHeight, currentGridCell, hFlip, vFlip);
+            float angle = (float)tileMap.GetCellTileData(-1, currentGridCell).GetCustomData("angle");
+            bool flagged = (bool)tileMap.GetCellTileData(-1, currentGridCell).GetCustomData("flagged");
+            return new SolidTileData(distance, angle, flagged);
         }
     }
 
@@ -184,12 +187,12 @@ public partial class Sensor : Node2D
             }
             case "top-sides":
             {
-                if (direction != "down") canDetect = true;
+                if (tileDetection != "bottom") canDetect = true;
                 break;
             }
             case "bottom":
             {
-                if (direction == "down") canDetect = true;
+                if (tileDetection == "bottom") canDetect = true;
                 break;
             }
         }

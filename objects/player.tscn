@@ -15,21 +15,27 @@ metadata/_edit_lock_ = true
 [node name="Sensors" type="Node2D" parent="."]
 
 [node name="BLSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+tileDetection = "bottom"
 direction = "down"
 
 [node name="BRSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+tileDetection = "bottom"
 direction = "down"
 
 [node name="TLSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
 visible = false
+tileDetection = "top"
 direction = "up"
 
 [node name="TRSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
 visible = false
+tileDetection = "top"
 direction = "up"
 
 [node name="LSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+tileDetection = "sides"
 direction = "left"
 
 [node name="RSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
+tileDetection = "sides"
 direction = "right"
