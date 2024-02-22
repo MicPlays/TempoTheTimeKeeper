@@ -68,6 +68,8 @@ public partial class Player : SolidObject
                 xSpeed -= JUMP_FORCE * Mathf.Sin(Mathf.DegToRad(groundAngle));
                 ySpeed -= JUMP_FORCE * Mathf.Cos(Mathf.DegToRad(groundAngle));
                 isGrounded = false;
+                SwitchGroundCollisionMode(0);
+                SwitchPushCollisionMode(0);
                 isJumping = true;
             }
             //if jumping, immediately go airborne, do not execute grounded 
@@ -103,22 +105,31 @@ public partial class Player : SolidObject
                 else 
                     groundSpeed -= Mathf.Min(Mathf.Abs(groundSpeed), FRICTION_SPEED) * Mathf.Sign(groundSpeed);
             
-                float wallDistance = PushCollisionProcess();
+                bool isVertical = SwitchPushCollisionMode(groundAngle);
+                float wallDistance = PushCollisionProcess(isVertical);
 
                 //calculate X and Y speed from Ground Speed and Angle
-                xSpeed = (groundSpeed * Mathf.Cos(Mathf.DegToRad(groundAngle))) + wallDistance;
-                ySpeed = groundSpeed * -Mathf.Sin(Mathf.DegToRad(groundAngle));
+                if (isVertical)
+                {
+                    xSpeed = groundSpeed * Mathf.Cos(Mathf.DegToRad(groundAngle));
+                    ySpeed = groundSpeed * -Mathf.Sin(Mathf.DegToRad(groundAngle))  + wallDistance;
+                }
+                else 
+                {
+                    xSpeed = (groundSpeed * Mathf.Cos(Mathf.DegToRad(groundAngle))) + wallDistance;
+                    ySpeed = groundSpeed * -Mathf.Sin(Mathf.DegToRad(groundAngle));
+                }
 
                 if (wallDistance != 0)
                 {
-                    //groundSpeed = 0;
+                    groundSpeed = 0;
                 }
 
                 //Move player pos
                 Position = new Vector2(GlobalPosition.X + xSpeed, GlobalPosition.Y + ySpeed);
 
                 //ground collision process
-                SwitchGroundCollisionMode();
+                SwitchGroundCollisionMode(groundAngle);
                 bool groundCollision = true;
                 SolidTileData groundData = GroundSensorCompetition();
 
@@ -148,14 +159,17 @@ public partial class Player : SolidObject
                     if (groundData.flagged)
                     {
                         groundAngle = (Mathf.Round(groundAngle / 90) % 4) * 90;
-                        GD.Print(groundAngle);
                     }
                     else
                         groundAngle = groundData.angle;
+                    
+                    playerSprite.RotationDegrees = -groundAngle;
                 }
                 else 
                 {
                     isGrounded = false;
+                    SwitchGroundCollisionMode(0);
+                    SwitchPushCollisionMode(0);
                 }
                 //if on flat ground, move sensors down to account for low steps
                 if (groundAngle == 0)
@@ -203,9 +217,9 @@ public partial class Player : SolidObject
                 groundAngle += 2.8125f;
             if (groundAngle > 360f || groundAngle < 0)
                 groundAngle = 0; 
-            
-            SwitchGroundCollisionMode();
-            
+
+            playerSprite.RotationDegrees = -groundAngle;
+
             //get angle of air movement
             Vector2 airAngleVector = new Vector2(xSpeed, ySpeed).Normalized();
             float airAngle = Mathf.RadToDeg(Mathf.Atan2(-airAngleVector.Y, airAngleVector.X));
@@ -262,10 +276,21 @@ public partial class Player : SolidObject
     }
 
     //push sensor collision process when grounded. returns distance from tile to move the player with
-    public float PushCollisionProcess()
+    public float PushCollisionProcess(bool isVertical)
     {
+        bool canCollide = false;
+        if ((groundAngle >= 316f && groundAngle <= 360f) || (groundAngle >= 0f && groundAngle <= 44f))
+        {
+            if (groundSpeed != 0)
+                canCollide = true;
+        }
+        else if (groundAngle >= 136f && groundAngle <= 224f)
+        {
+            if (groundSpeed != 0)
+                canCollide = true;
+        }
         //if player isn't moving, don't check sensors
-        if (groundSpeed != 0)
+        if (canCollide)
         {
             Sensor activeSensor;
             //get active sensor
@@ -273,11 +298,22 @@ public partial class Player : SolidObject
                 activeSensor = sensorTable["F"];
             else 
                 activeSensor = sensorTable["E"];
+
+            SolidTileData data;
             //player will not have moved yet, move push sensors to account for this
-            activeSensor.Position = new Vector2(activeSensor.Position.X + groundSpeed, activeSensor.Position.Y);
-            SolidTileData data = activeSensor.CheckForTile();
-            //reset sensor pos as child objects move along with their parents in Godot
-            activeSensor.Position = new Vector2(Mathf.Sign(groundSpeed) * pushRadius, 0);
+            if (isVertical)
+            {
+                activeSensor.Position = new Vector2(activeSensor.Position.X, activeSensor.Position.Y + groundSpeed);
+                data = activeSensor.CheckForTile();
+                activeSensor.Position = new Vector2(activeSensor.Position.X, activeSensor.Position.Y - groundSpeed);
+            }
+            else 
+            {
+                activeSensor.Position = new Vector2(activeSensor.Position.X + groundSpeed, activeSensor.Position.Y);
+                data = activeSensor.CheckForTile();
+                activeSensor.Position = new Vector2(activeSensor.Position.X - groundSpeed, activeSensor.Position.Y);
+            }
+            
             if (data.distance < 0)
             {
                 if (activeSensor.direction == "left")
@@ -343,31 +379,66 @@ public partial class Player : SolidObject
             return groundBData;
     }
 
-    public void SwitchGroundCollisionMode()
+    //rotate push sensors according to ground angle. returns if the sensors
+    //are aligned horizontally (false) or vertically (true) with the ground
+    public bool SwitchPushCollisionMode(float currentAngle)
     {
-        if ((groundAngle >= 315f && groundAngle <= 360f) || (groundAngle >= 0f && groundAngle <= 45f))
+        if ((currentAngle >= 316f && currentAngle <= 360f) || (currentAngle >= 0f && currentAngle <= 44f))
+        {
+            sensorTable["E"].Position = new Vector2(-pushRadius, 0);
+            sensorTable["E"].direction = "left";
+            sensorTable["F"].Position = new Vector2(pushRadius, 0);
+            sensorTable["F"].direction = "right";
+            return false;
+        }
+        else if (currentAngle >= 45f && currentAngle <= 135f)
+        {
+            sensorTable["E"].Position = new Vector2(0, pushRadius);
+            sensorTable["E"].direction = "down";
+            sensorTable["F"].Position = new Vector2(0, -pushRadius);
+            sensorTable["F"].direction = "up";
+            return true;
+        }
+        else if (currentAngle >= 136f && currentAngle <= 224f)
+        {
+            sensorTable["E"].Position = new Vector2(pushRadius, 0);
+            sensorTable["E"].direction = "right";
+            sensorTable["F"].Position = new Vector2(-pushRadius, 0);
+            sensorTable["F"].direction = "left";
+            return false;
+        }
+        else 
+        {
+            sensorTable["E"].Position = new Vector2(0, -pushRadius);
+            sensorTable["E"].direction = "up";
+            sensorTable["F"].Position = new Vector2(0, pushRadius);
+            sensorTable["F"].direction = "down";
+            return true;
+        }
+    }
+
+    public void SwitchGroundCollisionMode(float currentAngle)
+    {
+        if ((currentAngle >= 315f && currentAngle <= 360f) || (currentAngle >= 0f && currentAngle <= 45f))
         {
             sensorTable["A"].Position = new Vector2(-widthRadius, heightRadius);
             sensorTable["A"].direction = "down";
             sensorTable["B"].Position = new Vector2(widthRadius, heightRadius);
             sensorTable["B"].direction = "down";
-            playerSprite.RotationDegrees = -groundAngle;
         }
-        else if (groundAngle >= 46f && groundAngle <= 134f)
+        else if (currentAngle >= 46f && currentAngle <= 134f)
         {
             sensorTable["A"].Position = new Vector2(heightRadius, -widthRadius);
             sensorTable["A"].direction = "right";
             sensorTable["B"].Position = new Vector2(heightRadius, widthRadius);
             sensorTable["B"].direction = "right";
-            playerSprite.RotationDegrees = -groundAngle;
         }
-        else if (groundAngle >= 135f && groundAngle <= 225f)
+        else if (currentAngle >= 135f && currentAngle <= 225f)
         {
             sensorTable["A"].Position = new Vector2(widthRadius, -heightRadius);
             sensorTable["A"].direction = "up";
             sensorTable["B"].Position = new Vector2(-widthRadius, -heightRadius);
             sensorTable["B"].direction = "up";
-            playerSprite.RotationDegrees = -groundAngle;
         }
         else 
         {
@@ -375,7 +446,6 @@ public partial class Player : SolidObject
             sensorTable["A"].direction = "left";
             sensorTable["B"].Position = new Vector2(-heightRadius, -widthRadius);
             sensorTable["B"].direction = "left";
-            playerSprite.RotationDegrees = -groundAngle;
         }
     }
 }
