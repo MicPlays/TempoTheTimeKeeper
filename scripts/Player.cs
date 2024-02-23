@@ -120,6 +120,9 @@ public partial class Player : SolidObject
                     ySpeed = groundSpeed * -Mathf.Sin(Mathf.DegToRad(groundAngle));
                 }
 
+                xSpeed = groundSpeed * Mathf.Cos(Mathf.DegToRad(groundAngle));
+                ySpeed = groundSpeed * -Mathf.Sin(Mathf.DegToRad(groundAngle));
+
                 if (wallDistance != 0)
                 {
                     groundSpeed = 0;
@@ -151,10 +154,14 @@ public partial class Player : SolidObject
                 //for now, just assume floor mode
                 if (groundCollision)
                 {
-                    if (sensorTable["A"].direction == "right" || sensorTable["A"].direction == "left")
+                    if (sensorTable["A"].direction == "right")
                         Position = new Vector2(GlobalPosition.X + groundData.distance,  GlobalPosition.Y); 
-                    else 
+                    else if (sensorTable["A"].direction == "down")
                         Position = new Vector2(GlobalPosition.X, GlobalPosition.Y + groundData.distance); 
+                    else if (sensorTable["A"].direction == "up")
+                        Position = new Vector2(GlobalPosition.X, GlobalPosition.Y - groundData.distance);
+                    else 
+                        Position = new Vector2(GlobalPosition.X - groundData.distance,  GlobalPosition.Y);
 
                     if (groundData.flagged)
                     {
@@ -178,7 +185,6 @@ public partial class Player : SolidObject
                     sensorTable["F"].Position = new Vector2(pushRadius, 4);
                 }
             }
-            
         }
         //air state
         else 
@@ -375,7 +381,7 @@ public partial class Player : SolidObject
             return groundAData;
         else if (groundAData.distance < groundBData.distance)
             return groundAData;
-        else 
+        else
             return groundBData;
     }
 

@@ -246,10 +246,22 @@ public partial class Sensor : Node2D
                 tileSurface.X = (gridCell.X * 16) + ((16 - detectedHeight) + detectedHeight);
             return GlobalPosition.X - tileSurface.X;
         }
-        else
+        else if (direction == "up")
         {
             tileSurface.X = (gridCell.X * 16) + index + 1;
-            tileSurface.Y = ((gridCell.Y * 16) + 16) - detectedHeight;
+            if (vFlip)
+                tileSurface.Y = (gridCell.Y * 16) + detectedHeight;
+            else
+                tileSurface.Y = ((gridCell.Y * 16) + 16) - detectedHeight;
+            return GlobalPosition.Y - tileSurface.Y;
+        }
+        else 
+        {
+            tileSurface.X = (gridCell.X * 16) + index + 1;
+            if (vFlip)
+                tileSurface.Y = ((gridCell.Y * 16) + 16) - (16 - detectedHeight) - detectedHeight;
+            else
+                tileSurface.Y = ((gridCell.Y * 16) + 16) - detectedHeight;
             return tileSurface.Y - GlobalPosition.Y;
         }
     }
