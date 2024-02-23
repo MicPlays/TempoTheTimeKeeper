@@ -112,7 +112,7 @@ public partial class Player : SolidObject
                 if (isVertical)
                 {
                     xSpeed = groundSpeed * Mathf.Cos(Mathf.DegToRad(groundAngle));
-                    ySpeed = groundSpeed * -Mathf.Sin(Mathf.DegToRad(groundAngle))  + wallDistance;
+                    ySpeed = groundSpeed * -Mathf.Sin(Mathf.DegToRad(groundAngle)) + wallDistance;
                 }
                 else 
                 {
@@ -128,6 +128,7 @@ public partial class Player : SolidObject
                 //Move player pos
                 Position = new Vector2(GlobalPosition.X + xSpeed, GlobalPosition.Y + ySpeed);
 
+                
                 //ground collision process
                 SwitchGroundCollisionMode(groundAngle);
                 bool groundCollision = true;
@@ -161,9 +162,7 @@ public partial class Player : SolidObject
                         Position = new Vector2(GlobalPosition.X - groundData.distance,  GlobalPosition.Y);
 
                     if (groundData.flagged)
-                    {
                         groundAngle = (Mathf.Round(groundAngle / 90) % 4) * 90;
-                    }
                     else
                         groundAngle = groundData.angle;
                     

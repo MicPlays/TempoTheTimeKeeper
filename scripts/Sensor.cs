@@ -88,7 +88,7 @@ public partial class Sensor : Node2D
             else
             {
                 float distance = GetDistance(0, 0, newGridCell, false, false);
-                float angle = -1f;
+                float angle = 0f;
                 bool flagged = false;
                 return new SolidTileData(distance, angle, flagged);
             }
@@ -243,7 +243,7 @@ public partial class Sensor : Node2D
             if (hFlip)
                 tileSurface.X = (gridCell.X * 16) + detectedHeight;
             else
-                tileSurface.X = (gridCell.X * 16) + ((16 - detectedHeight) + detectedHeight);
+                tileSurface.X = ((gridCell.X * 16) + 16) - (16 - detectedHeight);
             return GlobalPosition.X - tileSurface.X;
         }
         else if (direction == "up")
