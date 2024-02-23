@@ -120,9 +120,6 @@ public partial class Player : SolidObject
                     ySpeed = groundSpeed * -Mathf.Sin(Mathf.DegToRad(groundAngle));
                 }
 
-                xSpeed = groundSpeed * Mathf.Cos(Mathf.DegToRad(groundAngle));
-                ySpeed = groundSpeed * -Mathf.Sin(Mathf.DegToRad(groundAngle));
-
                 if (wallDistance != 0)
                 {
                     groundSpeed = 0;
