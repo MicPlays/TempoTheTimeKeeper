@@ -12,12 +12,15 @@ public partial class Player : SolidObject
     private const float JUMP_FORCE = 6.5f;
     private const float GRAVITY_FORCE = 0.21875f;
     private const float AIR_ACC_SPEED = 0.09375f;
+    private const float SLOPE_FACTOR = 0.125f;
+    private const float SLOPE_SPEED_FACTOR =  0.05078125f;
 
     public Sprite2D playerSprite;
 
     //state variables
     private bool isGrounded = true;
     private bool isJumping = false;
+    private int controlLockTimer = 0;
     
     //sensor stuff
     public int pushRadius = 10;
@@ -61,50 +64,64 @@ public partial class Player : SolidObject
     {
         //ground state
         if (isGrounded)
-        {        
+        {   
+            //adjust ground speed according to slope factor 
+            if (sensorTable["A"].direction != "up" && groundSpeed != 0)
+                groundSpeed -= SLOPE_FACTOR * Mathf.Sin(Mathf.DegToRad(groundAngle)); 
+                
+            
             //jump check
             if (Input.IsActionPressed("jump"))
             {
-                xSpeed -= JUMP_FORCE * Mathf.Sin(Mathf.DegToRad(groundAngle));
-                ySpeed -= JUMP_FORCE * Mathf.Cos(Mathf.DegToRad(groundAngle));
-                isGrounded = false;
-                SwitchGroundCollisionMode(0);
-                SwitchPushCollisionMode(0);
-                isJumping = true;
+                //activate ceiling sensors for one frame before jump. if ceiling is as close
+                //as 6 pixels from the player, don't jump.
+                SolidTileData data = CeilingSensorCompetition();
+                if (data.distance > 6)
+                {
+                    xSpeed -= JUMP_FORCE * Mathf.Sin(Mathf.DegToRad(groundAngle));
+                    ySpeed -= JUMP_FORCE * Mathf.Cos(Mathf.DegToRad(groundAngle));
+                    isGrounded = false;
+                    SwitchGroundCollisionMode(0);
+                    SwitchPushCollisionMode(0);
+                    isJumping = true;
+                }
             }
             //if jumping, immediately go airborne, do not execute grounded 
             //code as player will immediately snap back to ground
             if (isGrounded)
             {
-                //ground running input
-                if (Input.IsActionPressed("left"))
+                if (controlLockTimer == 0)
                 {
-                    if (groundSpeed > 0)
-                        groundSpeed -= DEC_SPEED;
-                        
-                    else if (groundSpeed > -TOP_SPEED)
+                    //ground running input
+                    if (Input.IsActionPressed("left"))
                     {
-                        groundSpeed -= ACC_SPEED;
-                        if (groundSpeed <= -TOP_SPEED)
-                            groundSpeed = -TOP_SPEED;
-                    }
-                    
-                }
-                else if (Input.IsActionPressed("right"))
-                {
-                    if (groundSpeed < 0)
-                        groundSpeed += DEC_SPEED;
+                        if (groundSpeed > 0)
+                            groundSpeed -= DEC_SPEED;
+                            
+                        else if (groundSpeed > -TOP_SPEED)
+                        {
+                            groundSpeed -= ACC_SPEED;
+                            if (groundSpeed <= -TOP_SPEED)
+                                groundSpeed = -TOP_SPEED;
+                        }
                         
-                    else if (groundSpeed < TOP_SPEED)
-                    {
-                        groundSpeed += ACC_SPEED;
-                        if (groundSpeed >= TOP_SPEED)
-                            groundSpeed = TOP_SPEED;
                     }
+                    else if (Input.IsActionPressed("right"))
+                    {
+                        if (groundSpeed < 0)
+                            groundSpeed += DEC_SPEED;
+                            
+                        else if (groundSpeed < TOP_SPEED)
+                        {
+                            groundSpeed += ACC_SPEED;
+                            if (groundSpeed >= TOP_SPEED)
+                                groundSpeed = TOP_SPEED;
+                        }
+                    }
+                    else 
+                        groundSpeed -= Mathf.Min(Mathf.Abs(groundSpeed), FRICTION_SPEED) * Mathf.Sign(groundSpeed);
                 }
-                else 
-                    groundSpeed -= Mathf.Min(Mathf.Abs(groundSpeed), FRICTION_SPEED) * Mathf.Sign(groundSpeed);
-            
+
                 bool isVertical = SwitchPushCollisionMode(groundAngle);
                 float wallDistance = PushCollisionProcess(isVertical);
 
@@ -112,7 +129,7 @@ public partial class Player : SolidObject
                 if (isVertical)
                 {
                     xSpeed = groundSpeed * Mathf.Cos(Mathf.DegToRad(groundAngle));
-                    ySpeed = groundSpeed * -Mathf.Sin(Mathf.DegToRad(groundAngle)) + wallDistance;
+                    ySpeed = (groundSpeed * -Mathf.Sin(Mathf.DegToRad(groundAngle))) + wallDistance;
                 }
                 else 
                 {
@@ -153,13 +170,13 @@ public partial class Player : SolidObject
                 if (groundCollision)
                 {
                     if (sensorTable["A"].direction == "right")
-                        Position = new Vector2(GlobalPosition.X + groundData.distance,  GlobalPosition.Y); 
+                        Position = new Vector2(GlobalPosition.X + groundData.distance - 1,  GlobalPosition.Y); 
                     else if (sensorTable["A"].direction == "down")
                         Position = new Vector2(GlobalPosition.X, GlobalPosition.Y + groundData.distance); 
                     else if (sensorTable["A"].direction == "up")
                         Position = new Vector2(GlobalPosition.X, GlobalPosition.Y - groundData.distance);
                     else 
-                        Position = new Vector2(GlobalPosition.X - groundData.distance,  GlobalPosition.Y);
+                        Position = new Vector2(GlobalPosition.X - groundData.distance + 1,  GlobalPosition.Y);
 
                     if (groundData.flagged)
                         groundAngle = (Mathf.Round(groundAngle / 90) % 4) * 90;
@@ -180,6 +197,34 @@ public partial class Player : SolidObject
                     sensorTable["E"].Position = new Vector2(-pushRadius, 4);
                     sensorTable["F"].Position = new Vector2(pushRadius, 4);
                 }
+
+                //handle slipping/falling down slopes that are too steep
+                if (controlLockTimer == 0)
+                {
+                    //if ground angle is within slip range and speed is too slow, slip
+                    if (Mathf.Abs(groundSpeed) < 2.5f && groundAngle >= 35f && groundAngle <= 326f)
+                    {
+                        //lock controls
+                        controlLockTimer = 30;
+
+                        //if ground angle is within fall range, fall instead of slip
+                        if (groundAngle >= 69f && groundAngle <= 293f)
+                        {
+                            isGrounded = false;
+                            SwitchGroundCollisionMode(0);
+                            SwitchPushCollisionMode(0);
+                        }
+                        //slipping
+                        else 
+                        {
+                            if (groundAngle < 180f)
+                                groundSpeed -= 0.5f;
+                            else groundSpeed += 0.5f;
+                        }
+                    }
+                }
+                else 
+                    controlLockTimer--;
             }
         }
         //air state
@@ -200,7 +245,7 @@ public partial class Player : SolidObject
                 xSpeed -= AIR_ACC_SPEED;
             else if (Input.IsActionPressed("right"))
                 xSpeed += AIR_ACC_SPEED;
-            
+        
             //air drag
             if (ySpeed < 0 && ySpeed > -4)
                 xSpeed -= (xSpeed/0.125f)/256;
@@ -238,12 +283,14 @@ public partial class Player : SolidObject
                 //mostly right, right, ceiling, and ground sensors active
                 AirPushCollisionProcess("F");
                 AirGroundCollisionProcess(false);
+                CeilingCollisionProcess();
             }
             else if (airAngle >= 46f && airAngle <= 135f)
             {
                 //mostly up, ceiling and push sensors active
                 AirPushCollisionProcess("E");
                 AirPushCollisionProcess("F");
+                CeilingCollisionProcess();
                 
             }
             else if (airAngle >= 136f && airAngle <= 225f)
@@ -251,6 +298,7 @@ public partial class Player : SolidObject
                 //mostly left, left, ceiling and ground
                 AirPushCollisionProcess("E");
                 AirGroundCollisionProcess(false);
+                CeilingCollisionProcess();
             }
             else 
             {
@@ -259,7 +307,7 @@ public partial class Player : SolidObject
                 AirPushCollisionProcess("F");
                 AirGroundCollisionProcess(true);
             }
-
+            
         }
     }
 
@@ -335,6 +383,7 @@ public partial class Player : SolidObject
         SolidTileData groundData = GroundSensorCompetition();
         if (groundData.distance >= 0)
             groundCollision = false;
+        //additional checks for ground collision based on air movement direction
         if (groundCollision) 
         {
             if (goingDown)
@@ -349,25 +398,44 @@ public partial class Player : SolidObject
                 if (!(ySpeed >= 0))
                     groundCollision = false;
             }
-
             if (groundCollision)
             {
                 Position = new Vector2(GlobalPosition.X, GlobalPosition.Y + groundData.distance); 
+                isGrounded = true;
+                isJumping = false;
                 if (groundData.flagged)
                     groundAngle = (Mathf.Round(groundAngle / 90) % 4) * 90;
                 else
                     groundAngle = groundData.angle;
-                //groundSpeed will likely need to be a combination of x and y direction going forward
-                groundSpeed = xSpeed;
+
+                //calculating groundSpeed on land based on ground angle.
+                //start with if floor is in slope range
+                if ((groundAngle >= 0 && groundAngle <= 45f) || (groundAngle <= 360f && groundAngle >= 316f))
+                    //ground is somewhat steep and player is moving mostly down
+                    if (((groundAngle >= 24 && groundAngle <= 45f) || (groundAngle <= 359f && groundAngle >= 339f)) && goingDown)
+                    {
+                        //use half of ySpeed for this calculation
+                        groundSpeed = -ySpeed * 0.5f * Mathf.Sign(Mathf.Sin(Mathf.DegToRad(groundAngle)));
+                    }
+                    //ground is either very flat or player is moving mostly left or right
+                    else groundSpeed = xSpeed;
+                //ground is very steep
+                else 
+                {
+                    //if moving down, calculate new groundSpeed using ySpeed
+                    if (goingDown)
+                        groundSpeed = -ySpeed * Mathf.Sign(Mathf.Sin(Mathf.DegToRad(groundAngle)));
+                    //just use xSpeed if moving mostly left or right
+                    else groundSpeed = xSpeed;
+                }
+                //don't forget to set ySpeed to 0 at end
                 ySpeed = 0;
-                isGrounded = true;
-                isJumping = false;
             }
         }
     }
 
     //get shortest distance between the two ground sensors. 
-    //returns a float array, index 0 being distance, index 1 being the tile angle value
+    //returns SolidTileData object.
     public SolidTileData GroundSensorCompetition()
     {
         SolidTileData groundAData = sensorTable["A"].CheckForTile();
@@ -379,6 +447,32 @@ public partial class Player : SolidObject
             return groundAData;
         else
             return groundBData;
+    }
+
+    //like ground sensor competition, but for ceiling sensors
+    public SolidTileData CeilingSensorCompetition()
+    {
+        SolidTileData ceilingCData = sensorTable["C"].CheckForTile();
+        SolidTileData ceilingDData = sensorTable["D"].CheckForTile();
+
+        if (ceilingCData.distance == ceilingDData.distance)
+            return ceilingDData;
+        else if (ceilingCData.distance < ceilingDData.distance)
+            return ceilingCData;
+        else
+            return ceilingDData;
+    }
+
+    //Ceiling sensor processing. Ceiling sensors are only active when airborne.
+    public void CeilingCollisionProcess()
+    {
+        SolidTileData data = CeilingSensorCompetition();
+        if (data.distance < 0)
+        {
+            Position = new Vector2(Position.X, Position.Y - data.distance);
+            //later, detect if player lands
+            ySpeed = 0;
+        }
     }
 
     //rotate push sensors according to ground angle. returns if the sensors

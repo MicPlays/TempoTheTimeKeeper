@@ -23,12 +23,10 @@ tileDetection = "bottom"
 direction = "down"
 
 [node name="TLSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
-visible = false
 tileDetection = "top"
 direction = "up"
 
 [node name="TRSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
-visible = false
 tileDetection = "top"
 direction = "up"
 

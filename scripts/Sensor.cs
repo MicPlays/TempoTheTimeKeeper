@@ -252,7 +252,7 @@ public partial class Sensor : Node2D
             if (vFlip)
                 tileSurface.Y = (gridCell.Y * 16) + detectedHeight;
             else
-                tileSurface.Y = ((gridCell.Y * 16) + 16) - detectedHeight;
+                tileSurface.Y = (gridCell.Y * 16)  + (16 - detectedHeight) + detectedHeight;
             return GlobalPosition.Y - tileSurface.Y;
         }
         else 
