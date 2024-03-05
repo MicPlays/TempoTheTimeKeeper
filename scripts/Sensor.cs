@@ -169,7 +169,7 @@ public partial class Sensor : Node2D
     }
 
     //calculate the detected height of a tile using either its width or height array.
-    //returns both the detected height and the index used in the calculation.
+    //returns the detected height, the index used in the calculation, and the hFlip and vFlip properties of the tile.
     //returns zeroes if tile is undefined or tile cannot be detected by the given sensor.
     private int[] GetHeight(Vector2I gridSquare)
     {
@@ -198,26 +198,61 @@ public partial class Sensor : Node2D
         }
         if (canDetect)
         {
-            if (direction == "left" || direction == "right")
-                tileArray = (int[])tileData.GetCustomData("width_array"); 
-            else 
-                tileArray = (int[])tileData.GetCustomData("height_array");
-            
-            //get index of array to use in collision calculation
-            Vector2 tilePos = new Vector2(gridSquare.X * 16, gridSquare.Y * 16);
-            int index;
-            if (direction == "left" || direction == "right")
-                index = (int)(GlobalPosition.Y - tilePos.Y);    
-            else
-                index = (int)(GlobalPosition.X - tilePos.X);
+            bool isHeight = false;
+            int tileID = tileMap.GetCellAlternativeTile(-1, gridSquare);
 
-            //get tile flip
+            //if tile is an alternative tile, get the width or height array 
+            //of the source tile that alt tile derives from
+            if (tileID != 0)
+            {
+                //to get the data from the source tile, we need the TileSetAtlasSource to get the tile data from.
+                //to get this TileSetAtlasSource, we need the source ID of the tile, retrieved from the tilemap.
+                int tileSourceID = tileMap.GetCellSourceId(-1, gridSquare);
+                TileSetAtlasSource atlas = (TileSetAtlasSource)tileMap.TileSet.GetSource(tileSourceID);
+                //to get said tile data from the atlas source, we need the atlas coordinates, also retrieved from the tilemap.
+                Vector2I tileAtlasCoords = tileMap.GetCellAtlasCoords(-1, gridSquare);
+                TileData sourceTileData = atlas.GetTileData(tileAtlasCoords, 0);
+
+                if (direction == "left" || direction == "right")
+                    tileArray = (int[])sourceTileData.GetCustomData("width_array"); 
+                else 
+                {
+                    tileArray = (int[])sourceTileData.GetCustomData("height_array");
+                    isHeight = true;
+                }
+            }
+            //otherwise just get height/width array
+            else 
+            {
+                if (direction == "left" || direction == "right")
+                    tileArray = (int[])tileData.GetCustomData("width_array"); 
+                else 
+                {
+                    tileArray = (int[])tileData.GetCustomData("height_array");
+                    isHeight = true;
+                }
+            }
+
+            int index;
+            Vector2 tilePos = new Vector2(gridSquare.X * 16, gridSquare.Y * 16);
             int hFlip = -1;
             int vFlip = -1;
+            //based on flip property, flip array to get correct collision data
             if (tileData.FlipH)
+            {
                 hFlip = 1;
+                if (isHeight) Array.Reverse(tileArray);
+               
+            }     
             if (tileData.FlipV)
+            {
                 vFlip = 1;
+                if (!isHeight) Array.Reverse(tileArray);   
+            }
+
+            if (isHeight)  index = (int)(GlobalPosition.X - tilePos.X);
+            else index = (int)(GlobalPosition.Y - tilePos.Y);
+
             return new int[] {index, tileArray[index], hFlip, vFlip};
         }
         else return new int[] {0, 0, 0, 0};
