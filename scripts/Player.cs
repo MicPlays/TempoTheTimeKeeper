@@ -16,6 +16,9 @@ public partial class Player : SolidObject
     private const float SLOPE_SPEED_FACTOR =  0.05078125f;
 
     public Sprite2D playerSprite;
+    //layer stuff
+    public int currentLayer;
+    public int visualLayer;
 
     //state variables
     private bool isGrounded = true;
@@ -37,6 +40,8 @@ public partial class Player : SolidObject
         heightRadius = 9;
 
         playerSprite = (Sprite2D)GetChild(0);
+        currentLayer = 0;
+        visualLayer = 0;
 
         //get player's sensors
         var sensors = this.FindChild("Sensors").GetChildren();
@@ -62,6 +67,7 @@ public partial class Player : SolidObject
 
     public override void _Process(double delta)
     {
+        GD.Print(currentLayer);
         //ground state
         if (isGrounded)
         {   
@@ -314,7 +320,7 @@ public partial class Player : SolidObject
     //push sensor collision process when airborne
     public void AirPushCollisionProcess(string sensorString)
     {
-        SolidTileData pushData = sensorTable[sensorString].CheckForTile();
+        SolidTileData pushData = sensorTable[sensorString].CheckForTile(currentLayer);
         if (pushData.distance < 0)
         {
             if (xSpeed > 0)
@@ -354,13 +360,13 @@ public partial class Player : SolidObject
             if (isVertical)
             {
                 activeSensor.Position = new Vector2(activeSensor.Position.X, activeSensor.Position.Y + groundSpeed);
-                data = activeSensor.CheckForTile();
+                data = activeSensor.CheckForTile(currentLayer);
                 activeSensor.Position = new Vector2(activeSensor.Position.X, activeSensor.Position.Y - groundSpeed);
             }
             else 
             {
                 activeSensor.Position = new Vector2(activeSensor.Position.X + groundSpeed, activeSensor.Position.Y);
-                data = activeSensor.CheckForTile();
+                data = activeSensor.CheckForTile(currentLayer);
                 activeSensor.Position = new Vector2(activeSensor.Position.X - groundSpeed, activeSensor.Position.Y);
             }
             
@@ -388,8 +394,8 @@ public partial class Player : SolidObject
         {
             if (goingDown)
             {
-                SolidTileData groundAData = sensorTable["A"].CheckForTile();
-                SolidTileData groundBData = sensorTable["B"].CheckForTile();
+                SolidTileData groundAData = sensorTable["A"].CheckForTile(currentLayer);
+                SolidTileData groundBData = sensorTable["B"].CheckForTile(currentLayer);
                 if (!(groundAData.distance >= -(ySpeed + 8) || groundBData.distance >= -(ySpeed + 8)))
                     groundCollision = false;
             }
@@ -438,8 +444,8 @@ public partial class Player : SolidObject
     //returns SolidTileData object.
     public SolidTileData GroundSensorCompetition()
     {
-        SolidTileData groundAData = sensorTable["A"].CheckForTile();
-        SolidTileData groundBData = sensorTable["B"].CheckForTile();
+        SolidTileData groundAData = sensorTable["A"].CheckForTile(currentLayer);
+        SolidTileData groundBData = sensorTable["B"].CheckForTile(currentLayer);
 
         if (groundAData.distance == groundBData.distance)
             return groundAData;
@@ -452,8 +458,8 @@ public partial class Player : SolidObject
     //like ground sensor competition, but for ceiling sensors
     public SolidTileData CeilingSensorCompetition()
     {
-        SolidTileData ceilingCData = sensorTable["C"].CheckForTile();
-        SolidTileData ceilingDData = sensorTable["D"].CheckForTile();
+        SolidTileData ceilingCData = sensorTable["C"].CheckForTile(currentLayer);
+        SolidTileData ceilingDData = sensorTable["D"].CheckForTile(currentLayer);
 
         if (ceilingCData.distance == ceilingDData.distance)
             return ceilingDData;
