@@ -15,13 +15,13 @@ public partial class Player : SolidObject
     private const float SLOPE_FACTOR = 0.125f;
     private const float SLOPE_SPEED_FACTOR =  0.05078125f;
 
-    public Sprite2D playerSprite;
-    //layer stuff
+    public AnimatedSprite2D playerSprite;
+
+    //player's current collision layer
     public int currentLayer;
-    public int visualLayer;
 
     //state variables
-    private bool isGrounded = true;
+    public bool isGrounded = true;
     private bool isJumping = false;
     private int controlLockTimer = 0;
     
@@ -37,11 +37,10 @@ public partial class Player : SolidObject
         groundAngle = 0f;
         groundSpeed = 0f;
         widthRadius = 9;
-        heightRadius = 9;
+        heightRadius = 20;
 
-        playerSprite = (Sprite2D)GetChild(0);
+        playerSprite = (AnimatedSprite2D)GetChild(1);
         currentLayer = 0;
-        visualLayer = 0;
 
         //get player's sensors
         var sensors = this.FindChild("Sensors").GetChildren();
@@ -63,11 +62,11 @@ public partial class Player : SolidObject
         sensorTable["E"].Position = new Vector2(-pushRadius, 0);
         sensorTable["F"].Position = new Vector2(pushRadius, 0);
 
+        playerSprite.Play("windyidle");
     }
 
     public override void _Process(double delta)
     {
-        GD.Print(currentLayer);
         //ground state
         if (isGrounded)
         {   
@@ -321,7 +320,7 @@ public partial class Player : SolidObject
     public void AirPushCollisionProcess(string sensorString)
     {
         SolidTileData pushData = sensorTable[sensorString].CheckForTile(currentLayer);
-        if (pushData.distance < 0)
+        if (pushData.distance <= 0)
         {
             if (xSpeed > 0)
                 Position = new Vector2(Position.X + pushData.distance, Position.Y);

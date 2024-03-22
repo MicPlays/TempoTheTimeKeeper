@@ -81,7 +81,7 @@ public partial class Sensor : Node2D
                 if (newDistanceData[3] > 0)
                     vFlip = true;
                 float distance = GetDistance(newIndex, newDetectedHeight, newGridCell, hFlip, vFlip);
-                float angle = (float)tileMap.GetCellTileData(layer, newGridCell).GetCustomData("angle");
+                float angle = GetAngle(layer, newGridCell, hFlip, vFlip);
                 bool flagged = (bool)tileMap.GetCellTileData(layer, newGridCell).GetCustomData("flagged");
                 return new SolidTileData(distance, angle, flagged);
             }
@@ -135,7 +135,7 @@ public partial class Sensor : Node2D
                 if (newDistanceData[3] > 0)
                     vFlip = true;
                 float distance = GetDistance(newIndex, newDetectedHeight, newGridCell, hFlip, vFlip);
-                float angle = (float)tileMap.GetCellTileData(layer, newGridCell).GetCustomData("angle");
+                float angle = GetAngle(layer, newGridCell, hFlip, vFlip);
                 bool flagged = (bool)tileMap.GetCellTileData(layer, newGridCell).GetCustomData("flagged");
                 return new SolidTileData(distance, angle, flagged);
             }
@@ -148,7 +148,7 @@ public partial class Sensor : Node2D
                     vFlip = true;
                 float[] data = new float[2];
                 float distance = GetDistance(index, detectedHeight, currentGridCell, hFlip, vFlip);
-                float angle = (float)tileMap.GetCellTileData(layer, currentGridCell).GetCustomData("angle");
+                float angle = GetAngle(layer, currentGridCell, hFlip, vFlip);
                 bool flagged = (bool)tileMap.GetCellTileData(layer, currentGridCell).GetCustomData("flagged");
                 return new SolidTileData(distance, angle, flagged);
             }
@@ -162,7 +162,7 @@ public partial class Sensor : Node2D
             if (distanceData[3] > 0)
                 vFlip = true;
             float distance = GetDistance(index, detectedHeight, currentGridCell, hFlip, vFlip);
-            float angle = (float)tileMap.GetCellTileData(layer, currentGridCell).GetCustomData("angle");
+            float angle = GetAngle(layer, currentGridCell, hFlip, vFlip);
             bool flagged = (bool)tileMap.GetCellTileData(layer, currentGridCell).GetCustomData("flagged");
             return new SolidTileData(distance, angle, flagged);
         }
@@ -220,6 +220,8 @@ public partial class Sensor : Node2D
                     tileArray = (int[])sourceTileData.GetCustomData("height_array");
                     isHeight = true;
                 }
+
+
             }
             //otherwise just get height/width array
             else 
@@ -300,8 +302,34 @@ public partial class Sensor : Node2D
             return tileSurface.Y - GlobalPosition.Y;
         }
     }
+
+    //get angle of tile, if tile is an alternative tile, calculates angle from source tile angle
+    public float GetAngle(int layer, Vector2I gridSquare, bool hFlip, bool vFlip)
+    {
+        int tileID = tileMap.GetCellAlternativeTile(layer, gridSquare);
+        if (tileID != 0)
+            {
+                int tileSourceID = tileMap.GetCellSourceId(layer, gridSquare);
+                TileSetAtlasSource atlas = (TileSetAtlasSource)tileMap.TileSet.GetSource(tileSourceID);
+
+                Vector2I tileAtlasCoords = tileMap.GetCellAtlasCoords(layer, gridSquare);
+                TileData sourceTileData = atlas.GetTileData(tileAtlasCoords, 0);
+
+                float angle = (float)sourceTileData.GetCustomData("angle");
+                if (hFlip && vFlip)
+                    return angle + 180;
+                else if (hFlip)
+                    return 360f - angle;
+                else if (vFlip) 
+                    return 180 - angle;
+                else return (float)tileMap.GetCellTileData(layer, gridSquare).GetCustomData("angle");
+            }
+        else return (float)tileMap.GetCellTileData(layer, gridSquare).GetCustomData("angle");
+    }
+
     public override void _Draw()
     {
+        
         //normal draw
         //if (mode == 0)
         //{
