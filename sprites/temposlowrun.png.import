@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b375bci8qxmab"
-path="res://.godot/imported/tempowindyidle.png-d46da3bb5135ca39a5b3f0d01f14822d.ctex"
+uid="uid://cr5mhrkiau3oh"
+path="res://.godot/imported/temposlowrun.png-e6e6c8b08f28a2b9dd23ca2e6214bdaa.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/tempowindyidle.png"
-dest_files=["res://.godot/imported/tempowindyidle.png-d46da3bb5135ca39a5b3f0d01f14822d.ctex"]
+source_file="res://sprites/temposlowrun.png"
+dest_files=["res://.godot/imported/temposlowrun.png-e6e6c8b08f28a2b9dd23ca2e6214bdaa.ctex"]
 
 [params]
 

@@ -29,6 +29,9 @@ public partial class Player : SolidObject
     public int pushRadius = 10;
     Dictionary<string, Sensor> sensorTable;
 
+    //variable running speed vars
+    private int currentFrame = 0;
+
     public override void _Ready()
     {
         //set player object properties (might make export vars later)
@@ -62,7 +65,6 @@ public partial class Player : SolidObject
         sensorTable["E"].Position = new Vector2(-pushRadius, 0);
         sensorTable["F"].Position = new Vector2(pushRadius, 0);
 
-        playerSprite.Play("windyidle");
     }
 
     public override void _Process(double delta)
@@ -70,6 +72,27 @@ public partial class Player : SolidObject
         //ground state
         if (isGrounded)
         {   
+            //placeholder animation code
+            if (groundSpeed != 0)
+            {
+                if (currentFrame == 0)
+                    playerSprite.Play("jog");
+                if (currentFrame != playerSprite.Frame)
+                {
+                    playerSprite.SpeedScale = Mathf.Floor(Mathf.Max(1, Mathf.Abs(groundSpeed)));
+                    currentFrame = playerSprite.Frame;
+                }
+                if (groundSpeed < 0)
+                    playerSprite.FlipH = true;
+                else playerSprite.FlipH = false;
+            }
+            else 
+            {
+                playerSprite.Play("windyidle");
+                playerSprite.SpeedScale = 1.0f;
+                currentFrame = 0;
+            }
+
             //adjust ground speed according to slope factor 
             if (sensorTable["A"].direction != "up" && groundSpeed != 0)
                 groundSpeed -= SLOPE_FACTOR * Mathf.Sin(Mathf.DegToRad(groundAngle)); 

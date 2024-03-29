@@ -29,6 +29,7 @@ metadata/_edit_lock_ = true
 [node name="LayerSwitcher" parent="." instance=ExtResource("3_ftwxp")]
 position = Vector2(705, 154)
 groundedOnly = true
+drawDebug = true
 WidthRadius = 15
 HeightRadius = 25
 sideA = 1
@@ -36,6 +37,7 @@ visualA = 2
 
 [node name="LayerSwitcher2" parent="." instance=ExtResource("3_ftwxp")]
 position = Vector2(817, 216)
+drawDebug = true
 WidthRadius = 30
 HeightRadius = 40
 sideA = 1
@@ -43,5 +45,6 @@ visualA = 2
 
 [node name="LayerSwitcher3" parent="." instance=ExtResource("3_ftwxp")]
 position = Vector2(589, 217)
+drawDebug = true
 WidthRadius = 30
 HeightRadius = 40
