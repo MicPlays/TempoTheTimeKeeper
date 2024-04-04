@@ -112,6 +112,8 @@ public partial class Player : SolidObject
                     SwitchGroundCollisionMode(0);
                     SwitchPushCollisionMode(0);
                     isJumping = true;
+                    playerSprite.Play("liftoff");
+                    playerSprite.SpeedScale = 1.0f;
                 }
             }
             //if jumping, immediately go airborne, do not execute grounded 
@@ -216,6 +218,9 @@ public partial class Player : SolidObject
                 else 
                 {
                     isGrounded = false;
+                    playerSprite.Play("airtransition");
+                    playerSprite.SpeedScale = 1.0f;
+                    currentFrame = 0;
                     SwitchGroundCollisionMode(0);
                     SwitchPushCollisionMode(0);
                 }
@@ -266,8 +271,17 @@ public partial class Player : SolidObject
                     if (ySpeed < -4)
                         ySpeed = -4;
                     isJumping = false;
+                    playerSprite.Play("airtransition");
+                    playerSprite.SpeedScale = 1.0f;
+                    currentFrame = 0;
                 }
             }
+
+            if (playerSprite.Animation == "airtransition" && playerSprite.Frame == 1)
+                playerSprite.Play("fall");
+            if (playerSprite.Animation == "liftoff" && playerSprite.Frame == 2)
+                playerSprite.Play("airtime");
+
             //input movement
             if (Input.IsActionPressed("left"))
                 xSpeed -= AIR_ACC_SPEED;
@@ -336,6 +350,8 @@ public partial class Player : SolidObject
                 AirGroundCollisionProcess(true);
             }
             
+            if ((playerSprite.Animation == "airtime" || playerSprite.Animation == "liftoff") && airAngle >= 180f && (airAngle <= 360f || airAngle == 0))
+                playerSprite.Play("airtransition");
         }
     }
 

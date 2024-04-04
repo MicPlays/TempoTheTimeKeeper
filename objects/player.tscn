@@ -1,10 +1,46 @@
-[gd_scene load_steps=37 format=3 uid="uid://dircvqlc5m7yk"]
+[gd_scene load_steps=52 format=3 uid="uid://dircvqlc5m7yk"]
 
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_73kcx"]
 [ext_resource type="PackedScene" uid="uid://cecegkc1uohgb" path="res://components/sensor.tscn" id="2_7vpx6"]
 [ext_resource type="Texture2D" uid="uid://b375bci8qxmab" path="res://sprites/tempowindyidle.png" id="2_wlp5u"]
 [ext_resource type="Texture2D" uid="uid://qgxcg4p6l2le" path="res://icon.svg" id="3_15yha"]
 [ext_resource type="Texture2D" uid="uid://cr5mhrkiau3oh" path="res://sprites/temposlowrun.png" id="3_ecbmo"]
+[ext_resource type="Texture2D" uid="uid://djuooc0a0sagi" path="res://sprites/tempoairtime.png" id="3_hh57d"]
+[ext_resource type="Texture2D" uid="uid://c35n648vedulw" path="res://sprites/tempoairtransition.png" id="4_wbhi5"]
+[ext_resource type="Texture2D" uid="uid://dcsj3cod1xuf5" path="res://sprites/tempofall.png" id="5_l3dsb"]
+[ext_resource type="Texture2D" uid="uid://bntu7arud0ji5" path="res://sprites/tempoliftoff.png" id="5_m1app"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ous6u"]
+atlas = ExtResource("3_hh57d")
+region = Rect2(0, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_n5wnf"]
+atlas = ExtResource("3_hh57d")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iqpiu"]
+atlas = ExtResource("3_hh57d")
+region = Rect2(100, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y7pjf"]
+atlas = ExtResource("4_wbhi5")
+region = Rect2(0, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ew276"]
+atlas = ExtResource("4_wbhi5")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vmwjt"]
+atlas = ExtResource("5_l3dsb")
+region = Rect2(0, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_f6y4c"]
+atlas = ExtResource("5_l3dsb")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y2cg4"]
+atlas = ExtResource("5_l3dsb")
+region = Rect2(100, 0, 50, 50)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_koh5g"]
 atlas = ExtResource("3_ecbmo")
@@ -53,6 +89,18 @@ region = Rect2(300, 0, 30, 50)
 [sub_resource type="AtlasTexture" id="AtlasTexture_hprru"]
 atlas = ExtResource("3_ecbmo")
 region = Rect2(330, 0, 30, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uy2f7"]
+atlas = ExtResource("5_m1app")
+region = Rect2(0, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a1evt"]
+atlas = ExtResource("5_m1app")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2w13e"]
+atlas = ExtResource("5_m1app")
+region = Rect2(100, 0, 50, 50)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4pcyl"]
 atlas = ExtResource("2_wlp5u")
@@ -128,6 +176,45 @@ region = Rect2(425, 0, 25, 50)
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_u4es1"]
 animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ous6u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_n5wnf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iqpiu")
+}],
+"loop": true,
+"name": &"airtime",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y7pjf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ew276")
+}],
+"loop": true,
+"name": &"airtransition",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vmwjt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_f6y4c")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y2cg4")
+}],
+"loop": true,
+"name": &"fall",
+"speed": 8.0
+}, {
 "frames": [],
 "loop": true,
 "name": &"idle",
@@ -173,6 +260,20 @@ animations = [{
 "loop": true,
 "name": &"jog",
 "speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uy2f7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a1evt")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2w13e")
+}],
+"loop": false,
+"name": &"liftoff",
+"speed": 8.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -247,8 +348,7 @@ metadata/_edit_lock_ = true
 position = Vector2(0, -1.19209e-07)
 scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_u4es1")
-animation = &"jog"
-frame_progress = 0.483262
+animation = &"airtransition"
 
 [node name="Sensors" type="Node2D" parent="."]
 
