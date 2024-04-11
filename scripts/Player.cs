@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class Player : SolidObject
+public partial class Player : GameObject
 {
     //constants
     private const float ACC_SPEED = 0.046875f;
@@ -15,8 +15,13 @@ public partial class Player : SolidObject
     private const float SLOPE_FACTOR = 0.125f;
     private const float SLOPE_SPEED_FACTOR =  0.05078125f;
 
-    public AnimatedSprite2D playerSprite;
+    //Components and their NodePaths
+    [Export]
+    public NodePath sensorContainerPath;
+    [Export]
+    public NodePath spritePath;
 
+    private AnimatedSprite2D playerSprite;
     //player's current collision layer
     public int currentLayer;
 
@@ -32,6 +37,9 @@ public partial class Player : SolidObject
     //variable running speed vars
     private int currentFrame = 0;
 
+    //player stats
+    public int noteCount = 0;
+
     public override void _Ready()
     {
         //set player object properties (might make export vars later)
@@ -42,11 +50,17 @@ public partial class Player : SolidObject
         widthRadius = 9;
         heightRadius = 20;
 
-        playerSprite = (AnimatedSprite2D)GetChild(1);
+        //get player components
+        playerSprite = GetNode<AnimatedSprite2D>(spritePath);
+        hitbox = GetNode<Area2D>(hitboxPath);
+        hitboxRect = hitbox.GetChild<CollisionShape2D>(0);
+
+        hitbox.AreaEntered += OnHitboxEnter;
+
         currentLayer = 0;
 
         //get player's sensors
-        var sensors = this.FindChild("Sensors").GetChildren();
+        var sensors = GetNode(sensorContainerPath).GetChildren();
         sensorTable = new Dictionary<string, Sensor>
         {
             { "A", (Sensor)sensors[0] },
@@ -586,6 +600,17 @@ public partial class Player : SolidObject
             sensorTable["A"].direction = "left";
             sensorTable["B"].Position = new Vector2(-heightRadius, -widthRadius);
             sensorTable["B"].direction = "left";
+        }
+    }
+
+    public void OnHitboxEnter(Area2D other)
+    {
+        GameObject otherObject = other.GetParent<GameObject>();
+        if (otherObject == null) return;
+        
+        if (otherObject.hitboxReaction == ObjectType.RoutineIncrement)
+        {
+            ((RoutineGameObject)otherObject).IncrementRoutine();
         }
     }
 }

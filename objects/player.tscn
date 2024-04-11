@@ -3,12 +3,14 @@
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_73kcx"]
 [ext_resource type="PackedScene" uid="uid://cecegkc1uohgb" path="res://components/sensor.tscn" id="2_7vpx6"]
 [ext_resource type="Texture2D" uid="uid://b375bci8qxmab" path="res://sprites/tempowindyidle.png" id="2_wlp5u"]
-[ext_resource type="Texture2D" uid="uid://qgxcg4p6l2le" path="res://icon.svg" id="3_15yha"]
 [ext_resource type="Texture2D" uid="uid://cr5mhrkiau3oh" path="res://sprites/temposlowrun.png" id="3_ecbmo"]
 [ext_resource type="Texture2D" uid="uid://djuooc0a0sagi" path="res://sprites/tempoairtime.png" id="3_hh57d"]
 [ext_resource type="Texture2D" uid="uid://c35n648vedulw" path="res://sprites/tempoairtransition.png" id="4_wbhi5"]
 [ext_resource type="Texture2D" uid="uid://dcsj3cod1xuf5" path="res://sprites/tempofall.png" id="5_l3dsb"]
 [ext_resource type="Texture2D" uid="uid://bntu7arud0ji5" path="res://sprites/tempoliftoff.png" id="5_m1app"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sirig"]
+size = Vector2(11, 33)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ous6u"]
 atlas = ExtResource("3_hh57d")
@@ -337,18 +339,22 @@ animations = [{
 
 [node name="Player" type="Node2D"]
 script = ExtResource("1_73kcx")
+sensorContainerPath = NodePath("Sensors")
+spritePath = NodePath("PlayerSprite")
+hitboxReaction = 4
+hitboxPath = NodePath("Hitbox")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-visible = false
-scale = Vector2(0.15, 0.148)
-texture = ExtResource("3_15yha")
-metadata/_edit_lock_ = true
+[node name="Hitbox" type="Area2D" parent="."]
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0.5, 1.5)
+shape = SubResource("RectangleShape2D_sirig")
+
+[node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -1.19209e-07)
 scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_u4es1")
-animation = &"airtransition"
+animation = &"windyidle"
 
 [node name="Sensors" type="Node2D" parent="."]
 
