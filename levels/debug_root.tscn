@@ -1,0 +1,196 @@
+[gd_scene load_steps=7 format=3 uid="uid://befiqwdkkto3g"]
+
+[ext_resource type="Script" path="res://scripts/GameController.cs" id="1_hn4vv"]
+[ext_resource type="TileSet" uid="uid://d3yxyvce56afc" path="res://tilesets/debugTileset.tres" id="2_tnvqv"]
+[ext_resource type="PackedScene" uid="uid://dircvqlc5m7yk" path="res://objects/player.tscn" id="3_32nit"]
+[ext_resource type="PackedScene" uid="uid://dg62a811grvq5" path="res://objects/gamehud.tscn" id="4_cxx7y"]
+[ext_resource type="PackedScene" uid="uid://54ipwnic1bc0" path="res://objects/layer_switcher.tscn" id="5_0rd7q"]
+[ext_resource type="PackedScene" uid="uid://bmlbgok634e1w" path="res://objects/music_note.tscn" id="6_boht8"]
+
+[node name="DebugRoot" type="Node2D"]
+script = ExtResource("1_hn4vv")
+playerPath = NodePath("Player")
+
+[node name="TileMap" type="TileMap" parent="." groups=["tilemaps"]]
+tile_set = ExtResource("2_tnvqv")
+format = 2
+layer_0/name = "collision1"
+layer_0/navigation_enabled = false
+layer_0/tile_data = PackedInt32Array(1048577, 0, 0, 1048578, 0, 0, 1048579, 0, 0, 1048580, 0, 0, 1048581, 0, 0, 1048582, 0, 0, 1048583, 0, 0, 1048584, 0, 0, 1048585, 0, 0, 1048586, 0, 0, 1048595, 0, 0, 1048596, 0, 0, 1048601, 0, 0, 1048602, 0, 0, 1048603, 0, 0, 1048604, 0, 0, 1048605, 0, 0, 1048606, 0, 0, 1048607, 0, 0, 1048608, 0, 0, 1048609, 0, 0, 1048610, 0, 0, 1048611, 0, 0, 1048612, 0, 0, 1048613, 0, 0, 1048614, 0, 0, 1048615, 0, 0, 1048616, 0, 0, 1048617, 0, 0, 1048618, 0, 0, 1048619, 0, 0, 1048620, 0, 0, 1048621, 0, 0, 1048622, 0, 0, 1048623, 0, 0, 1048624, 0, 0, 1048625, 0, 0, 1048626, 0, 0, 1048627, 0, 0, 1048594, 0, 196608, 1048593, 0, 196608, 1048592, 0, 196608, 1048591, 0, 196608, 1048590, 0, 196608, 1048589, 0, 196608, 1048588, 0, 196608, 1048587, 0, 196608, 1114113, 0, 0, 1114114, 0, 0, 1114115, 0, 0, 1114116, 0, 0, 1114117, 0, 0, 1114118, 0, 0, 1114119, 0, 0, 1114120, 0, 0, 1114121, 0, 0, 1114122, 0, 0, 1114123, 0, 0, 1114124, 0, 0, 1114125, 0, 0, 1114126, 0, 0, 1114127, 0, 0, 1114128, 0, 0, 1114129, 0, 0, 1114130, 0, 0, 1114131, 0, 0, 1114132, 0, 0, 1114133, 0, 0, 1114134, 0, 0, 1114135, 0, 0, 1114136, 0, 0, 1179649, 0, 0, 1179650, 0, 0, 1179651, 0, 0, 1179652, 0, 0, 1179653, 0, 0, 1179654, 0, 0, 1179655, 0, 0, 1179656, 0, 0, 1179657, 0, 0, 1179658, 0, 0, 1179659, 0, 0, 1179660, 0, 0, 1179661, 0, 0, 1179662, 0, 0, 1179663, 0, 0, 1179664, 0, 0, 1179665, 0, 0, 1179666, 0, 0, 1179667, 0, 0, 1179668, 0, 0, 1179669, 0, 0, 1179670, 0, 0, 1179671, 0, 0, 1179672, 0, 0, 1114162, 0, 0, 1114161, 0, 0, 1114160, 0, 0, 1114159, 0, 0, 1114158, 0, 0, 1114157, 0, 0, 1114156, 0, 0, 1114155, 0, 0, 1114154, 0, 0, 1114153, 0, 0, 1114152, 0, 0, 1114151, 0, 0, 1114150, 0, 0, 1114149, 0, 0, 1114148, 0, 0, 1114147, 0, 0, 1114146, 0, 0, 1114145, 0, 0, 1114144, 0, 0, 1114143, 0, 0, 1114142, 0, 0, 1114141, 0, 0, 1114140, 0, 0, 1114139, 0, 0, 1114138, 0, 0, 1114137, 0, 0, 1179676, 0, 0, 1179677, 0, 0, 1179678, 0, 0, 1179679, 0, 0, 1179680, 0, 0, 1179681, 0, 0, 1179682, 0, 0, 1179683, 0, 0, 1179689, 0, 0, 1179688, 0, 0, 1179687, 0, 0, 1179686, 0, 0, 1179685, 0, 0, 1179684, 0, 0, 1179675, 0, 0, 1179674, 0, 0, 1179673, 0, 0, 1179695, 0, 0, 1179694, 0, 0, 1179693, 0, 0, 1179692, 0, 0, 1179691, 0, 0, 1179690, 0, 0, 1114163, 0, 0, 1179698, 0, 0, 1179699, 0, 0, 1179697, 0, 0, 1179696, 0, 0, 983085, 0, 2, 983086, 65536, 2, 917550, 131072, 2, 917551, 196608, 2, 852015, 262144, 2, 786479, 327680, 2, 983084, 983040, 1, 524331, 983040, 196609, 524332, 983040, 131073, 589865, 131072, 196610, 589870, 131072, 131074, 524334, 65536, 131074, 524329, 65536, 196610, 524333, 0, 131074, 524330, 0, 196610, 589871, 196608, 131074, 589864, 196608, 196610, 720943, 327680, 131074, 655407, 262144, 131074, 983087, 0, 0, 983088, 0, 0, 917552, 0, 0, 852016, 0, 0, 786480, 0, 0, 720944, 0, 0, 655408, 0, 0, 589872, 0, 0, 524336, 0, 0, 524335, 0, 0, 458800, 0, 0, 458799, 0, 0, 458798, 0, 0, 458797, 0, 0, 458796, 0, 0, 458795, 0, 0, 458794, 0, 0, 458793, 0, 0, 458792, 0, 0, 524328, 0, 0, 524327, 0, 0, 589863, 0, 0, 458791, 0, 0, 1048628, 0, 0, 1114164, 0, 0, 1114165, 0, 0, 1179701, 0, 0, 1179702, 0, 0, 1179703, 0, 0, 1179704, 0, 0, 1179705, 0, 0, 1179706, 0, 0, 1179707, 0, 0, 1179708, 0, 0, 1179709, 0, 0, 1179710, 0, 0, 1179711, 0, 0, 1179712, 0, 0, 1114177, 0, 0, 1114176, 0, 0, 1179700, 0, 0, 1048629, 0, 0, 1048630, 0, 0, 1048631, 0, 0, 1048632, 0, 0, 1048633, 0, 0, 1048634, 0, 0, 1048635, 0, 0, 1048636, 0, 0, 1048637, 0, 0, 1048638, 0, 0, 1048639, 0, 0, 1048640, 0, 0, 1048641, 0, 0, 1048642, 0, 0, 1048643, 0, 0, 1114172, 0, 0, 1114171, 0, 0, 1114170, 0, 0, 1114169, 0, 0, 1114168, 0, 0, 1114167, 0, 0, 1114166, 0, 0, 1114173, 0, 0, 1114174, 0, 0, 1114175, 0, 0, 1114178, 0, 0, 1114179, 0, 0, 1179715, 0, 0, 1179714, 0, 0, 1179713, 0, 0, 655400, 262144, 196610, 655399, 0, 0, 786459, 0, 0, 786460, 0, 0, 786461, 0, 0, 524324, 0, 0, 524323, 0, 0, 524325, 0, 0, 524326, 0, 0, 524337, 0, 0, 524338, 0, 0, 524339, 0, 0, 524340, 0, 0, 786489, 0, 0, 786490, 0, 0, 786491, 0, 0, 1048600, 0, 0, 1048597, 0, 0, 1048598, 0, 0, 1048599, 0, 0)
+layer_1/name = "collision2"
+layer_1/z_index = 1
+layer_1/navigation_enabled = false
+layer_1/tile_data = PackedInt32Array(1048596, 0, 0, 1048595, 0, 0, 1048594, 0, 0, 1048593, 0, 0, 1048592, 0, 0, 1048591, 0, 0, 1048590, 0, 0, 1048589, 0, 0, 1048588, 0, 0, 1048587, 0, 0, 1048586, 0, 0, 1048585, 0, 0, 1114121, 0, 0, 1114122, 0, 0, 1114123, 0, 0, 1114124, 0, 0, 1114125, 0, 0, 1114126, 0, 0, 1114127, 0, 0, 1114128, 0, 0, 1114129, 0, 0, 1114130, 0, 0, 1114131, 0, 0, 1114132, 0, 0, 1179668, 0, 0, 1179667, 0, 0, 1179662, 0, 0, 1179661, 0, 0, 1179660, 0, 0, 1179659, 0, 0, 1179658, 0, 0, 1179657, 0, 0, 1179666, 0, 0, 1179665, 0, 0, 1179664, 0, 0, 1179663, 0, 0, 1048583, 0, 0, 1048584, 0, 0, 1048582, 0, 0, 1048581, 0, 0, 1048580, 0, 0, 1048579, 0, 0, 1048578, 0, 0, 1048577, 0, 0, 1114113, 0, 0, 1114114, 0, 0, 1114115, 0, 0, 1114116, 0, 0, 1114117, 0, 0, 1114118, 0, 0, 1114119, 0, 0, 1114120, 0, 0, 1179649, 0, 0, 1179650, 0, 0, 1179651, 0, 0, 1179652, 0, 0, 1179653, 0, 0, 1179654, 0, 0, 1179655, 0, 0, 1179656, 0, 0, 1048597, 0, 0, 1048598, 0, 0, 1048599, 0, 0, 1048600, 0, 0, 1114136, 0, 0, 1114135, 0, 0, 1114134, 0, 0, 1114133, 0, 0, 1179672, 0, 0, 1179671, 0, 0, 1179670, 0, 0, 1179669, 0, 0, 1048601, 0, 0, 1114137, 0, 0, 1179673, 0, 0, 1179674, 0, 0, 1179675, 0, 0, 1179676, 0, 0, 1179677, 0, 0, 1179678, 0, 0, 1179679, 0, 0, 1179680, 0, 0, 1179681, 0, 0, 1179682, 0, 0, 1179683, 0, 0, 1179684, 0, 0, 1179685, 0, 0, 1179686, 0, 0, 1179687, 0, 0, 1114152, 0, 0, 1114153, 0, 0, 1114154, 0, 0, 1114155, 0, 0, 1114156, 0, 0, 1114157, 0, 0, 1179694, 0, 0, 1179695, 0, 0, 1179696, 0, 0, 1179697, 0, 0, 1179698, 0, 0, 1179699, 0, 0, 1179693, 0, 0, 1179692, 0, 0, 1179691, 0, 0, 1179690, 0, 0, 1179689, 0, 0, 1179688, 0, 0, 1114142, 0, 0, 1114141, 0, 0, 1114140, 0, 0, 1114139, 0, 0, 1114138, 0, 0, 1048602, 0, 0, 1048603, 0, 0, 1048604, 0, 0, 1048605, 0, 0, 1048606, 0, 0, 1048607, 0, 0, 1048608, 0, 0, 1048609, 0, 0, 1048610, 0, 0, 1048611, 0, 0, 1048612, 0, 0, 1048613, 0, 0, 1048614, 0, 0, 1048615, 0, 0, 1048616, 0, 0, 1048617, 0, 0, 1048618, 0, 0, 1048619, 0, 0, 1048620, 0, 0, 1114158, 0, 0, 1114159, 0, 0, 1048623, 0, 0, 1048624, 0, 0, 1048625, 0, 0, 1048626, 0, 0, 1048622, 0, 0, 1048621, 0, 0, 1114150, 0, 0, 1114149, 0, 0, 1114148, 0, 0, 1114147, 0, 0, 1114146, 0, 0, 1114145, 0, 0, 1114144, 0, 0, 1114143, 0, 0, 1114151, 0, 0, 1048627, 0, 0, 1114161, 0, 0, 1114160, 0, 0, 1114162, 0, 0, 1114163, 0, 0, 655399, 0, 0, 589863, 0, 0, 524327, 0, 0, 524336, 0, 0, 589872, 0, 0, 524335, 0, 0, 524328, 0, 0, 983083, 983040, 65537, 589871, 196608, 131074, 589870, 131072, 131074, 655407, 262144, 131074, 655408, 0, 0, 458791, 0, 0, 458792, 0, 0, 458793, 0, 0, 458794, 0, 0, 458795, 0, 0, 458796, 0, 0, 458797, 0, 0, 458798, 0, 0, 458799, 0, 0, 458800, 0, 0, 524332, 983040, 131073, 524331, 983040, 196609, 589865, 131072, 196610, 589864, 196608, 196610, 524329, 65536, 196610, 524330, 0, 196610, 524333, 0, 131074, 524334, 65536, 131074, 655400, 262144, 196610, 720936, 327680, 196610, 852008, 262144, 65538, 983081, 65536, 65538, 917545, 131072, 65538, 917544, 196608, 65538, 720935, 0, 0, 786471, 0, 0, 852007, 0, 0, 917543, 0, 0, 983079, 0, 0, 983080, 0, 0, 983082, 0, 65538, 786472, 327680, 65538, 786459, 0, 0, 786460, 0, 0, 786461, 0, 0, 524323, 0, 0, 524324, 0, 0, 524325, 0, 0, 524326, 0, 0, 524337, 0, 0, 524338, 0, 0, 524339, 0, 0, 524340, 0, 0, 786489, 0, 0, 786490, 0, 0, 786491, 0, 0)
+metadata/layer = 0
+
+[node name="Player" parent="." instance=ExtResource("3_32nit")]
+light_mask = 1025
+position = Vector2(541, 235)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(2, 2)
+metadata/_edit_lock_ = true
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HUD" parent="CanvasLayer" instance=ExtResource("4_cxx7y")]
+metadata/_edit_lock_ = true
+
+[node name="LayerSwitchers" type="Node2D" parent="."]
+
+[node name="LayerSwitcher" parent="LayerSwitchers" instance=ExtResource("5_0rd7q")]
+position = Vector2(705, 154)
+groundedOnly = true
+WidthRadius = 15
+HeightRadius = 25
+sideA = 1
+visualA = 2
+
+[node name="LayerSwitcher2" parent="LayerSwitchers" instance=ExtResource("5_0rd7q")]
+position = Vector2(817, 216)
+WidthRadius = 30
+HeightRadius = 40
+sideA = 1
+visualA = 2
+
+[node name="LayerSwitcher3" parent="LayerSwitchers" instance=ExtResource("5_0rd7q")]
+position = Vector2(589, 217)
+WidthRadius = 30
+HeightRadius = 40
+
+[node name="MusicNotes" type="Node2D" parent="."]
+
+[node name="MusicNote" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(215, 212)
+
+[node name="MusicNote2" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(233, 214)
+
+[node name="MusicNote3" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(278, 204)
+
+[node name="MusicNote4" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(260, 213)
+
+[node name="MusicNote5" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(242, 193)
+
+[node name="MusicNote6" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(192, 192)
+
+[node name="MusicNote7" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(173, 226)
+
+[node name="MusicNote8" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(142, 221)
+
+[node name="MusicNote9" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(161, 204)
+
+[node name="MusicNote10" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(149, 185)
+
+[node name="MusicNote11" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(206, 170)
+
+[node name="MusicNote12" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(178, 172)
+
+[node name="MusicNote13" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(226, 172)
+
+[node name="MusicNote14" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(223, 231)
+
+[node name="MusicNote15" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(261, 173)
+
+[node name="MusicNote16" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(221, 187)
+
+[node name="MusicNote17" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(275, 189)
+
+[node name="MusicNote18" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(270, 233)
+
+[node name="MusicNote19" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(300, 228)
+
+[node name="MusicNote20" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(304, 200)
+
+[node name="MusicNote21" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(298, 175)
+
+[node name="MusicNote22" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(242, 148)
+
+[node name="MusicNote23" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(271, 146)
+
+[node name="MusicNote24" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(197, 140)
+
+[node name="MusicNote25" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(173, 144)
+
+[node name="MusicNote26" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(141, 159)
+
+[node name="MusicNote27" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(190, 154)
+
+[node name="MusicNote28" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(218, 148)
+
+[node name="MusicNote29" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(225, 126)
+
+[node name="MusicNote30" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(244, 225)
+
+[node name="MusicNote31" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(186, 228)
+
+[node name="MusicNote32" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(198, 206)
+
+[node name="MusicNote33" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(184, 204)
+
+[node name="MusicNote34" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(173, 190)
+
+[node name="MusicNote35" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(160, 176)
+
+[node name="MusicNote36" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(166, 155)
+
+[node name="MusicNote37" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(243, 178)
+
+[node name="MusicNote38" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(251, 157)
+
+[node name="MusicNote39" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(229, 159)
+
+[node name="MusicNote40" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(204, 153)
+
+[node name="MusicNote41" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(280, 172)
+
+[node name="MusicNote42" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(285, 157)
+
+[node name="MusicNote43" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(304, 160)
+
+[node name="MusicNote44" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(288, 141)
+
+[node name="MusicNote45" parent="MusicNotes" instance=ExtResource("6_boht8")]
+position = Vector2(256, 132)

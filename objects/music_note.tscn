@@ -136,7 +136,6 @@ sprite_frames = SubResource("SpriteFrames_8ihc8")
 animation = &"bounce"
 
 [node name="Hitbox" type="Area2D" parent="."]
-visible = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 visible = false

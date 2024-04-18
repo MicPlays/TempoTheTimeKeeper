@@ -22,8 +22,9 @@ public partial class MusicNoteFloat : RoutineGameObject
         playerRef.noteCount++;
         HUD.Instance.SetNoteCount(playerRef.noteCount);
         GameController.Instance.AddScore(10);
-        sprite.Play("burst");
         sprite.AnimationFinished += OnBurst;
+        sprite.Play("burst");
+        
     }
 
     public void OnBurst()
