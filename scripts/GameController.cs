@@ -1,10 +1,14 @@
 using Godot;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 public partial class GameController : Node2D
 {
     [Export]
     public NodePath playerPath;
+    [Export]
+    public NodePath layerSwitcherContainerPath;
     private static Player playerRef;
     private static bool timerActive;
     private static double timeSec;
@@ -18,6 +22,13 @@ public partial class GameController : Node2D
         Instance = this;
         playerRef = GetNode<Player>(playerPath);
         timerActive = true;
+        var layerSwitchNodes = GetNode<Node2D>(layerSwitcherContainerPath).GetChildren();
+        foreach (var node in layerSwitchNodes)
+        {
+            LayerSwitcher layerSwitcher = (LayerSwitcher)node;
+            layerSwitcher.player = playerRef;
+        }
+
     }
 
     public Player GetPlayer()

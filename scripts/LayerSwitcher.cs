@@ -4,6 +4,10 @@ using System;
 [Tool]
 public partial class LayerSwitcher : Node2D
 {
+    enum Orientation
+    { Vertical, Horizontal };
+    enum Side
+    { A, B };
     //toggle to only switch layer if player is grounded
     [Export]
     public bool groundedOnly;
@@ -15,9 +19,9 @@ public partial class LayerSwitcher : Node2D
     public bool drawDebug = false;
 
     //flag to store the side of the layer switcher the player is on (true = left/up, false = right/down)
-    private bool currentSide;
-    //which direction the switcher is oriented in(true for vertical, false for horizontal)
-    private bool orientation;
+    private Side currentSide;
+
+    private Orientation orientation;
 
     private int _widthRadius = 1;
     private int _heightRadius = 1;
@@ -30,9 +34,9 @@ public partial class LayerSwitcher : Node2D
         {
             _widthRadius = value;
             if (WidthRadius > HeightRadius)
-                orientation = false;
+                orientation = Orientation.Horizontal;
             else if(WidthRadius < HeightRadius)
-                orientation = true;
+                orientation = Orientation.Vertical;
             UpdateConfigurationWarnings();
             QueueRedraw();
         }
@@ -47,9 +51,9 @@ public partial class LayerSwitcher : Node2D
         {
             _heightRadius = value;
             if (WidthRadius > HeightRadius)
-                orientation = false;
+                orientation = Orientation.Horizontal;
             else if(WidthRadius < HeightRadius)
-                orientation = true;
+                orientation = Orientation.Vertical;
             UpdateConfigurationWarnings();
             QueueRedraw();
         }
@@ -71,11 +75,10 @@ public partial class LayerSwitcher : Node2D
 
     public override void _Ready()
     { 
-        player = (Player)GetNode("/root/DebugRoot/Player");
         if (WidthRadius > HeightRadius)
-            orientation = false;
+            orientation = Orientation.Horizontal;
         else if(WidthRadius < HeightRadius)
-            orientation = true;
+            orientation = Orientation.Vertical;
     }
 
     public override void _Process(double delta)
@@ -91,64 +94,66 @@ public partial class LayerSwitcher : Node2D
 
             if (priorityOnly)
                 canSwitch = false;
-
+            
+            //if player is in range
+            if (
+            !(Position.Y - HeightRadius <= player.Position.Y && player.Position.Y <= Position.Y + HeightRadius  &&
+                Position.X - WidthRadius <= player.Position.X && player.Position.X <= Position.X + WidthRadius)
+            )
+            canSwitch = false;
             //if vertical orientation
-            if (orientation == true)
+            if (orientation == Orientation.Vertical)
             {
-                //if player is in range
-                if (Position.Y - HeightRadius <= player.Position.Y && player.Position.Y <= Position.Y + HeightRadius)
+                //if currentSide is left
+                if (currentSide == Side.A)
                 {
-                    //if currentSide is left
-                    if (currentSide == true)
+                    if (player.Position.X >= Position.X)
                     {
-                        if (player.Position.X >= Position.X)
-                        {
-                            if (canSwitch)
-                                player.currentLayer = sideB;
-                            player.ZIndex = visualB;
-                            currentSide = false;
-                        }
+                        if (canSwitch)
+                            player.currentLayer = sideB;
+                            
+                        player.ZIndex = visualB;
+                        currentSide = Side.B;
                     }
-                    //currentSide is right
-                    else
+                }
+                //currentSide is right
+                else
+                {
+                    if (player.Position.X <= Position.X)
                     {
-                        if (player.Position.X <= Position.X)
-                        {
-                            if (canSwitch)
-                                player.currentLayer = sideA;
-                            player.ZIndex= visualA;
-                            currentSide = true;
-                        }
+                        if (canSwitch)
+                            player.currentLayer = sideA;
+
+                        player.ZIndex= visualA;
+                        currentSide = Side.A;
                     }
                 }
             }
             //if horizontal orientation
             else 
             {
-                //if player is in range
-                if (Position.X - WidthRadius <= player.Position.X && player.Position.X <= Position.X + WidthRadius)
+                //if currentSide is up
+                if (currentSide == Side.A)
                 {
-                    //if currentSide is up
-                    if (currentSide == true)
+                    if (player.Position.Y >= Position.Y)
                     {
-                        if (player.Position.Y >= Position.Y)
-                        {
-                            if (canSwitch)
-                                player.currentLayer = sideB;
-                            player.ZIndex = visualB;
-                            currentSide = false;
-                        }
+                        if (canSwitch)
+                            player.currentLayer = sideB;
+
+                        player.ZIndex = visualB;
+                        currentSide = Side.B;
                     }
-                    //currentSide is down
-                    else
+                }
+                //currentSide is down
+                else
+                {
+                    if (player.Position.Y <= Position.Y)
                     {
-                        if (player.Position.Y <= Position.Y)
-                        {
-                            if (canSwitch)
-                                player.currentLayer = sideA;
-                            player.ZIndex = visualA;
-                            currentSide = true;
-                        }
+                        if (canSwitch)
+                            player.currentLayer = sideA;
+
+                        player.ZIndex = visualA;
+                        currentSide = Side.A;
                     }
                 }
             }
@@ -170,7 +175,7 @@ public partial class LayerSwitcher : Node2D
     {
         if (Engine.IsEditorHint() || drawDebug)
         {
-            if (!orientation)
+            if (orientation == Orientation.Horizontal)
                 DrawLine(new Vector2(-WidthRadius, 0), new Vector2(WidthRadius, 0), Colors.Orange, 1);
             else DrawLine(new Vector2(0, -HeightRadius), new Vector2(0, HeightRadius), Colors.Orange, 1);
         }

@@ -307,6 +307,10 @@ public partial class Sensor : Node2D
     public float GetAngle(int layer, Vector2I gridSquare, bool hFlip, bool vFlip)
     {
         int tileID = tileMap.GetCellAlternativeTile(layer, gridSquare);
+        if ((float)tileMap.GetCellTileData(layer, gridSquare).GetCustomData("angle") != 0)
+        {
+            return (float)tileMap.GetCellTileData(layer, gridSquare).GetCustomData("angle");
+        }
         if (tileID != 0)
             {
                 int tileSourceID = tileMap.GetCellSourceId(layer, gridSquare);

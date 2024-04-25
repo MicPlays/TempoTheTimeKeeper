@@ -10,6 +10,7 @@
 [node name="DebugRoot" type="Node2D"]
 script = ExtResource("1_hn4vv")
 playerPath = NodePath("Player")
+layerSwitcherContainerPath = NodePath("LayerSwitchers")
 
 [node name="TileMap" type="TileMap" parent="." groups=["tilemaps"]]
 tile_set = ExtResource("2_tnvqv")
@@ -46,17 +47,16 @@ HeightRadius = 25
 sideA = 1
 visualA = 2
 
-[node name="LayerSwitcher2" parent="LayerSwitchers" instance=ExtResource("5_0rd7q")]
-position = Vector2(817, 216)
-WidthRadius = 30
-HeightRadius = 40
-sideA = 1
-visualA = 2
-
 [node name="LayerSwitcher3" parent="LayerSwitchers" instance=ExtResource("5_0rd7q")]
 position = Vector2(589, 217)
 WidthRadius = 30
 HeightRadius = 40
+
+[node name="LayerSwitcher4" parent="LayerSwitchers" instance=ExtResource("5_0rd7q")]
+position = Vector2(831, 216)
+WidthRadius = 30
+HeightRadius = 40
+sideA = 1
 
 [node name="MusicNotes" type="Node2D" parent="."]
 
