@@ -5,14 +5,20 @@ using System.Collections.Generic;
 public partial class Player : GameObject
 {
     //constants
-    private const float ACC_SPEED = 0.046875f;
-    private const float DEC_SPEED = 0.5f;
-    private const float FRICTION_SPEED = 0.046875f;
-    private const int TOP_SPEED = 6;
-    private const float JUMP_FORCE = 6.5f;
-    private const float GRAVITY_FORCE = 0.21875f;
-    private const float AIR_ACC_SPEED = 0.09375f;
-    private const float SLOPE_FACTOR = 0.125f;
+    private const float ACC_SPEED = 2.8125f;
+    //0.046875f
+    private const float DEC_SPEED = 30f;
+    //0.5f
+    private const float FRICTION_SPEED = 2.8125f;
+    private const int TOP_SPEED = 360;
+    private const float JUMP_FORCE = 390f;
+    //6.5f
+    private const float GRAVITY_FORCE = 13.125f;
+    //0.21875f
+    private const float AIR_ACC_SPEED = 5.625f;
+    //0.09375f
+    private const float SLOPE_FACTOR = 7.5f;
+    //0.125f
     private const float SLOPE_SPEED_FACTOR =  0.05078125f;
 
     //Components and their NodePaths
@@ -28,7 +34,7 @@ public partial class Player : GameObject
     //state variables
     public bool isGrounded = true;
     private bool isJumping = false;
-    private int controlLockTimer = 0;
+    private float controlLockTimer = 0;
     
     //sensor stuff
     public int pushRadius = 10;
@@ -109,7 +115,7 @@ public partial class Player : GameObject
 
             //adjust ground speed according to slope factor 
             if (sensorTable["A"].direction != "up" && groundSpeed != 0)
-                groundSpeed -= SLOPE_FACTOR * Mathf.Sin(Mathf.DegToRad(groundAngle)); 
+                groundSpeed -= SLOPE_FACTOR * (float)delta * Mathf.Sin(Mathf.DegToRad(groundAngle)); 
                 
             
             //jump check
@@ -120,8 +126,8 @@ public partial class Player : GameObject
                 SolidTileData data = CeilingSensorCompetition();
                 if (data.distance > 6)
                 {
-                    xSpeed -= JUMP_FORCE * Mathf.Sin(Mathf.DegToRad(groundAngle));
-                    ySpeed -= JUMP_FORCE * Mathf.Cos(Mathf.DegToRad(groundAngle));
+                    xSpeed -= JUMP_FORCE * (float)delta * Mathf.Sin(Mathf.DegToRad(groundAngle));
+                    ySpeed -= JUMP_FORCE * (float)delta * Mathf.Cos(Mathf.DegToRad(groundAngle));
                     isGrounded = false;
                     SwitchGroundCollisionMode(0);
                     SwitchPushCollisionMode(0);
@@ -140,34 +146,35 @@ public partial class Player : GameObject
                     if (Input.IsActionPressed("left"))
                     {
                         if (groundSpeed > 0)
-                            groundSpeed -= DEC_SPEED;
+                            groundSpeed -= DEC_SPEED * (float)delta;
                             
-                        else if (groundSpeed > -TOP_SPEED)
+                        else if (groundSpeed > -TOP_SPEED * (float)delta)
                         {
-                            groundSpeed -= ACC_SPEED;
-                            if (groundSpeed <= -TOP_SPEED)
-                                groundSpeed = -TOP_SPEED;
+                            groundSpeed -= ACC_SPEED * (float)delta;
+                            if (groundSpeed <= -TOP_SPEED * (float)delta)
+                                groundSpeed = -TOP_SPEED * (float)delta;
                         }
                         
                     }
                     else if (Input.IsActionPressed("right"))
                     {
                         if (groundSpeed < 0)
-                            groundSpeed += DEC_SPEED;
+                            groundSpeed += DEC_SPEED * (float)delta;
                             
-                        else if (groundSpeed < TOP_SPEED)
+                        else if (groundSpeed < TOP_SPEED * (float)delta)
                         {
-                            groundSpeed += ACC_SPEED;
-                            if (groundSpeed >= TOP_SPEED)
-                                groundSpeed = TOP_SPEED;
+                            groundSpeed += ACC_SPEED * (float)delta;
+                            if (groundSpeed >= TOP_SPEED * (float)delta)
+                                groundSpeed = TOP_SPEED * (float)delta;
                         }
                     }
                     else 
-                        groundSpeed -= Mathf.Min(Mathf.Abs(groundSpeed), FRICTION_SPEED) * Mathf.Sign(groundSpeed);
+                        groundSpeed -= Mathf.Min(Mathf.Abs(groundSpeed), FRICTION_SPEED * (float)delta * Mathf.Sign(groundSpeed));
                 }
 
                 bool isVertical = SwitchPushCollisionMode(groundAngle);
                 float wallDistance = PushCollisionProcess(isVertical);
+                wallDistance *= 60 * (float)delta;
 
                 //calculate X and Y speed from Ground Speed and Angle
                 if (isVertical)
@@ -188,10 +195,8 @@ public partial class Player : GameObject
 
                 //Move player pos
                 Position = new Vector2(GlobalPosition.X + xSpeed, GlobalPosition.Y + ySpeed);
-
                 
                 //ground collision process
-                SwitchGroundCollisionMode(groundAngle);
                 bool groundCollision = true;
                 SolidTileData groundData = GroundSensorCompetition();
 
@@ -209,8 +214,6 @@ public partial class Player : GameObject
                         groundCollision = false;
                 }
 
-                //eventually, collision calculation will be based off of the current mode.
-                //for now, just assume floor mode
                 if (groundCollision)
                 {
                     if (sensorTable["A"].direction == "right")
@@ -228,6 +231,7 @@ public partial class Player : GameObject
                         groundAngle = groundData.angle;
                     
                     playerSprite.RotationDegrees = -groundAngle;
+                    SwitchGroundCollisionMode(groundAngle);
                 }
                 else 
                 {
@@ -249,7 +253,7 @@ public partial class Player : GameObject
                 if (controlLockTimer == 0)
                 {
                     //if ground angle is within slip range and speed is too slow, slip
-                    if (Mathf.Abs(groundSpeed) < 2.5f && groundAngle >= 35f && groundAngle <= 326f)
+                    if (Mathf.Abs(groundSpeed) < 150f * (float)delta && groundAngle >= 35f && groundAngle <= 326f)
                     {
                         //lock controls
                         controlLockTimer = 30;
@@ -265,13 +269,14 @@ public partial class Player : GameObject
                         else 
                         {
                             if (groundAngle < 180f)
-                                groundSpeed -= 0.5f;
-                            else groundSpeed += 0.5f;
+                                groundSpeed -= 30f * (float)delta;
+                            else groundSpeed += 30f * (float)delta;;
                         }
                     }
                 }
                 else 
                     controlLockTimer--;
+                    
             }
         }
         //air state
@@ -282,8 +287,8 @@ public partial class Player : GameObject
             {
                 if (Input.IsActionJustReleased("jump"))
                 {
-                    if (ySpeed < -4)
-                        ySpeed = -4;
+                    if (ySpeed < -240f * (float)delta)
+                        ySpeed = -240f * (float)delta;
                     isJumping = false;
                     playerSprite.Play("airtransition");
                     playerSprite.SpeedScale = 1.0f;
@@ -298,20 +303,36 @@ public partial class Player : GameObject
 
             //input movement
             if (Input.IsActionPressed("left"))
-                xSpeed -= AIR_ACC_SPEED;
+            {
+                if (xSpeed > -TOP_SPEED * (float)delta)
+                {
+                    xSpeed -= AIR_ACC_SPEED * (float)delta;
+                    if (xSpeed <= -TOP_SPEED * (float)delta)
+                        xSpeed = -TOP_SPEED * (float)delta;
+                }
+            }
             else if (Input.IsActionPressed("right"))
-                xSpeed += AIR_ACC_SPEED;
+            {
+                if (xSpeed < TOP_SPEED * (float)delta)
+                {
+                    xSpeed += AIR_ACC_SPEED * (float)delta;
+                    if (xSpeed >= TOP_SPEED * (float)delta)
+                        xSpeed = TOP_SPEED * (float)delta;
+                }
+            }
         
             //air drag
-            if (ySpeed < 0 && ySpeed > -4)
-                xSpeed -= (xSpeed/0.125f)/256;
-
+            if (ySpeed < 0 && ySpeed > -240f * (float)delta)
+            {
+                xSpeed -= xSpeed/7.5f * (float)delta/256;
+            }
+        
             //Move player pos
             Position = new Vector2(GlobalPosition.X + xSpeed, GlobalPosition.Y + ySpeed);
 
             //apply gravity
-            ySpeed += GRAVITY_FORCE;
-            if (ySpeed > 16) ySpeed = 16;
+            ySpeed += GRAVITY_FORCE * (float)delta;
+            if (ySpeed > 960 * (float)delta) ySpeed = 960 * (float)delta;
 
             //rotate player angle back to 0
             if (groundAngle < 180f)

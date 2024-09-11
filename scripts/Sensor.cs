@@ -90,7 +90,7 @@ public partial class Sensor : Node2D
                 float distance = GetDistance(0, 0, newGridCell, false, false);
                 float angle = 0f;
                 bool flagged = false;
-                return new SolidTileData(distance, angle, flagged);
+                return new SolidTileData(distance + (16 - distance), angle, flagged);
             }
         }
         //regression (if detected tile is a full block, pull back one tile in sensor's direction)
