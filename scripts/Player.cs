@@ -116,7 +116,6 @@ public partial class Player : GameObject
             //adjust ground speed according to slope factor 
             if (sensorTable["A"].direction != "up" && groundSpeed != 0)
                 groundSpeed -= SLOPE_FACTOR * (float)delta * Mathf.Sin(Mathf.DegToRad(groundAngle)); 
-                
             
             //jump check
             if (Input.IsActionPressed("jump"))
@@ -360,14 +359,14 @@ public partial class Player : GameObject
                 //mostly right, right, ceiling, and ground sensors active
                 AirPushCollisionProcess("F");
                 AirGroundCollisionProcess(false);
-                CeilingCollisionProcess();
+                CeilingCollisionProcess(false);
             }
             else if (airAngle >= 46f && airAngle <= 135f)
             {
                 //mostly up, ceiling and push sensors active
                 AirPushCollisionProcess("E");
                 AirPushCollisionProcess("F");
-                CeilingCollisionProcess();
+                CeilingCollisionProcess(true);
                 
             }
             else if (airAngle >= 136f && airAngle <= 225f)
@@ -375,7 +374,7 @@ public partial class Player : GameObject
                 //mostly left, left, ceiling and ground
                 AirPushCollisionProcess("E");
                 AirGroundCollisionProcess(false);
-                CeilingCollisionProcess();
+                CeilingCollisionProcess(false);
             }
             else 
             {
@@ -543,14 +542,28 @@ public partial class Player : GameObject
     }
 
     //Ceiling sensor processing. Ceiling sensors are only active when airborne.
-    public void CeilingCollisionProcess()
+    public void CeilingCollisionProcess(bool goingUp)
     {
         SolidTileData data = CeilingSensorCompetition();
         if (data.distance < 0)
         {
             Position = new Vector2(Position.X, Position.Y - data.distance);
-            //later, detect if player lands
-            ySpeed = 0;
+            
+            if (data.angle < 136f || data.angle > 225f)
+            {
+                if (goingUp)
+                {
+                    isGrounded = true;
+                    isJumping = false;
+                    if (data.flagged)
+                        groundAngle = (Mathf.Round(groundAngle / 90) % 4) * 90;
+                    else
+                        groundAngle = data.angle;
+                    groundSpeed = ySpeed * -Mathf.Sign(Mathf.Sin(groundAngle));
+                }
+                else ySpeed = 0;
+            }
+            else ySpeed = 0;
         }
     }
 

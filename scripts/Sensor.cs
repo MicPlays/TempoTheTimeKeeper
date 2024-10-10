@@ -200,9 +200,7 @@ public partial class Sensor : Node2D
         {
             bool isHeight = false;
             int tileID = tileMap.GetCellAlternativeTile(layer, gridSquare);
-
-            //if tile is an alternative tile, get the width or height array 
-            //of the source tile that alt tile derives from
+            //for flagged alt-tiles
             if (tileID != 0)
             {
                 //to get the data from the source tile, we need the TileSetAtlasSource to get the tile data from.
@@ -221,9 +219,8 @@ public partial class Sensor : Node2D
                     isHeight = true;
                 }
 
-
             }
-            //otherwise just get height/width array
+
             else 
             {
                 if (direction == "left" || direction == "right")
@@ -240,16 +237,23 @@ public partial class Sensor : Node2D
             int hFlip = -1;
             int vFlip = -1;
             //based on flip property, flip array to get correct collision data
-            if (tileData.FlipH)
+            if (tileID == 4096)
             {
                 hFlip = 1;
                 if (isHeight) Array.Reverse(tileArray);
                
             }     
-            if (tileData.FlipV)
+            if (tileID == 8192)
             {
                 vFlip = 1;
                 if (!isHeight) Array.Reverse(tileArray);   
+            }
+            if (tileID == 12288)
+            {
+                hFlip = 1;
+                if (isHeight) Array.Reverse(tileArray);
+                vFlip = 1;
+                if (!isHeight) Array.Reverse(tileArray);
             }
 
             if (isHeight)  index = (int)(GlobalPosition.X - tilePos.X);
@@ -306,29 +310,15 @@ public partial class Sensor : Node2D
     //get angle of tile, if tile is an alternative tile, calculates angle from source tile angle
     public float GetAngle(int layer, Vector2I gridSquare, bool hFlip, bool vFlip)
     {
-        int tileID = tileMap.GetCellAlternativeTile(layer, gridSquare);
-        if ((float)tileMap.GetCellTileData(layer, gridSquare).GetCustomData("angle") != 0)
-        {
-            return (float)tileMap.GetCellTileData(layer, gridSquare).GetCustomData("angle");
-        }
-        if (tileID != 0)
-            {
-                int tileSourceID = tileMap.GetCellSourceId(layer, gridSquare);
-                TileSetAtlasSource atlas = (TileSetAtlasSource)tileMap.TileSet.GetSource(tileSourceID);
-
-                Vector2I tileAtlasCoords = tileMap.GetCellAtlasCoords(layer, gridSquare);
-                TileData sourceTileData = atlas.GetTileData(tileAtlasCoords, 0);
-
-                float angle = (float)sourceTileData.GetCustomData("angle");
-                if (hFlip && vFlip)
-                    return angle + 180;
-                else if (hFlip)
-                    return 360f - angle;
-                else if (vFlip) 
-                    return 180 - angle;
-                else return (float)tileMap.GetCellTileData(layer, gridSquare).GetCustomData("angle");
-            }
-        else return (float)tileMap.GetCellTileData(layer, gridSquare).GetCustomData("angle");
-    }
+        TileData tileData = tileMap.GetCellTileData(layer, gridSquare);
+        float angle = (float)tileData.GetCustomData("angle");
+        if (hFlip && vFlip)
+            return angle + 180;
+        else if (hFlip)
+            return 360f - angle;
+        else if (vFlip) 
+            return 180 - angle;
+        else return angle;
+}
 
 }
