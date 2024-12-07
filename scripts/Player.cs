@@ -20,6 +20,11 @@ public partial class Player : GameObject
     private const float SLOPE_FACTOR = 7.5f;
     //0.125f
     private const float SLOPE_SPEED_FACTOR =  0.05078125f;
+    private const float SPEED_BOOST_TIME_WINDOW = 15f;
+    private const float SUPER_SPEED_BOOST_TIME_WINDOW = 5f;
+    private const float WALL_JUMP_BOOST = 60f;
+    private const float WALL_JUMP_FORCE = 300f;
+    private const float WALL_SLIDE_FORCE = 9.5625f;
 
     //Components and their NodePaths
     [Export]
@@ -34,7 +39,10 @@ public partial class Player : GameObject
     //state variables
     public bool isGrounded = true;
     private bool isJumping = false;
+    public bool isWallJumpProcess = false;
     private float controlLockTimer = 0;
+    private bool speedBoostInputTimerActive = false;
+    private float speedBoostInputTimer = 0;
     
     //sensor stuff
     public int pushRadius = 10;
@@ -287,7 +295,7 @@ public partial class Player : GameObject
                 if (Input.IsActionJustReleased("jump"))
                 {
                     if (ySpeed < -240f * (float)delta)
-                        ySpeed = -240f * (float)delta;
+                        ySpeed = -150f * (float)delta;
                     isJumping = false;
                     playerSprite.Play("airtransition");
                     playerSprite.SpeedScale = 1.0f;
@@ -354,33 +362,36 @@ public partial class Player : GameObject
             sensorTable["E"].Position = new Vector2(-10, 0);
             sensorTable["F"].Position = new Vector2(10, 0);
 
+            if (speedBoostInputTimerActive)
+                speedBoostInputTimer += (float)delta;
+
             if ((airAngle >= 0f && airAngle <= 45f) || (airAngle >= 316 && airAngle <= 360))
             {
                 //mostly right, right, ceiling, and ground sensors active
-                AirPushCollisionProcess("F");
+                AirPushCollisionProcess("F", (float)delta);
                 AirGroundCollisionProcess(false);
                 CeilingCollisionProcess(false);
             }
             else if (airAngle >= 46f && airAngle <= 135f)
             {
                 //mostly up, ceiling and push sensors active
-                AirPushCollisionProcess("E");
-                AirPushCollisionProcess("F");
+                AirPushCollisionProcess("E", (float)delta);
+                AirPushCollisionProcess("F", (float)delta);
                 CeilingCollisionProcess(true);
                 
             }
             else if (airAngle >= 136f && airAngle <= 225f)
             {
                 //mostly left, left, ceiling and ground
-                AirPushCollisionProcess("E");
+                AirPushCollisionProcess("E", (float)delta);
                 AirGroundCollisionProcess(false);
                 CeilingCollisionProcess(false);
             }
             else 
             {
                 //mostly down, ground and push active
-                AirPushCollisionProcess("E");
-                AirPushCollisionProcess("F");
+                AirPushCollisionProcess("E", (float)delta);
+                AirPushCollisionProcess("F", (float)delta);
                 AirGroundCollisionProcess(true);
             }
             
@@ -390,16 +401,114 @@ public partial class Player : GameObject
     }
 
     //push sensor collision process when airborne
-    public void AirPushCollisionProcess(string sensorString)
+    public void AirPushCollisionProcess(string sensorString, float delta)
     {
         SolidTileData pushData = sensorTable[sensorString].CheckForTile(currentLayer);
         if (pushData.distance <= 0)
         {
+            //reset player position (push against wall) but keep xSpeed for wall jump
             if (xSpeed > 0)
                 Position = new Vector2(Position.X + pushData.distance, Position.Y);
             else if (xSpeed < 0)
                 Position = new Vector2(Position.X - pushData.distance, Position.Y);
-            xSpeed = 0;
+            //wall jump process
+            if (!isWallJumpProcess)
+            {
+                isWallJumpProcess = true;
+                speedBoostInputTimerActive = true;
+            }
+            else
+            {
+                if (speedBoostInputTimer <= SUPER_SPEED_BOOST_TIME_WINDOW * delta)
+                {
+                    if (Input.IsActionJustPressed("jump"))
+                    {
+                        GD.Print("super wall jump");
+                        xSpeed = -xSpeed / 2;
+                        xSpeed += Mathf.Sign(xSpeed) * ((WALL_JUMP_FORCE * delta) + (WALL_JUMP_BOOST * delta));
+                        ySpeed = -(JUMP_FORCE * delta);
+                        if (xSpeed < 0)
+                            playerSprite.FlipH = true;
+                        else playerSprite.FlipH = false;
+                        //wall jump anim play
+                        speedBoostInputTimer = 0;
+                        speedBoostInputTimerActive = false;
+                        isWallJumpProcess = false;
+                    }
+                }
+                else if (speedBoostInputTimer <= SPEED_BOOST_TIME_WINDOW * delta)
+                {
+                    int direction = 1;
+                    if (sensorString == "F") direction = -1;
+                    xSpeed = 0;
+                    if (Input.IsActionJustPressed("jump"))
+                    {
+                        GD.Print("boosted wall jump");
+                        xSpeed = direction * ((WALL_JUMP_FORCE * delta) + (WALL_JUMP_BOOST * delta));
+                        ySpeed = -(JUMP_FORCE * delta);
+                        if (xSpeed < 0)
+                            playerSprite.FlipH = true;
+                        else playerSprite.FlipH = false;
+                        //wall jump anim play
+                        speedBoostInputTimer = 0;
+                        speedBoostInputTimerActive = false;
+                        isWallJumpProcess = false;
+                    }
+                    else
+                    {
+                        if (ySpeed > 0)
+                            ySpeed -= WALL_SLIDE_FORCE * delta;
+                        //wall slide anim play
+                    }
+                }
+                else 
+                {   
+                    xSpeed = 0;
+                    //left wall
+                    if (Input.IsActionPressed("left") && sensorString == "E")
+                    {
+                        
+                        if (Input.IsActionJustPressed("jump"))
+                        {
+                            GD.Print("regular wall jump");
+                            xSpeed += WALL_JUMP_FORCE * delta;
+                            ySpeed = -(JUMP_FORCE * delta);
+                            playerSprite.FlipH = false;
+                            //wall jump anim play
+                            speedBoostInputTimer = 0;
+                            speedBoostInputTimerActive = false;
+                            isWallJumpProcess = false;
+                        }
+                        else
+                        {
+                            if (ySpeed > 0)
+                                ySpeed -= WALL_SLIDE_FORCE * delta;
+                            //wall slide anim play
+                        }
+                    }
+                    //right wall
+                    else if (Input.IsActionPressed("right") && sensorString == "F")
+                    {
+                        if (Input.IsActionJustPressed("jump"))
+                        {
+                            GD.Print("regular wall jump");
+                            xSpeed -= WALL_JUMP_FORCE * delta;
+                            ySpeed = -(JUMP_FORCE * delta);
+                            playerSprite.FlipH = true;
+                            //wall jump anim play
+                            speedBoostInputTimer = 0;
+                            speedBoostInputTimerActive = false;
+                            isWallJumpProcess = false;
+                        }
+                        else
+                        {
+                            if (ySpeed > 0)
+                                ySpeed -= WALL_SLIDE_FORCE * delta;
+                            //wall slide anim play
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -508,6 +617,9 @@ public partial class Player : GameObject
                 }
                 //don't forget to set ySpeed to 0 at end
                 ySpeed = 0;
+                speedBoostInputTimer = 0;
+                speedBoostInputTimerActive = false;
+                isWallJumpProcess = false;
             }
         }
     }
