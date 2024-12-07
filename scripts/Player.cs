@@ -20,8 +20,9 @@ public partial class Player : GameObject
     private const float SLOPE_FACTOR = 7.5f;
     //0.125f
     private const float SLOPE_SPEED_FACTOR =  0.05078125f;
-    private const float SPEED_BOOST_TIME_WINDOW = 15f;
-    private const float SUPER_SPEED_BOOST_TIME_WINDOW = 5f;
+    private const float SPEED_BOOST_TIME_WINDOW = 5f;
+    private const float SUPER_SPEED_BOOST_TIME_WINDOW = 0.5f;
+    private const float GROUND_JUMP_BOOST = 60f;
     private const float WALL_JUMP_BOOST = 60f;
     private const float WALL_JUMP_FORCE = 300f;
     private const float WALL_SLIDE_FORCE = 9.5625f;
@@ -43,6 +44,7 @@ public partial class Player : GameObject
     private float controlLockTimer = 0;
     private bool speedBoostInputTimerActive = false;
     private float speedBoostInputTimer = 0;
+    private float shortHopFloor = -150f;
     
     //sensor stuff
     public int pushRadius = 10;
@@ -134,19 +136,36 @@ public partial class Player : GameObject
                 if (data.distance > 6)
                 {
                     xSpeed -= JUMP_FORCE * (float)delta * Mathf.Sin(Mathf.DegToRad(groundAngle));
+                    if (speedBoostInputTimer < SUPER_SPEED_BOOST_TIME_WINDOW * delta)
+                    {
+                        xSpeed += Mathf.Sign(xSpeed) * (GROUND_JUMP_BOOST * (float)delta);
+                    }
+                    else if (speedBoostInputTimer < SPEED_BOOST_TIME_WINDOW * delta)
+                    {
+                        xSpeed += Mathf.Sign(xSpeed) * (GROUND_JUMP_BOOST * (float)delta);
+                        if (Mathf.Abs(xSpeed) < TOP_SPEED)
+                            xSpeed = Mathf.Sign(xSpeed) * Mathf.Abs(xSpeed);
+                    }
                     ySpeed -= JUMP_FORCE * (float)delta * Mathf.Cos(Mathf.DegToRad(groundAngle));
+                    if (Mathf.Abs(xSpeed) / (360 * (float)delta) > 1)
+                        shortHopFloor = -240f * (float)delta;
+                    else shortHopFloor = Mathf.Lerp(-240f * (float)delta, -150f * (float)delta, Mathf.Abs(xSpeed) / (360 * (float)delta));
                     isGrounded = false;
                     SwitchGroundCollisionMode(0);
                     SwitchPushCollisionMode(0);
                     isJumping = true;
                     playerSprite.Play("liftoff");
                     playerSprite.SpeedScale = 1.0f;
+                    speedBoostInputTimer = 0;
+                    speedBoostInputTimerActive = false;
                 }
             }
             //if jumping, immediately go airborne, do not execute grounded 
             //code as player will immediately snap back to ground
             if (isGrounded)
             {
+                if (speedBoostInputTimerActive)
+                    speedBoostInputTimer += (float)delta;
                 if (controlLockTimer == 0)
                 {
                     //ground running input
@@ -295,7 +314,7 @@ public partial class Player : GameObject
                 if (Input.IsActionJustReleased("jump"))
                 {
                     if (ySpeed < -240f * (float)delta)
-                        ySpeed = -150f * (float)delta;
+                        ySpeed = shortHopFloor;
                     isJumping = false;
                     playerSprite.Play("airtransition");
                     playerSprite.SpeedScale = 1.0f;
@@ -618,7 +637,7 @@ public partial class Player : GameObject
                 //don't forget to set ySpeed to 0 at end
                 ySpeed = 0;
                 speedBoostInputTimer = 0;
-                speedBoostInputTimerActive = false;
+                speedBoostInputTimerActive = true;
                 isWallJumpProcess = false;
             }
         }
