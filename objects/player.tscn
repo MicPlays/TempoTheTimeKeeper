@@ -1,4 +1,4 @@
-[gd_scene load_steps=52 format=3 uid="uid://dircvqlc5m7yk"]
+[gd_scene load_steps=63 format=3 uid="uid://dircvqlc5m7yk"]
 
 [ext_resource type="Script" path="res://scripts/Player.cs" id="1_73kcx"]
 [ext_resource type="PackedScene" uid="uid://cecegkc1uohgb" path="res://components/sensor.tscn" id="2_7vpx6"]
@@ -8,6 +8,9 @@
 [ext_resource type="Texture2D" uid="uid://c35n648vedulw" path="res://sprites/tempoairtransition.png" id="4_wbhi5"]
 [ext_resource type="Texture2D" uid="uid://dcsj3cod1xuf5" path="res://sprites/tempofall.png" id="5_l3dsb"]
 [ext_resource type="Texture2D" uid="uid://bntu7arud0ji5" path="res://sprites/tempoliftoff.png" id="5_m1app"]
+[ext_resource type="Texture2D" uid="uid://i4jxpfkegtmu" path="res://sprites/tempowallattach.png" id="7_3x33c"]
+[ext_resource type="Texture2D" uid="uid://cluoiaue8s5d" path="res://sprites/tempowalljump.png" id="8_1ujqh"]
+[ext_resource type="Texture2D" uid="uid://cjbcge0pkvygh" path="res://sprites/tempowallslide.png" id="8_2utlj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sirig"]
 size = Vector2(11, 33)
@@ -103,6 +106,38 @@ region = Rect2(50, 0, 50, 50)
 [sub_resource type="AtlasTexture" id="AtlasTexture_2w13e"]
 atlas = ExtResource("5_m1app")
 region = Rect2(100, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1hrx7"]
+atlas = ExtResource("8_1ujqh")
+region = Rect2(0, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pqnvw"]
+atlas = ExtResource("8_1ujqh")
+region = Rect2(50, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_slcgk"]
+atlas = ExtResource("8_1ujqh")
+region = Rect2(100, 0, 50, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_hfqr3"]
+atlas = ExtResource("8_2utlj")
+region = Rect2(0, 0, 30, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_umkwm"]
+atlas = ExtResource("8_2utlj")
+region = Rect2(30, 0, 30, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3blyg"]
+atlas = ExtResource("8_2utlj")
+region = Rect2(60, 0, 30, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_q4xuv"]
+atlas = ExtResource("8_2utlj")
+region = Rect2(90, 0, 30, 50)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_r38s6"]
+atlas = ExtResource("8_2utlj")
+region = Rect2(120, 0, 30, 50)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_4pcyl"]
 atlas = ExtResource("2_wlp5u")
@@ -217,11 +252,6 @@ animations = [{
 "name": &"fall",
 "speed": 8.0
 }, {
-"frames": [],
-"loop": true,
-"name": &"idle",
-"speed": 5.0
-}, {
 "frames": [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_koh5g")
@@ -276,6 +306,48 @@ animations = [{
 "loop": false,
 "name": &"liftoff",
 "speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("7_3x33c")
+}],
+"loop": true,
+"name": &"wallattach",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1hrx7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pqnvw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_slcgk")
+}],
+"loop": false,
+"name": &"walljump",
+"speed": 12.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_hfqr3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_umkwm")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3blyg")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_q4xuv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_r38s6")
+}],
+"loop": false,
+"name": &"wallslide",
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,

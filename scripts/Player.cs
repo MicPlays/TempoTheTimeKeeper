@@ -45,6 +45,7 @@ public partial class Player : GameObject
     private bool speedBoostInputTimerActive = false;
     private float speedBoostInputTimer = 0;
     private float shortHopFloor = -150f;
+    private bool wallSlideActivated = false;
     
     //sensor stuff
     public int pushRadius = 10;
@@ -320,6 +321,8 @@ public partial class Player : GameObject
                     playerSprite.SpeedScale = 1.0f;
                     currentFrame = 0;
                 }
+                else if (playerSprite.Animation == "walljump" && playerSprite.Frame == 2)
+                    playerSprite.Play("airtime");
             }
 
             if (playerSprite.Animation == "airtransition" && playerSprite.Frame == 1)
@@ -357,8 +360,11 @@ public partial class Player : GameObject
             Position = new Vector2(GlobalPosition.X + xSpeed, GlobalPosition.Y + ySpeed);
 
             //apply gravity
-            ySpeed += GRAVITY_FORCE * (float)delta;
-            if (ySpeed > 960 * (float)delta) ySpeed = 960 * (float)delta;
+            if (!wallSlideActivated)
+            {
+                ySpeed += GRAVITY_FORCE * (float)delta;
+                if (ySpeed > 960 * (float)delta) ySpeed = 960 * (float)delta;
+            }
 
             //rotate player angle back to 0
             if (groundAngle < 180f)
@@ -435,6 +441,9 @@ public partial class Player : GameObject
             {
                 isWallJumpProcess = true;
                 speedBoostInputTimerActive = true;
+                playerSprite.Play("wallattach");
+                if (sensorString == "E") playerSprite.FlipH = false;
+                else playerSprite.FlipH = true;
             }
             else
             {
@@ -449,10 +458,11 @@ public partial class Player : GameObject
                         if (xSpeed < 0)
                             playerSprite.FlipH = true;
                         else playerSprite.FlipH = false;
-                        //wall jump anim play
+                        playerSprite.Play("walljump");
                         speedBoostInputTimer = 0;
                         speedBoostInputTimerActive = false;
                         isWallJumpProcess = false;
+                        isJumping = true;
                     }
                 }
                 else if (speedBoostInputTimer <= SPEED_BOOST_TIME_WINDOW * delta)
@@ -468,16 +478,20 @@ public partial class Player : GameObject
                         if (xSpeed < 0)
                             playerSprite.FlipH = true;
                         else playerSprite.FlipH = false;
-                        //wall jump anim play
+                        playerSprite.Play("walljump");
                         speedBoostInputTimer = 0;
                         speedBoostInputTimerActive = false;
                         isWallJumpProcess = false;
+                        wallSlideActivated = false;
+                        isJumping = true;
                     }
                     else
                     {
                         if (ySpeed > 0)
-                            ySpeed -= WALL_SLIDE_FORCE * delta;
-                        //wall slide anim play
+                            ySpeed += WALL_SLIDE_FORCE * delta;
+                        else ySpeed += GRAVITY_FORCE * delta;
+                        playerSprite.Play("wallslide");
+                        wallSlideActivated = true;
                     }
                 }
                 else 
@@ -493,16 +507,18 @@ public partial class Player : GameObject
                             xSpeed += WALL_JUMP_FORCE * delta;
                             ySpeed = -(JUMP_FORCE * delta);
                             playerSprite.FlipH = false;
-                            //wall jump anim play
+                            playerSprite.Play("walljump");
                             speedBoostInputTimer = 0;
                             speedBoostInputTimerActive = false;
                             isWallJumpProcess = false;
+                            wallSlideActivated = false;
+                            isJumping = true;
                         }
                         else
                         {
                             if (ySpeed > 0)
-                                ySpeed -= WALL_SLIDE_FORCE * delta;
-                            //wall slide anim play
+                                ySpeed += WALL_SLIDE_FORCE * delta;
+                            else ySpeed += GRAVITY_FORCE * delta;
                         }
                     }
                     //right wall
@@ -513,17 +529,19 @@ public partial class Player : GameObject
                             GD.Print("regular wall jump");
                             xSpeed -= WALL_JUMP_FORCE * delta;
                             ySpeed = -(JUMP_FORCE * delta);
-                            playerSprite.FlipH = true;
-                            //wall jump anim play
+                            playerSprite.Play("walljump");
                             speedBoostInputTimer = 0;
                             speedBoostInputTimerActive = false;
                             isWallJumpProcess = false;
+                            playerSprite.FlipH = true;
+                            wallSlideActivated = false;
+                            isJumping = true;
                         }
                         else
                         {
                             if (ySpeed > 0)
-                                ySpeed -= WALL_SLIDE_FORCE * delta;
-                            //wall slide anim play
+                                ySpeed += WALL_SLIDE_FORCE * delta;
+                            else ySpeed += GRAVITY_FORCE * delta;
                         }
                     }
                 }
@@ -639,6 +657,7 @@ public partial class Player : GameObject
                 speedBoostInputTimer = 0;
                 speedBoostInputTimerActive = true;
                 isWallJumpProcess = false;
+                wallSlideActivated = false;
             }
         }
     }
