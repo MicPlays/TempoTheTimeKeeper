@@ -45,7 +45,6 @@ public partial class Player : GameObject
     private bool speedBoostInputTimerActive = false;
     private float speedBoostInputTimer = 0;
     private float shortHopFloor = -150f;
-    private bool wallSlideActivated = false;
     
     //sensor stuff
     public int pushRadius = 10;
@@ -360,11 +359,8 @@ public partial class Player : GameObject
             Position = new Vector2(GlobalPosition.X + xSpeed, GlobalPosition.Y + ySpeed);
 
             //apply gravity
-            if (!wallSlideActivated)
-            {
-                ySpeed += GRAVITY_FORCE * (float)delta;
-                if (ySpeed > 960 * (float)delta) ySpeed = 960 * (float)delta;
-            }
+            ySpeed += GRAVITY_FORCE * (float)delta;
+            if (ySpeed > 960 * (float)delta) ySpeed = 960 * (float)delta;
 
             //rotate player angle back to 0
             if (groundAngle < 180f)
@@ -482,25 +478,20 @@ public partial class Player : GameObject
                         speedBoostInputTimer = 0;
                         speedBoostInputTimerActive = false;
                         isWallJumpProcess = false;
-                        wallSlideActivated = false;
                         isJumping = true;
                     }
                     else
                     {
-                        if (ySpeed > 0)
-                            ySpeed += WALL_SLIDE_FORCE * delta;
-                        else ySpeed += GRAVITY_FORCE * delta;
+                        ySpeed -= WALL_SLIDE_FORCE * delta;
                         playerSprite.Play("wallslide");
-                        wallSlideActivated = true;
                     }
                 }
                 else 
                 {   
                     xSpeed = 0;
                     //left wall
-                    if (Input.IsActionPressed("left") && sensorString == "E")
+                    if (sensorString == "E")
                     {
-                        
                         if (Input.IsActionJustPressed("jump"))
                         {
                             GD.Print("regular wall jump");
@@ -511,18 +502,15 @@ public partial class Player : GameObject
                             speedBoostInputTimer = 0;
                             speedBoostInputTimerActive = false;
                             isWallJumpProcess = false;
-                            wallSlideActivated = false;
                             isJumping = true;
                         }
                         else
                         {
-                            if (ySpeed > 0)
-                                ySpeed += WALL_SLIDE_FORCE * delta;
-                            else ySpeed += GRAVITY_FORCE * delta;
+                            ySpeed -= WALL_SLIDE_FORCE * delta;
                         }
                     }
                     //right wall
-                    else if (Input.IsActionPressed("right") && sensorString == "F")
+                    else
                     {
                         if (Input.IsActionJustPressed("jump"))
                         {
@@ -534,14 +522,11 @@ public partial class Player : GameObject
                             speedBoostInputTimerActive = false;
                             isWallJumpProcess = false;
                             playerSprite.FlipH = true;
-                            wallSlideActivated = false;
                             isJumping = true;
                         }
                         else
                         {
-                            if (ySpeed > 0)
-                                ySpeed += WALL_SLIDE_FORCE * delta;
-                            else ySpeed += GRAVITY_FORCE * delta;
+                            ySpeed -= WALL_SLIDE_FORCE * delta;
                         }
                     }
                 }
@@ -657,7 +642,6 @@ public partial class Player : GameObject
                 speedBoostInputTimer = 0;
                 speedBoostInputTimerActive = true;
                 isWallJumpProcess = false;
-                wallSlideActivated = false;
             }
         }
     }
