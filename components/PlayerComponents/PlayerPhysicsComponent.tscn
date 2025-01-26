@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://jrfoo1k66g2r"]
+
+[ext_resource type="Script" path="res://scripts/Player/PlayerPhysicsComponent.cs" id="1_mn73r"]
+
+[node name="PlayerPhysicsComponent" type="Node2D"]
+script = ExtResource("1_mn73r")

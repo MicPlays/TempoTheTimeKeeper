@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://4di657ifqbj5"]
+
+[ext_resource type="Script" path="res://scripts/Player/PlayerCollisionComponent.cs" id="1_dsa0i"]
+
+[node name="PlayerCollisionComponent" type="Node2D"]
+script = ExtResource("1_dsa0i")

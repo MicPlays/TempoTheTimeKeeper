@@ -1,6 +1,6 @@
 [gd_scene load_steps=21 format=3 uid="uid://bmlbgok634e1w"]
 
-[ext_resource type="Script" path="res://scripts/MusicNoteFloat.cs" id="1_67tn6"]
+[ext_resource type="Script" path="res://scripts/Objects/MusicNoteFloat.cs" id="1_67tn6"]
 [ext_resource type="Texture2D" uid="uid://ddn6hp51yk5wk" path="res://sprites/temponote.png" id="2_urhnj"]
 [ext_resource type="Texture2D" uid="uid://ts18mbcmice0" path="res://sprites/temponotecollect.png" id="3_7ocal"]
 

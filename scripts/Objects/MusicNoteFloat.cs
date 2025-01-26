@@ -17,6 +17,7 @@ public partial class MusicNoteFloat : RoutineGameObject
 
     public override void IncrementRoutine()
     {
+        /*
         hitbox.SetDeferred("monitorable", false);
         Player playerRef = GameController.Instance.GetPlayer();
         playerRef.noteCount++;
@@ -24,6 +25,7 @@ public partial class MusicNoteFloat : RoutineGameObject
         GameController.Instance.AddScore(10);
         sprite.AnimationFinished += OnBurst;
         sprite.Play("burst");
+        */
         
     }
 

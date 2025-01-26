@@ -71,7 +71,7 @@ public partial class LayerSwitcher : Node2D
     [Export]
     public int visualB;
 
-    public Player player;
+    public Tempo player;
 
     public override void _Ready()
     { 
@@ -81,14 +81,14 @@ public partial class LayerSwitcher : Node2D
             orientation = Orientation.Vertical;
     }
 
-    public override void _Process(double delta)
+    public override void _PhysicsProcess(double delta)
     {
         if (!Engine.IsEditorHint())
         {
             bool canSwitch = true;
             if (groundedOnly)
             {
-                if (!player.isGrounded)
+                if (!(player.psm.CurrentState is PlayerGrounded))
                     canSwitch = false;
             }
 

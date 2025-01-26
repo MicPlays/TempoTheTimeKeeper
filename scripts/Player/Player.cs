@@ -4,54 +4,24 @@ using System.Collections.Generic;
 
 public partial class Player : GameObject
 {
-    //constants
-    private const float ACC_SPEED = 2.8125f;
-    //0.046875f
-    private const float DEC_SPEED = 30f;
-    //0.5f
-    private const float FRICTION_SPEED = 2.8125f;
-    private const int TOP_SPEED = 360;
-    private const float JUMP_FORCE = 390f;
-    //6.5f
-    private const float GRAVITY_FORCE = 13.125f;
-    //0.21875f
-    private const float AIR_ACC_SPEED = 5.625f;
-    //0.09375f
-    private const float SLOPE_FACTOR = 7.5f;
-    //0.125f
-    private const float SLOPE_SPEED_FACTOR =  0.05078125f;
-    private const float SPEED_BOOST_TIME_WINDOW = 5f;
-    private const float SUPER_SPEED_BOOST_TIME_WINDOW = 0.5f;
-    private const float GROUND_JUMP_BOOST = 60f;
-    private const float WALL_JUMP_BOOST = 60f;
-    private const float WALL_JUMP_FORCE = 300f;
-    private const float WALL_SLIDE_FORCE = 9.5625f;
-
     //Components and their NodePaths
     [Export]
-    public NodePath sensorContainerPath;
-    [Export]
     public NodePath spritePath;
+    [Export]
+    public NodePath stateMachinePath;
+    [Export]
+    public NodePath collisionPath;
+    [Export]
+    public NodePath physicsPath;
 
-    private AnimatedSprite2D playerSprite;
+    public PlayerCollisionComponent cc;
+    public PlayerPhysicsComponent pc;
+    public PlayerStateMachine psm;
+    public AnimatedSprite2D playerSprite;
     //player's current collision layer
     public int currentLayer;
-
-    //state variables
-    public bool isGrounded = true;
-    private bool isJumping = false;
-    public bool isWallJumpProcess = false;
-    private float controlLockTimer = 0;
-    private bool speedBoostInputTimerActive = false;
-    private float speedBoostInputTimer = 0;
-    private float shortHopFloor = -150f;
-    
-    //sensor stuff
-    public int pushRadius = 10;
-    Dictionary<string, Sensor> sensorTable;
-
-    //variable running speed vars
-    private int currentFrame = 0;
+    public int currentFrame;
+    public float controlLockTimer = 0;
 
     //player stats
     public int noteCount = 0;
@@ -65,39 +35,21 @@ public partial class Player : GameObject
         groundSpeed = 0f;
         widthRadius = 9;
         heightRadius = 20;
+        currentLayer = 0;
 
         //get player components
         playerSprite = GetNode<AnimatedSprite2D>(spritePath);
-        hitbox = GetNode<Area2D>(hitboxPath);
-        hitboxRect = hitbox.GetChild<CollisionShape2D>(0);
-
-        hitbox.AreaEntered += OnHitboxEnter;
-
-        currentLayer = 0;
-
-        //get player's sensors
-        var sensors = GetNode(sensorContainerPath).GetChildren();
-        sensorTable = new Dictionary<string, Sensor>
-        {
-            { "A", (Sensor)sensors[0] },
-            { "B", (Sensor)sensors[1] },
-            { "C", (Sensor)sensors[2] },
-            { "D", (Sensor)sensors[3] },
-            { "E", (Sensor)sensors[4] },
-            { "F", (Sensor)sensors[5] }
-        };
-
-        //move sensors to relative locations
-        sensorTable["A"].Position = new Vector2(-widthRadius, heightRadius);
-        sensorTable["B"].Position = new Vector2(widthRadius, heightRadius);
-        sensorTable["C"].Position = new Vector2(-widthRadius, -heightRadius);
-        sensorTable["D"].Position = new Vector2(widthRadius, -heightRadius);
-        sensorTable["E"].Position = new Vector2(-pushRadius, 0);
-        sensorTable["F"].Position = new Vector2(pushRadius, 0);
-
+        cc = GetNode<PlayerCollisionComponent>(collisionPath);
+        cc.player = this;
+        cc.Init();
+        pc = GetNode<PlayerPhysicsComponent>(physicsPath);
+        pc.player = this;
+        psm = GetNode<PlayerStateMachine>(stateMachinePath);
+        psm.player = this;
+        psm.SetState(new PlayerFall());
     }
-
-    public override void _Process(double delta)
+/*
+    public override void _PhysicsProcess(double delta)
     {
         //ground state
         if (isGrounded)
@@ -482,7 +434,8 @@ public partial class Player : GameObject
                     }
                     else
                     {
-                        ySpeed -= WALL_SLIDE_FORCE * delta;
+                        if (ySpeed >= 0)
+                            ySpeed -= WALL_SLIDE_FORCE * delta;
                         playerSprite.Play("wallslide");
                     }
                 }
@@ -506,7 +459,8 @@ public partial class Player : GameObject
                         }
                         else
                         {
-                            ySpeed -= WALL_SLIDE_FORCE * delta;
+                            if (ySpeed >= 0)
+                                ySpeed -= WALL_SLIDE_FORCE * delta;
                         }
                     }
                     //right wall
@@ -526,7 +480,8 @@ public partial class Player : GameObject
                         }
                         else
                         {
-                            ySpeed -= WALL_SLIDE_FORCE * delta;
+                            if (ySpeed >= 0)
+                                ySpeed -= WALL_SLIDE_FORCE * delta;
                         }
                     }
                 }
@@ -770,7 +725,7 @@ public partial class Player : GameObject
             sensorTable["B"].direction = "left";
         }
     }
-
+*/
     public void OnHitboxEnter(Area2D other)
     {
         GameObject otherObject = other.GetParent<GameObject>();

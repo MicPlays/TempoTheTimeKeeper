@@ -2,7 +2,7 @@
 
 [ext_resource type="Theme" uid="uid://dqqryx6wfycsn" path="res://fonts/gameUI.tres" id="1_m3y2p"]
 [ext_resource type="Texture2D" uid="uid://cer7sm44xr6tu" path="res://sprites/temponoteicon.png" id="2_6i0fl"]
-[ext_resource type="Script" path="res://scripts/HUD.cs" id="2_xsqvx"]
+[ext_resource type="Script" path="res://scripts/Framework/HUD.cs" id="2_xsqvx"]
 
 [node name="HUD" type="Control"]
 layout_mode = 3

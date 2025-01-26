@@ -1,6 +1,6 @@
-[gd_scene load_steps=63 format=3 uid="uid://dircvqlc5m7yk"]
+[gd_scene load_steps=66 format=3 uid="uid://dircvqlc5m7yk"]
 
-[ext_resource type="Script" path="res://scripts/Player.cs" id="1_73kcx"]
+[ext_resource type="Script" path="res://scripts/Player/Tempo/Tempo.cs" id="1_uwl0n"]
 [ext_resource type="PackedScene" uid="uid://cecegkc1uohgb" path="res://components/sensor.tscn" id="2_7vpx6"]
 [ext_resource type="Texture2D" uid="uid://b375bci8qxmab" path="res://sprites/tempowindyidle.png" id="2_wlp5u"]
 [ext_resource type="Texture2D" uid="uid://cr5mhrkiau3oh" path="res://sprites/temposlowrun.png" id="3_ecbmo"]
@@ -11,6 +11,9 @@
 [ext_resource type="Texture2D" uid="uid://i4jxpfkegtmu" path="res://sprites/tempowallattach.png" id="7_3x33c"]
 [ext_resource type="Texture2D" uid="uid://cluoiaue8s5d" path="res://sprites/tempowalljump.png" id="8_1ujqh"]
 [ext_resource type="Texture2D" uid="uid://cjbcge0pkvygh" path="res://sprites/tempowallslide.png" id="8_2utlj"]
+[ext_resource type="PackedScene" uid="uid://b5rk4486ae3mm" path="res://components/PlayerComponents/Tempo/TempoPhysicsComponent.tscn" id="12_jxmbv"]
+[ext_resource type="PackedScene" uid="uid://bmhkx7ld86yp3" path="res://components/PlayerComponents/Tempo/TempoCollisionComponent.tscn" id="13_35ij4"]
+[ext_resource type="PackedScene" uid="uid://bxdctkx2sj1mf" path="res://components/PlayerComponents/PlayerStateMachine.tscn" id="14_3x2e7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sirig"]
 size = Vector2(11, 33)
@@ -223,7 +226,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_iqpiu")
 }],
-"loop": true,
+"loop": false,
 "name": &"airtime",
 "speed": 8.0
 }, {
@@ -234,7 +237,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_ew276")
 }],
-"loop": true,
+"loop": false,
 "name": &"airtransition",
 "speed": 6.0
 }, {
@@ -248,7 +251,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_y2cg4")
 }],
-"loop": true,
+"loop": false,
 "name": &"fall",
 "speed": 8.0
 }, {
@@ -311,7 +314,7 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("7_3x33c")
 }],
-"loop": true,
+"loop": false,
 "name": &"wallattach",
 "speed": 5.0
 }, {
@@ -410,10 +413,11 @@ animations = [{
 }]
 
 [node name="Player" type="Node2D"]
-script = ExtResource("1_73kcx")
-sensorContainerPath = NodePath("Sensors")
+script = ExtResource("1_uwl0n")
 spritePath = NodePath("PlayerSprite")
-hitboxReaction = 4
+stateMachinePath = NodePath("PlayerStateMachine")
+collisionPath = NodePath("TempoCollisionComponent")
+physicsPath = NodePath("TempoPhysicsComponent")
 hitboxPath = NodePath("Hitbox")
 
 [node name="Hitbox" type="Area2D" parent="."]
@@ -426,7 +430,7 @@ shape = SubResource("RectangleShape2D_sirig")
 position = Vector2(0, -1.19209e-07)
 scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_u4es1")
-animation = &"windyidle"
+animation = &"fall"
 
 [node name="Sensors" type="Node2D" parent="."]
 
@@ -453,3 +457,10 @@ direction = "left"
 [node name="RSensor" parent="Sensors" instance=ExtResource("2_7vpx6")]
 tileDetection = "sides"
 direction = "right"
+
+[node name="TempoPhysicsComponent" parent="." instance=ExtResource("12_jxmbv")]
+
+[node name="TempoCollisionComponent" parent="." instance=ExtResource("13_35ij4")]
+sensorContainerPath = NodePath("../Sensors")
+
+[node name="PlayerStateMachine" parent="." instance=ExtResource("14_3x2e7")]
