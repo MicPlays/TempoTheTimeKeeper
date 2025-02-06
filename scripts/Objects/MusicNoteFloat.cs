@@ -1,36 +1,44 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class MusicNoteFloat : RoutineGameObject
 {
     [Export]
     public NodePath spritePath;
     private AnimatedSprite2D sprite;
+    [Export]
+    public NodePath screenNotifierPath;
+    public VisibleOnScreenNotifier2D screenNotifer;
 
     public override void _Ready()
     {
         hitbox = GetNode<Area2D>(hitboxPath);
-
+        hitbox.AreaEntered += OnPlayerEnter;
+        screenNotifer = GetNode<VisibleOnScreenNotifier2D>(screenNotifierPath);
         sprite = GetNode<AnimatedSprite2D>(spritePath);
-        sprite.Play("bounce");
+    }
+
+    public void OnPlayerEnter(Area2D playerHitbox)
+    {
+        IncrementRoutine();
     }
 
     public override void IncrementRoutine()
     {
-        /*
-        hitbox.SetDeferred("monitorable", false);
+        hitbox.SetDeferred("monitoring", false);
         Player playerRef = GameController.Instance.GetPlayer();
         playerRef.noteCount++;
         HUD.Instance.SetNoteCount(playerRef.noteCount);
         GameController.Instance.AddScore(10);
         sprite.AnimationFinished += OnBurst;
         sprite.Play("burst");
-        */
-        
     }
 
     public void OnBurst()
     {
+        sprite.AnimationFinished -= OnBurst;
         QueueFree();
     }
+
 }

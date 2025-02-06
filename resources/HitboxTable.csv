@@ -1,0 +1,7 @@
+,Attackable,Routine,Hurt,Special,Player,Null
+Attackable,0,0,0,0,0,0
+Routine,0,0,0,1,1,0
+Hurt,1,0,0,0,1,0
+Special,1,0,0,1,1,0
+Player,0,0,0,0,0,0
+Null,0,0,0,0,0,0

@@ -122,22 +122,22 @@ animations = [{
 "speed": 15.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_821er"]
-size = Vector2(20, 17)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y7yjm"]
 
 [node name="MusicNote" type="Node2D"]
 script = ExtResource("1_67tn6")
 spritePath = NodePath("AnimatedSprite2D")
-hitboxReaction = 1
+screenNotifierPath = NodePath("VisibleOnScreenNotifier2D")
 hitboxPath = NodePath("Hitbox")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_8ihc8")
 animation = &"bounce"
 
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+
 [node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-visible = false
-position = Vector2(0, 0.5)
-shape = SubResource("RectangleShape2D_821er")
+shape = SubResource("RectangleShape2D_y7yjm")

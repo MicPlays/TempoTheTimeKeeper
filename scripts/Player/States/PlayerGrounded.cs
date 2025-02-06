@@ -1,9 +1,9 @@
 using Godot;
 using System;
 
-public partial class PlayerGrounded : State
+public partial class PlayerGrounded : BaseState
 {
-    public override void Enter(StateMachine sm)
+    public override void Enter(BaseStateMachine sm)
     {
         if (sm is PlayerStateMachine)
         {
@@ -14,7 +14,7 @@ public partial class PlayerGrounded : State
         }
     }
 
-    public override void Run(StateMachine sm, double delta)
+    public override void Run(BaseStateMachine sm, double delta)
     {
         float deltaTime = (float)delta;
         if (sm is PlayerStateMachine)
@@ -33,7 +33,7 @@ public partial class PlayerGrounded : State
                 }
                 if (player.groundSpeed < 0)
                     player.playerSprite.FlipH = true;
-                else player.playerSprite.FlipH = false;
+                else if (player.groundSpeed > 0) player.playerSprite.FlipH = false;
             }
             else 
             {
@@ -45,7 +45,7 @@ public partial class PlayerGrounded : State
             player.pc.FactorSlope(deltaTime);
 
             //jump check
-            if (Input.IsActionPressed("jump"))
+            if (Input.IsActionJustPressed("jump"))
             {
                 //activate ceiling sensors for one frame before jump. if ceiling is as close
                 //as 6 pixels from the player, don't jump.
@@ -91,6 +91,7 @@ public partial class PlayerGrounded : State
             else 
             {
                 player.playerSprite.Play("fall");
+                player.playerSprite.SpeedScale = 1.0f;
                 return;
             }
 
@@ -111,7 +112,7 @@ public partial class PlayerGrounded : State
             else player.controlLockTimer = Mathf.Clamp(player.controlLockTimer - deltaTime, 0, 30 * deltaTime);
         }
     }
-    public override void Exit(StateMachine sm)
+    public override void Exit(BaseStateMachine sm)
     {
         
     }

@@ -9,7 +9,9 @@ public partial class GameController : Node2D
     public NodePath playerPath;
     [Export]
     public NodePath layerSwitcherContainerPath;
-    private static Tempo playerRef;
+    [Export]
+    public bool drawHitboxes {get; set;}
+    private static Player playerRef;
     private static bool timerActive;
     private static double timeSec;
     private static int minutes;
@@ -20,7 +22,7 @@ public partial class GameController : Node2D
     public override void _Ready()
     {
         Instance = this;
-        playerRef = GetNode<Tempo>(playerPath);
+        playerRef = GetNode<Player>(playerPath);
         timerActive = true;
         var layerSwitchNodes = GetNode<Node2D>(layerSwitcherContainerPath).GetChildren();
         foreach (var node in layerSwitchNodes)
@@ -31,7 +33,7 @@ public partial class GameController : Node2D
 
     }
 
-    public Tempo GetPlayer()
+    public Player GetPlayer()
     {
         return playerRef;
     }

@@ -1,8 +1,9 @@
 using Godot;
 
-public abstract partial class State : Node
+public abstract partial class BaseState : Node2D
 {
-	public abstract void Enter(StateMachine gm);
-	public abstract void Run(StateMachine gm, double delta);
-	public abstract void Exit(StateMachine gm);
+	public abstract void Enter(BaseStateMachine gm);
+	public abstract void Run(BaseStateMachine gm, double delta);
+	public abstract void Exit(BaseStateMachine gm);
 }
+

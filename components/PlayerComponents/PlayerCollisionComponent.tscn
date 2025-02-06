@@ -2,5 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/Player/PlayerCollisionComponent.cs" id="1_dsa0i"]
 
-[node name="PlayerCollisionComponent" type="Node2D"]
+[node name="PlayerCollisionComponent" type="Area2D"]
+collision_mask = 0
+monitoring = false
 script = ExtResource("1_dsa0i")

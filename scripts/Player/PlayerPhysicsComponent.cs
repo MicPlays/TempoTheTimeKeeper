@@ -127,7 +127,7 @@ public partial class PlayerPhysicsComponent : Node
 
     public void Decelerate(float delta)
     {
-        player.groundSpeed -= Mathf.Min(Mathf.Abs(player.groundSpeed), FRICTION_SPEED * delta * Mathf.Sign(player.groundSpeed));
+        player.groundSpeed -= Mathf.Min(Mathf.Abs(player.groundSpeed), FRICTION_SPEED * delta) * Mathf.Sign(player.groundSpeed);
     }
 
     public void SetSpeedOnGround(bool isVertical, float wallDistance)

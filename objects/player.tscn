@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=3 uid="uid://dircvqlc5m7yk"]
+[gd_scene load_steps=66 format=3 uid="uid://ignf2bte5qdy"]
 
 [ext_resource type="Script" path="res://scripts/Player/Tempo/Tempo.cs" id="1_uwl0n"]
 [ext_resource type="PackedScene" uid="uid://cecegkc1uohgb" path="res://components/sensor.tscn" id="2_7vpx6"]
@@ -14,9 +14,6 @@
 [ext_resource type="PackedScene" uid="uid://b5rk4486ae3mm" path="res://components/PlayerComponents/Tempo/TempoPhysicsComponent.tscn" id="12_jxmbv"]
 [ext_resource type="PackedScene" uid="uid://bmhkx7ld86yp3" path="res://components/PlayerComponents/Tempo/TempoCollisionComponent.tscn" id="13_35ij4"]
 [ext_resource type="PackedScene" uid="uid://bxdctkx2sj1mf" path="res://components/PlayerComponents/PlayerStateMachine.tscn" id="14_3x2e7"]
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_sirig"]
-size = Vector2(11, 33)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_ous6u"]
 atlas = ExtResource("3_hh57d")
@@ -226,7 +223,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_iqpiu")
 }],
-"loop": false,
+"loop": true,
 "name": &"airtime",
 "speed": 8.0
 }, {
@@ -251,7 +248,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_y2cg4")
 }],
-"loop": false,
+"loop": true,
 "name": &"fall",
 "speed": 8.0
 }, {
@@ -412,25 +409,22 @@ animations = [{
 "speed": 10.0
 }]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3lnvd"]
+size = Vector2(13, 32)
+
 [node name="Player" type="Node2D"]
 script = ExtResource("1_uwl0n")
 spritePath = NodePath("PlayerSprite")
 stateMachinePath = NodePath("PlayerStateMachine")
 collisionPath = NodePath("TempoCollisionComponent")
 physicsPath = NodePath("TempoPhysicsComponent")
-hitboxPath = NodePath("Hitbox")
-
-[node name="Hitbox" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-position = Vector2(0.5, 1.5)
-shape = SubResource("RectangleShape2D_sirig")
+hitboxPath = NodePath("")
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -1.19209e-07)
 scale = Vector2(0.8, 0.8)
 sprite_frames = SubResource("SpriteFrames_u4es1")
-animation = &"fall"
+animation = &"windyidle"
 
 [node name="Sensors" type="Node2D" parent="."]
 
@@ -462,5 +456,9 @@ direction = "right"
 
 [node name="TempoCollisionComponent" parent="." instance=ExtResource("13_35ij4")]
 sensorContainerPath = NodePath("../Sensors")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TempoCollisionComponent"]
+position = Vector2(0.5, 2)
+shape = SubResource("RectangleShape2D_3lnvd")
 
 [node name="PlayerStateMachine" parent="." instance=ExtResource("14_3x2e7")]

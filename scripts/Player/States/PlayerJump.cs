@@ -3,7 +3,7 @@ using System;
 
 public partial class PlayerJump : PlayerFall
 {
-    public override void Enter(StateMachine sm)
+    public override void Enter(BaseStateMachine sm)
     {
         if (sm is PlayerStateMachine)
         {
@@ -15,7 +15,7 @@ public partial class PlayerJump : PlayerFall
         }
     }
 
-    public override void Run(StateMachine sm, double delta)
+    public override void Run(BaseStateMachine sm, double delta)
     {
         float deltaTime = (float)delta;
         if (sm is PlayerStateMachine)
@@ -33,7 +33,7 @@ public partial class PlayerJump : PlayerFall
             base.Run(sm, delta);
         }
     }
-    public override void Exit(StateMachine sm)
+    public override void Exit(BaseStateMachine sm)
     {
         
     }

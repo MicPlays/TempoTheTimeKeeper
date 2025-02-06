@@ -4,7 +4,7 @@
 [ext_resource type="TileSet" uid="uid://k1wnidgqaqet" path="res://tilesets/countrytiles.tres" id="1_x3und"]
 [ext_resource type="PackedScene" uid="uid://dg62a811grvq5" path="res://objects/gamehud.tscn" id="2_opsrq"]
 [ext_resource type="Texture2D" uid="uid://rdj7ykghxr4d" path="res://levelbackgrounds/countrybg.png" id="4_7o7m7"]
-[ext_resource type="PackedScene" uid="uid://dircvqlc5m7yk" path="res://objects/player.tscn" id="4_jbqmj"]
+[ext_resource type="PackedScene" uid="uid://ignf2bte5qdy" path="res://objects/player.tscn" id="4_jbqmj"]
 [ext_resource type="PackedScene" uid="uid://54ipwnic1bc0" path="res://objects/layer_switcher.tscn" id="6_htrjs"]
 [ext_resource type="PackedScene" uid="uid://bmlbgok634e1w" path="res://objects/music_note.tscn" id="7_00hab"]
 
@@ -44,7 +44,6 @@ metadata/_edit_lock_ = true
 
 [node name="Player" parent="." instance=ExtResource("4_jbqmj")]
 position = Vector2(128, 1003)
-hitboxReaction = 0
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 zoom = Vector2(1.4, 1.4)

@@ -1,14 +1,14 @@
 using Godot;
 using System;
 
-public partial class PlayerFall : State
+public partial class PlayerFall : BaseState
 {
-    public override void Enter(StateMachine sm)
+    public override void Enter(BaseStateMachine sm)
     {
         
     }
 
-    public override void Run(StateMachine sm, double delta)
+    public override void Run(BaseStateMachine sm, double delta)
     {
         float deltaTime = (float)delta;
         if (sm is PlayerStateMachine)
@@ -32,13 +32,17 @@ public partial class PlayerFall : State
             player.cc.AirPushCollisionProcess();
             player.cc.DetermineAirCollisionMode(airAngle);
 
-            if ((player.playerSprite.Animation == "airtime" || player.playerSprite.Animation == "liftoff") && airAngle >= 180f && (airAngle < 360f))
+            if ((player.playerSprite.Animation == "airtime") && airAngle >= 180f && (airAngle < 360f))
                 player.playerSprite.Play("airtransition");
+
+            if (player.playerSprite.Animation == "liftoff" && !player.playerSprite.IsPlaying()) player.playerSprite.Play("airtime");
+
+            if (!player.playerSprite.IsPlaying() && player.playerSprite.Animation == "airtransition") player.playerSprite.Play("fall");
                 
             player.controlLockTimer = Mathf.Clamp(player.controlLockTimer - deltaTime, 0, 30 * deltaTime);
         }
     }
-    public override void Exit(StateMachine sm)
+    public override void Exit(BaseStateMachine sm)
     {
         
     }

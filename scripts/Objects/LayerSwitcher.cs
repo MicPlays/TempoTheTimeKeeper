@@ -71,7 +71,7 @@ public partial class LayerSwitcher : Node2D
     [Export]
     public int visualB;
 
-    public Tempo player;
+    public Player player;
 
     public override void _Ready()
     { 

@@ -5,22 +5,24 @@ public partial class TempoPhysicsComponent : PlayerPhysicsComponent
 {
     [ExportGroup("Physics Constants")]
     private float SPEED_BOOST_TIME_WINDOW {get; set;} = 5f;
-    private float SUPER_SPEED_BOOST_TIME_WINDOW {get; set;} = 0.5f;
+    private float SUPER_SPEED_BOOST_TIME_WINDOW {get; set;} = 3.5f;
     private float GROUND_JUMP_BOOST {get; set;} = 60f;
     private float WALL_JUMP_BOOST {get; set;} = 60f;
     private float WALL_JUMP_FORCE {get; set;} = 300f;
     private float WALL_SLIDE_FORCE {get; set;} = 9.5625f;
 
-    public override void Jump(float delta)
+    public void TempoJump(float delta)
     {
         Tempo tempo = (Tempo)player;
         player.xSpeed -= JUMP_FORCE * (float)delta * Mathf.Sin(Mathf.DegToRad(player.groundAngle));
         if (tempo.speedBoostInputTimer < SUPER_SPEED_BOOST_TIME_WINDOW * delta)
         {
+            GD.Print("superjump");
             player.xSpeed += Mathf.Sign(player.xSpeed) * (GROUND_JUMP_BOOST * delta);
         }
         else if (tempo.speedBoostInputTimer < SPEED_BOOST_TIME_WINDOW * delta)
         {
+            GD.Print("boosted jump");
             player.xSpeed += Mathf.Sign(player.xSpeed) * (GROUND_JUMP_BOOST * delta);
             if (Mathf.Abs(player.xSpeed) < TOP_SPEED)
                 player.xSpeed = Mathf.Sign(player.xSpeed) * Mathf.Abs(player.xSpeed);

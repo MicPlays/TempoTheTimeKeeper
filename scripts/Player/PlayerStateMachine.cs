@@ -1,11 +1,11 @@
 using Godot;
 using System;
 
-public partial class PlayerStateMachine : StateMachine
+public partial class PlayerStateMachine : BaseStateMachine
 {
     public Player player;
     
-    public override void TransitionState(State transitionState)
+    public override void TransitionState(BaseState transitionState)
     {
         CurrentState.Exit(this);
         SetState(transitionState);

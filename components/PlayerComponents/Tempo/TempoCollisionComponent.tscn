@@ -2,5 +2,7 @@
 
 [ext_resource type="Script" path="res://scripts/Player/Tempo/TempoCollisionComponent.cs" id="1_l11bd"]
 
-[node name="TempoCollisionComponent" type="Node2D"]
+[node name="TempoCollisionComponent" type="Area2D"]
+collision_mask = 0
+monitoring = false
 script = ExtResource("1_l11bd")

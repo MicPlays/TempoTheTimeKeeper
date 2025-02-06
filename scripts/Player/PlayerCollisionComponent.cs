@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class PlayerCollisionComponent : Node
+public partial class PlayerCollisionComponent : Area2D
 {
     public Player player;
 

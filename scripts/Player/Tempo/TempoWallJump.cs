@@ -1,9 +1,10 @@
 using Godot;
 using System;
 
-public partial class TempoWallJump : State
+public partial class TempoWallJump : BaseState
 {
-    public override void Enter(StateMachine sm)
+    bool isSliding = false;
+    public override void Enter(BaseStateMachine sm)
     {
         if (sm is PlayerStateMachine)
         {
@@ -17,7 +18,7 @@ public partial class TempoWallJump : State
         }
     }
 
-    public override void Run(StateMachine sm, double delta)
+    public override void Run(BaseStateMachine sm, double delta)
     {
         if (sm is PlayerStateMachine)
         {
@@ -68,14 +69,18 @@ public partial class TempoWallJump : State
             {
                 tpc.WallSlide(deltaTime);
                 float airAngle = player.cc.GetAngleOfAirMovement();
-                if (airAngle == 270) player.psm.TransitionState(new TempoWallSlide());
+                if (airAngle == 270) 
+                {
+                    player.playerSprite.Play("wallslide");
+                    isSliding = true;
+                }
                 player.cc.DetermineAirCollisionMode(airAngle);
             }
         }
     }
 
-    public override void Exit(StateMachine sm)
+    public override void Exit(BaseStateMachine sm)
     {
-        
+        isSliding = false;
     }
 }
