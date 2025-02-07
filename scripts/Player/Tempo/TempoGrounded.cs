@@ -21,6 +21,7 @@ public partial class TempoGrounded : PlayerGrounded
             PlayerStateMachine psm = (PlayerStateMachine)sm;
             Tempo player = (Tempo)psm.player;
             TempoPhysicsComponent tpc = (TempoPhysicsComponent)player.pc;
+            TempoCollisionComponent tcc = (TempoCollisionComponent)player.cc;
             player.speedBoostInputTimer += Mathf.Clamp((float)delta, 0, 10f * (float)delta);
             if (player.groundSpeed != 0)
             {
@@ -86,6 +87,7 @@ public partial class TempoGrounded : PlayerGrounded
                         player.pc.Decelerate(deltaTime);
                 }
             }
+
             //wall collision
             bool isVertical = player.cc.SwitchPushCollisionMode(player.groundAngle);
             float wallDistance = player.cc.PushCollisionProcess(isVertical);
@@ -93,8 +95,22 @@ public partial class TempoGrounded : PlayerGrounded
 
             player.pc.SetSpeedOnGround(isVertical, wallDistance);
 
+            if (player.controlLockTimer == 0)
+            {
+                if (Input.IsActionJustPressed("attack"))
+                {
+                    tpc.ApplyAttackForce(deltaTime);
+                    tcc.ToggleAttackHitbox(true);
+                    player.controlLockTimer = 20 * deltaTime;
+                    psm.TransitionState(new TempoGroundAttack());   
+                }
+            }
+
             //Move player
             player.pc.MovePlayerObject();
+
+            
+                
 
             //ground collision
             bool groundCollision = player.cc.GroundCollisionProcess();

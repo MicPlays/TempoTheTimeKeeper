@@ -49,4 +49,11 @@ public partial class TempoCollisionComponent : PlayerCollisionComponent
         if (landed) player.psm.TransitionState(new TempoGrounded());
         return landed;
     }
+
+    public void ToggleAttackHitbox(bool toggle)
+    {
+        Tempo tempo = (Tempo)player;
+        tempo.attackBox.SetDeferred("monitorable", toggle);
+        tempo.attackBox.SetDeferred("monitoring", toggle);
+    }
 }

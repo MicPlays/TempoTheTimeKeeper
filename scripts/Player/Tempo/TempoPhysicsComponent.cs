@@ -4,12 +4,20 @@ using System;
 public partial class TempoPhysicsComponent : PlayerPhysicsComponent
 {
     [ExportGroup("Physics Constants")]
+    [Export]
     private float SPEED_BOOST_TIME_WINDOW {get; set;} = 5f;
+    [Export]
     private float SUPER_SPEED_BOOST_TIME_WINDOW {get; set;} = 3.5f;
+    [Export]
     private float GROUND_JUMP_BOOST {get; set;} = 60f;
+    [Export]
     private float WALL_JUMP_BOOST {get; set;} = 60f;
+    [Export]
     private float WALL_JUMP_FORCE {get; set;} = 300f;
+    [Export]
     private float WALL_SLIDE_FORCE {get; set;} = 9.5625f;
+    [Export]
+    private float ATTACK_FORCE {get; set;} = 400f;
 
     public void TempoJump(float delta)
     {
@@ -61,5 +69,10 @@ public partial class TempoPhysicsComponent : PlayerPhysicsComponent
     {
         if (player.ySpeed >= 0)
             player.ySpeed -= WALL_SLIDE_FORCE * delta;
+    }
+
+    public void ApplyAttackForce(float delta)
+    {
+        player.xSpeed = Mathf.Sign(player.xSpeed) * ATTACK_FORCE * delta;
     }
 }

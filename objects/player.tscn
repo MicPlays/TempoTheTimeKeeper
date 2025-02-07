@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=3 uid="uid://ignf2bte5qdy"]
+[gd_scene load_steps=67 format=3 uid="uid://ignf2bte5qdy"]
 
 [ext_resource type="Script" path="res://scripts/Player/Tempo/Tempo.cs" id="1_uwl0n"]
 [ext_resource type="PackedScene" uid="uid://cecegkc1uohgb" path="res://components/sensor.tscn" id="2_7vpx6"]
@@ -412,8 +412,12 @@ animations = [{
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_3lnvd"]
 size = Vector2(13, 32)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_w7lfp"]
+size = Vector2(17, 37)
+
 [node name="Player" type="Node2D"]
 script = ExtResource("1_uwl0n")
+attackBoxPath = NodePath("DamageArea")
 spritePath = NodePath("PlayerSprite")
 stateMachinePath = NodePath("PlayerStateMachine")
 collisionPath = NodePath("TempoCollisionComponent")
@@ -455,6 +459,8 @@ direction = "right"
 [node name="TempoPhysicsComponent" parent="." instance=ExtResource("12_jxmbv")]
 
 [node name="TempoCollisionComponent" parent="." instance=ExtResource("13_35ij4")]
+collision_mask = 4
+monitoring = true
 sensorContainerPath = NodePath("../Sensors")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TempoCollisionComponent"]
@@ -462,3 +468,12 @@ position = Vector2(0.5, 2)
 shape = SubResource("RectangleShape2D_3lnvd")
 
 [node name="PlayerStateMachine" parent="." instance=ExtResource("14_3x2e7")]
+
+[node name="DamageArea" type="Area2D" parent="."]
+position = Vector2(14, 2)
+collision_layer = 4
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DamageArea"]
+position = Vector2(1.5, -0.5)
+shape = SubResource("RectangleShape2D_w7lfp")

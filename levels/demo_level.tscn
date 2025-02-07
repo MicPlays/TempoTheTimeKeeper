@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://dt4fbtchk67j4"]
+[gd_scene load_steps=10 format=3 uid="uid://dt4fbtchk67j4"]
 
 [ext_resource type="Script" path="res://scripts/Framework/GameController.cs" id="1_8vys5"]
 [ext_resource type="TileSet" uid="uid://k1wnidgqaqet" path="res://tilesets/countrytiles.tres" id="1_x3und"]
@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://ignf2bte5qdy" path="res://objects/player.tscn" id="4_jbqmj"]
 [ext_resource type="PackedScene" uid="uid://54ipwnic1bc0" path="res://objects/layer_switcher.tscn" id="6_htrjs"]
 [ext_resource type="PackedScene" uid="uid://bmlbgok634e1w" path="res://objects/music_note.tscn" id="7_00hab"]
+[ext_resource type="PackedScene" uid="uid://dhqooaj0ldjev" path="res://objects/spikes.tscn" id="8_rf4c1"]
+[ext_resource type="PackedScene" uid="uid://b5rqqrfnpotbp" path="res://objects/target.tscn" id="9_c4ltg"]
 
 [node name="DemoLevel" type="Node2D"]
 script = ExtResource("1_8vys5")
@@ -1242,3 +1244,10 @@ position = Vector2(8556, 1005)
 
 [node name="MusicNote344" parent="Notes" instance=ExtResource("7_00hab")]
 position = Vector2(8582, 1005)
+
+[node name="Spikes" parent="." instance=ExtResource("8_rf4c1")]
+position = Vector2(308, 999)
+facing = 2
+
+[node name="Target" parent="." instance=ExtResource("9_c4ltg")]
+position = Vector2(70, 999)

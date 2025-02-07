@@ -24,6 +24,10 @@ public partial class PlayerPhysicsComponent : Node
     public float SLOPE_SPEED_FACTOR {get; set;} = 0.05078125f;
     [Export]
     public float SHORT_HOP_FLOOR {get; set;} = -240f;
+    [Export]
+    public float HURT_X_FORCE {get; set;} = 120f;
+    [Export]
+    public float HURT_Y_FORCE {get; set;} = -160f;
 
     public Player player;
 
@@ -53,6 +57,12 @@ public partial class PlayerPhysicsComponent : Node
     {
         player.ySpeed += GRAVITY_FORCE * delta;
         if (player.ySpeed > 960 * delta) player.ySpeed = 960 * (float)delta;
+    }
+
+    public virtual void ApplyHurtForce(float delta)
+    {
+        player.xSpeed = -Mathf.Sign(player.xSpeed) * HURT_X_FORCE * delta;
+        player.ySpeed = HURT_Y_FORCE * delta;
     }
 
     //rotate player angle back to 0

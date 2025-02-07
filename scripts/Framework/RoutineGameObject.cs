@@ -1,9 +1,7 @@
 using Godot;
 using System;
 
-public abstract partial class RoutineGameObject : GameObject
+public interface IRoutineGameObject
 {
-    public int routineCount;
-
     public abstract void IncrementRoutine();
 }

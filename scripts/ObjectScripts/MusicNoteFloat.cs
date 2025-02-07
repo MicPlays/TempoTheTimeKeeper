@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class MusicNoteFloat : RoutineGameObject
+public partial class MusicNoteFloat : GameObject, IRoutineGameObject
 {
     [Export]
     public NodePath spritePath;
@@ -21,10 +21,11 @@ public partial class MusicNoteFloat : RoutineGameObject
 
     public void OnPlayerEnter(Area2D playerHitbox)
     {
-        IncrementRoutine();
+        if (playerHitbox.CollisionLayer == 1)
+            IncrementRoutine();
     }
 
-    public override void IncrementRoutine()
+    public void IncrementRoutine()
     {
         hitbox.SetDeferred("monitoring", false);
         Player playerRef = GameController.Instance.GetPlayer();

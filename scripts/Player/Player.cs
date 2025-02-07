@@ -22,6 +22,14 @@ public partial class Player : GameObject
     public int currentLayer;
     public int currentFrame;
     public float controlLockTimer = 0;
+    public float invulnTimer = 0;
+    public bool isInvuln = false;
+    public float invulnFlashTimer;
+    public bool flashActive = false;
+    [Export]
+    public float invulnLength {get; set;} = 120f;
+    [Export]
+    public float invulnFlashInterval {get; set;} = 30f;
 
     //player stats
     public int noteCount = 0;
@@ -49,5 +57,30 @@ public partial class Player : GameObject
         psm.player = this;
         psm.SetState(new PlayerFall());
 
+    }
+
+    public override void _PhysicsProcess(double delta)
+    {
+        //handle invulnerability (extends across multiple states)
+        if (isInvuln)
+        {
+            invulnTimer += (float)delta;
+            if (flashActive)
+            {
+                invulnFlashTimer += (float)delta;
+                if (invulnFlashTimer <= invulnFlashInterval * (float)delta)
+                    playerSprite.Visible = !playerSprite.Visible;
+                else invulnFlashTimer = 0;
+            }
+            if (invulnTimer > invulnLength * (float)delta)
+            {
+                playerSprite.Visible = true;
+                isInvuln = false;
+                invulnTimer = 0;
+                invulnFlashTimer = 0;
+                flashActive = false;
+                hitbox.SetCollisionLayerValue(1, true);
+            }
+        }
     }
 }

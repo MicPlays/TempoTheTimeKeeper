@@ -1,8 +1,9 @@
-[gd_scene load_steps=21 format=3 uid="uid://bmlbgok634e1w"]
+[gd_scene load_steps=22 format=3 uid="uid://bmlbgok634e1w"]
 
-[ext_resource type="Script" path="res://scripts/Objects/MusicNoteFloat.cs" id="1_67tn6"]
+[ext_resource type="Script" path="res://scripts/ObjectScripts/MusicNoteFloat.cs" id="1_67tn6"]
 [ext_resource type="Texture2D" uid="uid://ddn6hp51yk5wk" path="res://sprites/temponote.png" id="2_urhnj"]
 [ext_resource type="Texture2D" uid="uid://ts18mbcmice0" path="res://sprites/temponotecollect.png" id="3_7ocal"]
+[ext_resource type="PackedScene" uid="uid://dnp1jk3tg6u6w" path="res://components/hitbox.tscn" id="4_hqu4u"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_m1vxh"]
 atlas = ExtResource("2_urhnj")
@@ -122,7 +123,7 @@ animations = [{
 "speed": 15.0
 }]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_y7yjm"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yby0t"]
 
 [node name="MusicNote" type="Node2D"]
 script = ExtResource("1_67tn6")
@@ -136,8 +137,9 @@ animation = &"bounce"
 
 [node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
 
-[node name="Hitbox" type="Area2D" parent="."]
+[node name="Hitbox" parent="." instance=ExtResource("4_hqu4u")]
 collision_layer = 2
+parentObjectPath = NodePath("..")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
-shape = SubResource("RectangleShape2D_y7yjm")
+shape = SubResource("RectangleShape2D_yby0t")
