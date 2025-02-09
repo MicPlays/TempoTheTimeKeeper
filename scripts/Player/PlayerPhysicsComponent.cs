@@ -217,4 +217,10 @@ public partial class PlayerPhysicsComponent : Node
         //don't forget to set ySpeed to 0 at end
         player.ySpeed = 0;
     }
+
+    public void SetDeathSpeedAndDirection(float delta)
+    {
+        player.xSpeed = 0;
+        player.ySpeed = -420f * delta;
+    }
 }

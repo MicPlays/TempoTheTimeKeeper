@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cjbcge0pkvygh"
-path="res://.godot/imported/tempowallslide.png-a16baff9a2139dffc750b05fb8f841c1.ctex"
+uid="uid://bdendng5gvns3"
+path="res://.godot/imported/stickuidark.png-e8b9299ffdf3965304a165d3ca3b9415.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/tempowallslide.png"
-dest_files=["res://.godot/imported/tempowallslide.png-a16baff9a2139dffc750b05fb8f841c1.ctex"]
+source_file="res://sprites/ui/stickuidark.png"
+dest_files=["res://.godot/imported/stickuidark.png-e8b9299ffdf3965304a165d3ca3b9415.ctex"]
 
 [params]
 

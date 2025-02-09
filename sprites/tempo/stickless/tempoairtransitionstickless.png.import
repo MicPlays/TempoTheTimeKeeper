@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://djuooc0a0sagi"
-path="res://.godot/imported/tempoairtime.png-f500d2f3a437c0c1dfe7fd9daf3842eb.ctex"
+uid="uid://vrf52ixjqc5e"
+path="res://.godot/imported/tempoairtransitionstickless.png-f0901d682ffa14998a8430d6b5210a22.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/tempoairtime.png"
-dest_files=["res://.godot/imported/tempoairtime.png-f500d2f3a437c0c1dfe7fd9daf3842eb.ctex"]
+source_file="res://sprites/tempo/stickless/tempoairtransitionstickless.png"
+dest_files=["res://.godot/imported/tempoairtransitionstickless.png-f0901d682ffa14998a8430d6b5210a22.ctex"]
 
 [params]
 

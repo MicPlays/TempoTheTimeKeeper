@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class Player : GameObject
+public partial class Player : GameObject, IAttackable
 {
     //Components and their NodePaths
     [Export]
@@ -30,6 +30,9 @@ public partial class Player : GameObject
     public float invulnLength {get; set;} = 120f;
     [Export]
     public float invulnFlashInterval {get; set;} = 30f;
+    [Export]
+    public int maxHealth = 3;
+    public int health = 3;
 
     //player stats
     public int noteCount = 0;
@@ -56,7 +59,6 @@ public partial class Player : GameObject
         psm = GetNode<PlayerStateMachine>(stateMachinePath);
         psm.player = this;
         psm.SetState(new PlayerFall());
-
     }
 
     public override void _PhysicsProcess(double delta)
@@ -81,6 +83,31 @@ public partial class Player : GameObject
                 flashActive = false;
                 hitbox.SetCollisionLayerValue(1, true);
             }
+        }
+    }
+
+    public virtual void Damage()
+    {
+        if (health == 0)
+            psm.TransitionState(new PlayerDeath());
+        else
+        {
+            HUD.Instance.SetHealth(health - 1);
+            health--;
+            psm.TransitionState(new PlayerHurt());
+        }
+        
+    }
+    
+    public virtual bool Heal()
+    {
+        if (health == maxHealth)
+            return false;
+        else 
+        {
+            HUD.Instance.SetHealth(health);
+            health++;
+            return true;
         }
     }
 }

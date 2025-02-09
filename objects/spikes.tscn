@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://dhqooaj0ldjev"]
 
-[ext_resource type="Texture2D" uid="uid://cer7sm44xr6tu" path="res://sprites/temponoteicon.png" id="1_nar47"]
 [ext_resource type="Script" path="res://scripts/ObjectScripts/Spikes.cs" id="1_o8nys"]
+[ext_resource type="Texture2D" uid="uid://cer7sm44xr6tu" path="res://sprites/ui/temponoteicon.png" id="2_ardth"]
 [ext_resource type="PackedScene" uid="uid://dnp1jk3tg6u6w" path="res://components/hitbox.tscn" id="3_o68ou"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6rk34"]
@@ -11,7 +11,7 @@ script = ExtResource("1_o8nys")
 hitboxPath = NodePath("Hitbox")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_nar47")
+texture = ExtResource("2_ardth")
 
 [node name="Hitbox" parent="." instance=ExtResource("3_o68ou")]
 collision_layer = 4

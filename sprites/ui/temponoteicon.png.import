@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ts18mbcmice0"
-path="res://.godot/imported/temponotecollect.png-71576c7fe2bcfd98983201921af3409d.ctex"
+uid="uid://cer7sm44xr6tu"
+path="res://.godot/imported/temponoteicon.png-2312d50d67945de4a1e3a0017bf92474.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/temponotecollect.png"
-dest_files=["res://.godot/imported/temponotecollect.png-71576c7fe2bcfd98983201921af3409d.ctex"]
+source_file="res://sprites/ui/temponoteicon.png"
+dest_files=["res://.godot/imported/temponoteicon.png-2312d50d67945de4a1e3a0017bf92474.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dcsj3cod1xuf5"
-path="res://.godot/imported/tempofall.png-c20fb68c708d6ef5deb3cbdb36ef9d43.ctex"
+uid="uid://birrbj3hjlmpm"
+path="res://.godot/imported/stickpickup.png-e46a30b9c09f6275a40591344bf84c1f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/tempofall.png"
-dest_files=["res://.godot/imported/tempofall.png-c20fb68c708d6ef5deb3cbdb36ef9d43.ctex"]
+source_file="res://components/stickpickup.png"
+dest_files=["res://.godot/imported/stickpickup.png-e46a30b9c09f6275a40591344bf84c1f.ctex"]
 
 [params]
 

@@ -20,39 +20,33 @@ public partial class Spikes : GameObject
 
     public void OnAreaEnter(Area2D area)
     {
-        
         if (area is Hitbox)
         {
             Hitbox attackable = (Hitbox)area;
             if (attackable.parentObject is IAttackable)
-                ((IAttackable)attackable.parentObject).Damage();
-        }
-        else 
-        {
-            Player player = GameController.Instance.GetPlayer();
-            player.psm.TransitionState(new PlayerHurt());
-            /*
-            switch (facing)
             {
-                case Facing.Left:
-                    if (player.xSpeed < 0)
-                        player.psm.TransitionState(new PlayerHurt());
-                    break;
-                case Facing.Right:
-                    if (player.xSpeed > 0)
-                        player.psm.TransitionState(new PlayerHurt());
-                    break;
-                case Facing.Up:
-                    if (player.ySpeed >= 0 && (GlobalPosition.Y - player.GlobalPosition.Y) > 0)
-                        player.psm.TransitionState(new PlayerHurt());
-                    break;
-                case Facing.Down:
-                    if (player.ySpeed < 0)
-                        player.psm.TransitionState(new PlayerHurt());
-                    break;
+                IAttackable otherObject = (IAttackable)attackable.parentObject;
+                switch (facing)
+                {
+                    case Facing.Left:
+                        if (attackable.parentObject.xSpeed < 0)
+                            otherObject.Damage();
+                        break;
+                    case Facing.Right:
+                        if (attackable.parentObject.xSpeed > 0)
+                            otherObject.Damage();
+                        break;
+                    case Facing.Up:
+                        if (attackable.parentObject.ySpeed >= 0 && (GlobalPosition.Y - attackable.parentObject.GlobalPosition.Y) > 0)
+                            otherObject.Damage();
+                        break;
+                    case Facing.Down:
+                        if (attackable.parentObject.ySpeed < 0)
+                            otherObject.Damage();
+                        break;
+                }
             }
-            */
-            
+                
         }
     }
 }

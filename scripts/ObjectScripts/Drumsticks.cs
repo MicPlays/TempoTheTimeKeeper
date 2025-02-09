@@ -1,8 +1,7 @@
 using Godot;
 using System;
-using System.Collections.Generic;
 
-public partial class MusicNoteFloat : GameObject, IRoutineGameObject
+public partial class Drumsticks : GameObject, IRoutineGameObject
 {
     [Export]
     public NodePath spritePath;
@@ -27,19 +26,13 @@ public partial class MusicNoteFloat : GameObject, IRoutineGameObject
 
     public void Routine()
     {
-        hitbox.SetDeferred("monitoring", false);
         Player playerRef = GameController.Instance.GetPlayer();
-        playerRef.noteCount++;
-        HUD.Instance.SetNoteCount(playerRef.noteCount);
-        GameController.Instance.AddScore(10);
-        sprite.AnimationFinished += OnBurst;
-        sprite.Play("burst");
+        bool healed = playerRef.Heal();
+        if (healed)
+        {
+            hitbox.SetDeferred("monitoring", false);
+            QueueFree();
+        }
+        
     }
-
-    public void OnBurst()
-    {
-        sprite.AnimationFinished -= OnBurst;
-        QueueFree();
-    }
-
 }

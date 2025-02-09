@@ -3,5 +3,5 @@ using System;
 
 public interface IRoutineGameObject
 {
-    public abstract void IncrementRoutine();
+    public abstract void Routine();
 }

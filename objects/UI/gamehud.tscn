@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3 uid="uid://dg62a811grvq5"]
+[gd_scene load_steps=5 format=3 uid="uid://dg62a811grvq5"]
 
 [ext_resource type="Theme" uid="uid://dqqryx6wfycsn" path="res://fonts/gameUI.tres" id="1_m3y2p"]
-[ext_resource type="Texture2D" uid="uid://cer7sm44xr6tu" path="res://sprites/temponoteicon.png" id="2_6i0fl"]
-[ext_resource type="Script" path="res://scripts/Framework/HUD.cs" id="2_xsqvx"]
+[ext_resource type="Texture2D" uid="uid://cer7sm44xr6tu" path="res://sprites/ui/temponoteicon.png" id="2_6i0fl"]
+[ext_resource type="Script" path="res://scripts/UIScripts/HUD.cs" id="2_r5n0a"]
+[ext_resource type="Script" path="res://scripts/UIScripts/HealthUIManager.cs" id="3_86ewc"]
 
 [node name="HUD" type="Control"]
 layout_mode = 3
@@ -12,41 +13,13 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme = ExtResource("1_m3y2p")
-script = ExtResource("2_xsqvx")
+script = ExtResource("2_r5n0a")
 minutesPath = NodePath("Timer/Minutes")
 secondsPath = NodePath("Timer/Seconds")
 hundPath = NodePath("Timer/HundSec")
 noteCountPath = NodePath("Notes/NoteCount")
 scorePath = NodePath("Score")
-
-[node name="ColorRect" type="ColorRect" parent="."]
-layout_mode = 1
-offset_left = 12.0
-offset_right = 49.0
-offset_bottom = 40.0
-color = Color(0, 0, 0, 0.482353)
-
-[node name="ColorRect2" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -47.0
-offset_right = 47.0
-offset_bottom = 40.0
-grow_horizontal = 2
-color = Color(0, 0, 0, 0.482353)
-
-[node name="ColorRect3" type="ColorRect" parent="."]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -99.0
-offset_right = -11.0
-offset_bottom = 40.0
-grow_horizontal = 0
-color = Color(0, 0, 0, 0.482353)
+healthPath = NodePath("Health")
 
 [node name="Timer" type="HBoxContainer" parent="."]
 layout_direction = 2
@@ -109,3 +82,14 @@ offset_right = -12.0
 offset_bottom = 27.0
 grow_horizontal = 0
 text = "000000000"
+
+[node name="Health" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.13
+anchor_right = 0.13
+offset_top = 10.0
+offset_bottom = 30.0
+script = ExtResource("3_86ewc")
+ActiveTexturePath = "res://sprites/ui/stickui.png"
+InactiveTexturePath = "res://sprites/ui/stickuidark.png"

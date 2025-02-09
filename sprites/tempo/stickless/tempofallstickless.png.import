@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ddn6hp51yk5wk"
-path="res://.godot/imported/temponote.png-23b04678e92118f3c5c1dc6c46bc0fcd.ctex"
+uid="uid://b5dnd5blso6vd"
+path="res://.godot/imported/tempofallstickless.png-b6a883d6762f2370e4d2e660954dd797.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/temponote.png"
-dest_files=["res://.godot/imported/temponote.png-23b04678e92118f3c5c1dc6c46bc0fcd.ctex"]
+source_file="res://sprites/tempo/stickless/tempofallstickless.png"
+dest_files=["res://.godot/imported/tempofallstickless.png-b6a883d6762f2370e4d2e660954dd797.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cluoiaue8s5d"
-path="res://.godot/imported/tempowalljump.png-a37a5647799df118b86b66a96b972d6b.ctex"
+uid="uid://ts18mbcmice0"
+path="res://.godot/imported/temponotecollect.png-edf9eecefd60fc95a2a384915ca530a0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/tempowalljump.png"
-dest_files=["res://.godot/imported/tempowalljump.png-a37a5647799df118b86b66a96b972d6b.ctex"]
+source_file="res://sprites/pickups/musicnote/temponotecollect.png"
+dest_files=["res://.godot/imported/temponotecollect.png-edf9eecefd60fc95a2a384915ca530a0.ctex"]
 
 [params]
 

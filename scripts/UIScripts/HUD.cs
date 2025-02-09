@@ -13,12 +13,15 @@ public partial class HUD : Control
     public NodePath noteCountPath;
     [Export]
     public NodePath scorePath;
+    [Export]
+    public NodePath healthPath;
 
     private static Label minutesText;
     private static Label secondsText;
     private static Label hundSecText;
     private static Label noteCountText;
     private static Label scoreText;
+    private static HealthUIManager healthContainer;
 
     public static HUD Instance {get; private set;}
 
@@ -30,6 +33,7 @@ public partial class HUD : Control
         hundSecText = GetNode<Label>(hundPath);
         noteCountText = GetNode<Label>(noteCountPath);
         scoreText = GetNode<Label>(scorePath);
+        healthContainer = GetNode<HealthUIManager>(healthPath);
     }
 
     public void SetTimer(int minutes, double timeSec, double hundSec)
@@ -65,5 +69,17 @@ public partial class HUD : Control
     public void SetNoteCount(int noteCount)
     {
         noteCountText.Text = noteCount.ToString();
+    }
+
+    public void BuildHealthBar(int maxHealth)
+    {
+        if (healthContainer != null)
+            healthContainer.Init(maxHealth);
+        else GD.Print("error loading health UI");
+    }
+
+    public void SetHealth(int index)
+    {
+        healthContainer.SwapSprite(index);
     }
 }

@@ -1,19 +1,21 @@
-[gd_scene load_steps=10 format=3 uid="uid://dt4fbtchk67j4"]
+[gd_scene load_steps=11 format=3 uid="uid://dt4fbtchk67j4"]
 
 [ext_resource type="Script" path="res://scripts/Framework/GameController.cs" id="1_8vys5"]
 [ext_resource type="TileSet" uid="uid://k1wnidgqaqet" path="res://tilesets/countrytiles.tres" id="1_x3und"]
-[ext_resource type="PackedScene" uid="uid://dg62a811grvq5" path="res://objects/gamehud.tscn" id="2_opsrq"]
+[ext_resource type="PackedScene" uid="uid://dg62a811grvq5" path="res://objects/UI/gamehud.tscn" id="2_opsrq"]
 [ext_resource type="Texture2D" uid="uid://rdj7ykghxr4d" path="res://levelbackgrounds/countrybg.png" id="4_7o7m7"]
 [ext_resource type="PackedScene" uid="uid://ignf2bte5qdy" path="res://objects/player.tscn" id="4_jbqmj"]
 [ext_resource type="PackedScene" uid="uid://54ipwnic1bc0" path="res://objects/layer_switcher.tscn" id="6_htrjs"]
 [ext_resource type="PackedScene" uid="uid://bmlbgok634e1w" path="res://objects/music_note.tscn" id="7_00hab"]
 [ext_resource type="PackedScene" uid="uid://dhqooaj0ldjev" path="res://objects/spikes.tscn" id="8_rf4c1"]
 [ext_resource type="PackedScene" uid="uid://b5rqqrfnpotbp" path="res://objects/target.tscn" id="9_c4ltg"]
+[ext_resource type="PackedScene" uid="uid://1437i3u14ghp" path="res://objects/drumsticks.tscn" id="10_ub5rj"]
 
 [node name="DemoLevel" type="Node2D"]
 script = ExtResource("1_8vys5")
 playerPath = NodePath("Player")
 layerSwitcherContainerPath = NodePath("LayerSwitchers")
+playerCamPath = NodePath("Player/Camera2D")
 
 [node name="ParallaxBackground" type="ParallaxBackground" parent="."]
 scroll_limit_begin = Vector2(0, 500)
@@ -1246,8 +1248,11 @@ position = Vector2(8556, 1005)
 position = Vector2(8582, 1005)
 
 [node name="Spikes" parent="." instance=ExtResource("8_rf4c1")]
-position = Vector2(308, 999)
+position = Vector2(273, 996)
 facing = 2
 
 [node name="Target" parent="." instance=ExtResource("9_c4ltg")]
 position = Vector2(70, 999)
+
+[node name="Drumsticks" parent="." instance=ExtResource("10_ub5rj")]
+position = Vector2(663, 874)

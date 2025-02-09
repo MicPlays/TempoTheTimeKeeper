@@ -95,7 +95,7 @@ public partial class TempoGrounded : PlayerGrounded
 
             player.pc.SetSpeedOnGround(isVertical, wallDistance);
 
-            if (player.controlLockTimer == 0)
+            if (player.controlLockTimer == 0 && player.health > 0)
             {
                 if (Input.IsActionJustPressed("attack"))
                 {

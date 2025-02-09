@@ -1,0 +1,49 @@
+[gd_scene load_steps=7 format=3 uid="uid://1437i3u14ghp"]
+
+[ext_resource type="PackedScene" uid="uid://dnp1jk3tg6u6w" path="res://components/hitbox.tscn" id="1_4xtqr"]
+[ext_resource type="Script" path="res://scripts/ObjectScripts/Drumsticks.cs" id="1_mik4g"]
+[ext_resource type="Texture2D" uid="uid://mhpkjs45rs56" path="res://sprites/pickups/drumsticks/stickpickup.png" id="1_xtdyv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_iy4qc"]
+atlas = ExtResource("1_xtdyv")
+region = Rect2(0, 0, 24, 24)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_54h8r"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_iy4qc")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"pickup",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_87n6c"]
+size = Vector2(28, 27)
+
+[node name="Drumsticks" type="Node2D"]
+script = ExtResource("1_mik4g")
+spritePath = NodePath("AnimatedSprite2D")
+screenNotifierPath = NodePath("VisibleOnScreenNotifier2D")
+hitboxPath = NodePath("Hitbox")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_54h8r")
+animation = &"idle"
+
+[node name="Hitbox" parent="." instance=ExtResource("1_4xtqr")]
+parentObjectPath = NodePath("..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_87n6c")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(-2.38419e-07, -0.500001)
+scale = Vector2(1.4, 1.35)

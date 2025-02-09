@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bntu7arud0ji5"
-path="res://.godot/imported/tempoliftoff.png-f9f8e73243823b7165eb5364a27c0207.ctex"
+uid="uid://bcu4261s57ybd"
+path="res://.godot/imported/tempowalljumpstickless.png-3f28635ec97a6ceb62580d2040c0dda4.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/tempoliftoff.png"
-dest_files=["res://.godot/imported/tempoliftoff.png-f9f8e73243823b7165eb5364a27c0207.ctex"]
+source_file="res://sprites/tempo/stickless/tempowalljumpstickless.png"
+dest_files=["res://.godot/imported/tempowalljumpstickless.png-3f28635ec97a6ceb62580d2040c0dda4.ctex"]
 
 [params]
 

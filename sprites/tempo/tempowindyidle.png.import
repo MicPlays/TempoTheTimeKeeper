@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b375bci8qxmab"
-path="res://.godot/imported/tempowindyidle.png-d46da3bb5135ca39a5b3f0d01f14822d.ctex"
+path="res://.godot/imported/tempowindyidle.png-460a1c2770f4313a7381960d52c0f575.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/tempowindyidle.png"
-dest_files=["res://.godot/imported/tempowindyidle.png-d46da3bb5135ca39a5b3f0d01f14822d.ctex"]
+source_file="res://sprites/tempo/tempowindyidle.png"
+dest_files=["res://.godot/imported/tempowindyidle.png-460a1c2770f4313a7381960d52c0f575.ctex"]
 
 [params]
 

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://i4jxpfkegtmu"
-path="res://.godot/imported/tempowallattach.png-9fc18f5f33d353d915d770eef33a289b.ctex"
+uid="uid://cjbcge0pkvygh"
+path="res://.godot/imported/tempowallslide.png-c5a57e5472d7e4b2b1fa5fea8c5cbc10.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://sprites/tempowallattach.png"
-dest_files=["res://.godot/imported/tempowallattach.png-9fc18f5f33d353d915d770eef33a289b.ctex"]
+source_file="res://sprites/tempo/tempowallslide.png"
+dest_files=["res://.godot/imported/tempowallslide.png-c5a57e5472d7e4b2b1fa5fea8c5cbc10.ctex"]
 
 [params]
 
