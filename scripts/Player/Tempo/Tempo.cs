@@ -82,4 +82,41 @@ public partial class Tempo : Player
             return true;
         }
     }
+    public override void SetState(int stateNum)
+    {
+        switch (stateNum)
+        {
+            case (int)TempoStates.Grounded:
+                psm.TransitionState(new TempoGrounded());
+                break;
+            case (int)TempoStates.Fall:
+                psm.TransitionState(new PlayerFall());
+                break;
+            case (int)TempoStates.Jump:
+                psm.TransitionState(new PlayerJump());
+                break;
+            case (int)TempoStates.WallJump:
+                psm.TransitionState(new TempoWallJump());
+                break;
+            case (int)TempoStates.GroundAttack:
+                psm.TransitionState(new TempoGroundAttack());
+                break;
+            case (int)TempoStates.Hurt:
+                psm.TransitionState(new PlayerHurt());
+                break;
+            case (int)TempoStates.Death:
+                psm.TransitionState(new PlayerDeath());
+                break;
+        }
+    }
+}
+public enum TempoStates
+{
+    Grounded,
+    Fall,
+    Jump,
+    WallJump,
+    GroundAttack,
+    Hurt,
+    Death
 }

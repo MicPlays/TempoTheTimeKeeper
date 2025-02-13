@@ -53,7 +53,7 @@ public partial class TempoGrounded : PlayerGrounded
                 SolidTileData data = player.cc.CeilingSensorCompetition();
                 if (data.distance > 6)
                 {
-                    tpc.TempoJump(deltaTime);
+                    player.pc.Jump(deltaTime);
                     player.playerSprite.Play("liftoff");
                     player.playerSprite.SpeedScale = 1.0f;
                     return;
@@ -111,21 +111,23 @@ public partial class TempoGrounded : PlayerGrounded
 
             
                 
-
-            //ground collision
-            bool groundCollision = player.cc.GroundCollisionProcess();
-            if (groundCollision)
+            if (!player.standingOnObject)
             {
-                player.playerSprite.RotationDegrees = -player.groundAngle;
-            }
-            else 
-            {
-                player.playerSprite.Play("fall");
-                player.playerSprite.SpeedScale = 1.0f;
-                return;
-            }
+                //ground collision
+                bool groundCollision = player.cc.GroundCollisionProcess();
+                if (groundCollision)
+                {
+                    player.playerSprite.RotationDegrees = -player.groundAngle;
+                }
+                else 
+                {
+                    player.playerSprite.Play("fall");
+                    player.playerSprite.SpeedScale = 1.0f;
+                    return;
+                }
 
-            player.cc.LowStepCorrection();
+                player.cc.LowStepCorrection();
+            }
             if (player.controlLockTimer == 0)
             {
                 bool falling = player.pc.CheckForSlip(deltaTime);

@@ -13,7 +13,8 @@ public partial class Player : GameObject, IAttackable
     public NodePath collisionPath;
     [Export]
     public NodePath physicsPath;
-
+    [Export]
+    public int pushRadius = 10;
     public PlayerCollisionComponent cc;
     public PlayerPhysicsComponent pc;
     public PlayerStateMachine psm;
@@ -33,6 +34,7 @@ public partial class Player : GameObject, IAttackable
     [Export]
     public int maxHealth = 3;
     public int health = 3;
+    public bool standingOnObject = false;
 
     //player stats
     public int noteCount = 0;
@@ -110,4 +112,44 @@ public partial class Player : GameObject, IAttackable
             return true;
         }
     }
+
+    public override void _Draw()
+    {
+        /*
+        Rect2 rect = new Rect2(-pushRadius, -heightRadius, pushRadius * 2, heightRadius * 2);
+        GD.Print(rect);
+        DrawRect(rect, new Color(Colors.Orange));
+        */
+    }
+
+    public virtual void SetState(int stateNum)
+    {
+        switch (stateNum)
+        {
+            case (int)PlayerStates.Grounded:
+                psm.TransitionState(new PlayerGrounded());
+                break;
+            case (int)PlayerStates.Fall:
+                psm.TransitionState(new PlayerFall());
+                break;
+            case (int)PlayerStates.Jump:
+                psm.TransitionState(new PlayerJump());
+                break;
+            case (int)PlayerStates.Hurt:
+                psm.TransitionState(new PlayerHurt());
+                break;
+            case (int)PlayerStates.Death:
+                psm.TransitionState(new PlayerDeath());
+                break;
+        }
+    }
+}
+
+public enum PlayerStates
+{
+    Grounded,
+    Fall,
+    Jump,
+    Hurt,
+    Death
 }

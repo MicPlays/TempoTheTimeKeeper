@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dt4fbtchk67j4"]
+[gd_scene load_steps=12 format=3 uid="uid://dt4fbtchk67j4"]
 
 [ext_resource type="Script" path="res://scripts/Framework/GameController.cs" id="1_8vys5"]
 [ext_resource type="TileSet" uid="uid://k1wnidgqaqet" path="res://tilesets/countrytiles.tres" id="1_x3und"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://dhqooaj0ldjev" path="res://objects/spikes.tscn" id="8_rf4c1"]
 [ext_resource type="PackedScene" uid="uid://b5rqqrfnpotbp" path="res://objects/target.tscn" id="9_c4ltg"]
 [ext_resource type="PackedScene" uid="uid://1437i3u14ghp" path="res://objects/drumsticks.tscn" id="10_ub5rj"]
+[ext_resource type="PackedScene" uid="uid://c4jypd5a275xj" path="res://objects/pushblock.tscn" id="11_i55sl"]
 
 [node name="DemoLevel" type="Node2D"]
 script = ExtResource("1_8vys5")
@@ -1256,3 +1257,6 @@ position = Vector2(70, 999)
 
 [node name="Drumsticks" parent="." instance=ExtResource("10_ub5rj")]
 position = Vector2(663, 874)
+
+[node name="PushBlock" parent="." instance=ExtResource("11_i55sl")]
+position = Vector2(803, 887)

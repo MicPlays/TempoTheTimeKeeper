@@ -48,6 +48,7 @@ public partial class PlayerPhysicsComponent : Node
             if (Mathf.Abs(player.xSpeed) / (360 * (float)delta) > 1)
                 SHORT_HOP_FLOOR = -240f * (float)delta;
             else SHORT_HOP_FLOOR = Mathf.Lerp(-240f * (float)delta, -150f * (float)delta, Mathf.Abs(player.xSpeed) / (360 * (float)delta));
+            player.standingOnObject = false;
             player.psm.TransitionState(new PlayerJump());
         }
     }

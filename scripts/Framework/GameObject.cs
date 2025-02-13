@@ -8,7 +8,9 @@ public abstract partial class GameObject : Node2D
     public float ySpeed = 0;
     public float groundSpeed = 0;
     public float groundAngle = 0;
+    [Export]
     public int widthRadius = 5;
+    [Export]
     public int heightRadius = 5;
     [Export]
     public NodePath hitboxPath;

@@ -82,20 +82,23 @@ public partial class PlayerGrounded : BaseState
             //Move player
             player.pc.MovePlayerObject();
 
-            //ground collision
-            bool groundCollision = player.cc.GroundCollisionProcess();
-            if (groundCollision)
+            if (!player.standingOnObject)
             {
-                player.playerSprite.RotationDegrees = -player.groundAngle;
+                //ground collision
+                bool groundCollision = player.cc.GroundCollisionProcess();
+                if (groundCollision)
+                {
+                    player.playerSprite.RotationDegrees = -player.groundAngle;
+                }
+                else 
+                {
+                    player.playerSprite.Play("fall");
+                    player.playerSprite.SpeedScale = 1.0f;
+                    return;
+                }
+                
+                player.cc.LowStepCorrection();
             }
-            else 
-            {
-                player.playerSprite.Play("fall");
-                player.playerSprite.SpeedScale = 1.0f;
-                return;
-            }
-
-            player.cc.LowStepCorrection();
             if (player.controlLockTimer == 0)
             {
                 bool falling = player.pc.CheckForSlip(deltaTime);

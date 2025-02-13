@@ -10,7 +10,6 @@ public partial class PlayerCollisionComponent : Hitbox
     public NodePath sensorContainerPath;
     public Dictionary<string, Sensor> sensorTable;
     //sensor stuff
-    public int pushRadius = 10;
 
     public virtual void Init()
     {
@@ -31,8 +30,8 @@ public partial class PlayerCollisionComponent : Hitbox
         sensorTable["B"].Position = new Vector2(player.widthRadius, player.heightRadius);
         sensorTable["C"].Position = new Vector2(-player.widthRadius, -player.heightRadius);
         sensorTable["D"].Position = new Vector2(player.widthRadius, -player.heightRadius);
-        sensorTable["E"].Position = new Vector2(-pushRadius, 0);
-        sensorTable["F"].Position = new Vector2(pushRadius, 0);
+        sensorTable["E"].Position = new Vector2(-player.pushRadius, 0);
+        sensorTable["F"].Position = new Vector2(player.pushRadius, 0);
     }
 
     public virtual SolidTileData CeilingSensorCompetition()
@@ -54,33 +53,33 @@ public partial class PlayerCollisionComponent : Hitbox
     {
         if ((currentAngle >= 316f && currentAngle <= 360f) || (currentAngle >= 0f && currentAngle <= 44f))
         {
-            sensorTable["E"].Position = new Vector2(-pushRadius, 0);
+            sensorTable["E"].Position = new Vector2(-player.pushRadius, 0);
             sensorTable["E"].direction = "left";
-            sensorTable["F"].Position = new Vector2(pushRadius, 0);
+            sensorTable["F"].Position = new Vector2(player.pushRadius, 0);
             sensorTable["F"].direction = "right";
             return false;
         }
         else if (currentAngle >= 45f && currentAngle <= 135f)
         {
-            sensorTable["E"].Position = new Vector2(0, pushRadius);
+            sensorTable["E"].Position = new Vector2(0, player.pushRadius);
             sensorTable["E"].direction = "down";
-            sensorTable["F"].Position = new Vector2(0, -pushRadius);
+            sensorTable["F"].Position = new Vector2(0, -player.pushRadius);
             sensorTable["F"].direction = "up";
             return true;
         }
         else if (currentAngle >= 136f && currentAngle <= 224f)
         {
-            sensorTable["E"].Position = new Vector2(pushRadius, 0);
+            sensorTable["E"].Position = new Vector2(player.pushRadius, 0);
             sensorTable["E"].direction = "right";
-            sensorTable["F"].Position = new Vector2(-pushRadius, 0);
+            sensorTable["F"].Position = new Vector2(-player.pushRadius, 0);
             sensorTable["F"].direction = "left";
             return false;
         }
         else 
         {
-            sensorTable["E"].Position = new Vector2(0, -pushRadius);
+            sensorTable["E"].Position = new Vector2(0, -player.pushRadius);
             sensorTable["E"].direction = "up";
-            sensorTable["F"].Position = new Vector2(0, pushRadius);
+            sensorTable["F"].Position = new Vector2(0, player.pushRadius);
             sensorTable["F"].direction = "down";
             return true;
         }
@@ -212,6 +211,27 @@ public partial class PlayerCollisionComponent : Hitbox
         return groundCollision;
     }
 
+    public bool CheckIfGrounded()
+    {
+        bool groundCollision = true;
+        SolidTileData groundData = GroundSensorCompetition();
+
+        //if player is too far off the ground, they won't collide. this formula
+        //takes player speed into account. the faster they move, the further they can
+        //be off the ground and still collide
+        if (sensorTable["A"].direction == "right" || sensorTable["A"].direction == "left")
+        {
+            if (groundData.distance > Mathf.Min(Mathf.Abs(player.ySpeed) + 4, 14))
+                groundCollision = false;
+        }
+        else 
+        {
+            if (groundData.distance > Mathf.Min(Mathf.Abs(player.xSpeed) + 4, 14))
+                groundCollision = false;
+        }
+        return groundCollision;
+    }
+
     public virtual SolidTileData GroundSensorCompetition()
     {
         SolidTileData groundAData = sensorTable["A"].CheckForTile(player.currentLayer);
@@ -230,8 +250,8 @@ public partial class PlayerCollisionComponent : Hitbox
         //if on flat ground, move sensors down to account for low steps
         if (player.groundAngle == 0)
         {
-            sensorTable["E"].Position = new Vector2(-pushRadius, 4);
-            sensorTable["F"].Position = new Vector2(pushRadius, 4);
+            sensorTable["E"].Position = new Vector2(-player.pushRadius, 4);
+            sensorTable["F"].Position = new Vector2(player.pushRadius, 4);
         }
     }
 

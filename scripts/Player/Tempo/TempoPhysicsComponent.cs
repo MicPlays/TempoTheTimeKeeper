@@ -19,7 +19,7 @@ public partial class TempoPhysicsComponent : PlayerPhysicsComponent
     [Export]
     private float ATTACK_FORCE {get; set;} = 400f;
 
-    public void TempoJump(float delta)
+    public override void Jump(float delta)
     {
         Tempo tempo = (Tempo)player;
         player.xSpeed -= JUMP_FORCE * (float)delta * Mathf.Sin(Mathf.DegToRad(player.groundAngle));
@@ -39,6 +39,7 @@ public partial class TempoPhysicsComponent : PlayerPhysicsComponent
         if (Mathf.Abs(player.xSpeed) / (360 * delta) > 1)
             SHORT_HOP_FLOOR = -240f * delta;
         else SHORT_HOP_FLOOR = Mathf.Lerp(-240f * delta, -150f * (float)delta, Mathf.Abs(player.xSpeed) / (360 * delta));
+        player.standingOnObject = false;
         tempo.psm.TransitionState(new PlayerJump());
     }
     public void WallJump(float delta)
