@@ -1248,10 +1248,6 @@ position = Vector2(8556, 1005)
 [node name="MusicNote344" parent="Notes" instance=ExtResource("7_00hab")]
 position = Vector2(8582, 1005)
 
-[node name="Spikes" parent="." instance=ExtResource("8_rf4c1")]
-position = Vector2(273, 996)
-facing = 2
-
 [node name="Target" parent="." instance=ExtResource("9_c4ltg")]
 position = Vector2(70, 999)
 
@@ -1260,3 +1256,6 @@ position = Vector2(663, 874)
 
 [node name="PushBlock" parent="." instance=ExtResource("11_i55sl")]
 position = Vector2(803, 887)
+
+[node name="Spikes" parent="." instance=ExtResource("8_rf4c1")]
+position = Vector2(307, 1008)

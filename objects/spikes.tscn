@@ -1,17 +1,23 @@
 [gd_scene load_steps=5 format=3 uid="uid://dhqooaj0ldjev"]
 
 [ext_resource type="Script" path="res://scripts/ObjectScripts/Spikes.cs" id="1_o8nys"]
-[ext_resource type="Texture2D" uid="uid://cer7sm44xr6tu" path="res://sprites/ui/temponoteicon.png" id="2_ardth"]
+[ext_resource type="Texture2D" uid="uid://cbosuhggjmra7" path="res://sprites/objects/simplespikes.png" id="2_48ram"]
 [ext_resource type="PackedScene" uid="uid://dnp1jk3tg6u6w" path="res://components/hitbox.tscn" id="3_o68ou"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6rk34"]
+size = Vector2(30, 9)
 
 [node name="Spikes" type="Node2D"]
 script = ExtResource("1_o8nys")
+spritePath = NodePath("Sprite2D")
+facing = 2
+screenNotifierPath = NodePath("VisibleOnScreenNotifier2D")
+widthRadius = 16
+heightRadius = 16
 hitboxPath = NodePath("Hitbox")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_ardth")
+texture = ExtResource("2_48ram")
 
 [node name="Hitbox" parent="." instance=ExtResource("3_o68ou")]
 collision_layer = 4
@@ -20,3 +26,7 @@ parentObjectPath = NodePath("..")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
 shape = SubResource("RectangleShape2D_6rk34")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(2.38419e-07, -0.500001)
+scale = Vector2(1.6, 1.65)
