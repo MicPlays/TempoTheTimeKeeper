@@ -824,13 +824,15 @@ animations = [{
 size = Vector2(13, 32)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_w7lfp"]
-size = Vector2(17, 37)
+size = Vector2(19.5, 36.5)
 
 [node name="Player" type="Node2D"]
 script = ExtResource("1_uwl0n")
+attackRadius = 18
 attackBoxPath = NodePath("DamageArea")
 regularSpritePath = NodePath("PlayerSprite")
 sticklessSpritePath = NodePath("SticklessSprite")
+lungeTimerMax = 20.0
 spritePath = NodePath("PlayerSprite")
 stateMachinePath = NodePath("PlayerStateMachine")
 collisionPath = NodePath("TempoCollisionComponent")
@@ -891,10 +893,10 @@ shape = SubResource("RectangleShape2D_3lnvd")
 [node name="PlayerStateMachine" parent="." instance=ExtResource("14_3x2e7")]
 
 [node name="DamageArea" type="Area2D" parent="."]
-position = Vector2(14, 2)
+position = Vector2(19, 1)
 collision_layer = 4
 collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="DamageArea"]
-position = Vector2(1.5, -0.5)
 shape = SubResource("RectangleShape2D_w7lfp")
+metadata/_edit_lock_ = true

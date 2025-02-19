@@ -1,11 +1,11 @@
 using Godot;
 using System;
 
-public partial class TempoGroundAttack : TempoGrounded
+public partial class TempoLungeTransition : BaseState
 {
     public override void Enter(BaseStateMachine sm)
     {
-        
+
     }
 
     public override void Run(BaseStateMachine sm, double delta)
@@ -17,13 +17,15 @@ public partial class TempoGroundAttack : TempoGrounded
             Tempo player = (Tempo)psm.player;
             TempoPhysicsComponent tpc = (TempoPhysicsComponent)player.pc;
             TempoCollisionComponent tcc = (TempoCollisionComponent)player.cc;
-            if (player.controlLockTimer == 0)
+
+            if (player.controlLockTimer == 0) 
             {
                 tcc.ToggleAttackHitbox(false);
-                psm.TransitionState(new TempoGrounded());
+                player.SetState((int)PlayerStates.Grounded);
             }
+            player.controlLockTimer = Mathf.Clamp(player.controlLockTimer - deltaTime, 0, 30 * deltaTime);
+            
         }
-        base.Run(sm, delta);
     }
 
     public override void Exit(BaseStateMachine sm)

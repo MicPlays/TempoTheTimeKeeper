@@ -211,7 +211,7 @@ public partial class PlayerCollisionComponent : Hitbox
         return groundCollision;
     }
 
-    public bool CheckIfGrounded()
+    public virtual bool CheckIfGrounded()
     {
         bool groundCollision = true;
         SolidTileData groundData = GroundSensorCompetition();

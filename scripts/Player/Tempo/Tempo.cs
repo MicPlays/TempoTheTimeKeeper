@@ -7,12 +7,16 @@ public partial class Tempo : Player
     public float speedBoostInputTimer = 0;
     public float xSpeedBuffer = 0;
     [Export]
+    public int attackRadius;
+    [Export]
     public NodePath attackBoxPath {get; set;}
     public Area2D attackBox;
     [Export]
     public NodePath regularSpritePath;
     [Export]
     public NodePath sticklessSpritePath;
+    [Export]
+    public float lungeTimerMax;
     public AnimatedSprite2D regularSprite;
     public AnimatedSprite2D sticklessSprite;
 
@@ -98,14 +102,17 @@ public partial class Tempo : Player
             case (int)TempoStates.WallJump:
                 psm.TransitionState(new TempoWallJump());
                 break;
-            case (int)TempoStates.GroundAttack:
-                psm.TransitionState(new TempoGroundAttack());
+            case (int)TempoStates.Lunge:
+                psm.TransitionState(new TempoLunge());
                 break;
             case (int)TempoStates.Hurt:
                 psm.TransitionState(new PlayerHurt());
                 break;
             case (int)TempoStates.Death:
                 psm.TransitionState(new PlayerDeath());
+                break;
+            case (int)TempoStates.LungeTransition:
+                psm.TransitionState(new TempoLungeTransition());
                 break;
         }
     }
@@ -116,7 +123,8 @@ public enum TempoStates
     Fall,
     Jump,
     WallJump,
-    GroundAttack,
+    Lunge,
     Hurt,
-    Death
+    Death,
+    LungeTransition
 }

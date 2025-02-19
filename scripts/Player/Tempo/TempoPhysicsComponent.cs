@@ -17,7 +17,9 @@ public partial class TempoPhysicsComponent : PlayerPhysicsComponent
     [Export]
     private float WALL_SLIDE_FORCE {get; set;} = 9.5625f;
     [Export]
-    private float ATTACK_FORCE {get; set;} = 400f;
+    private float ATTACK_FORCE {get; set;} = 50f;
+    [Export]
+    public float LUNGE_ACTIVATE_SPEED {get; set;} = 180f;
 
     public override void Jump(float delta)
     {
@@ -74,6 +76,30 @@ public partial class TempoPhysicsComponent : PlayerPhysicsComponent
 
     public void ApplyAttackForce(float delta)
     {
-        player.xSpeed = Mathf.Sign(player.xSpeed) * ATTACK_FORCE * delta;
+        if ((player.groundAngle >= 316f && player.groundAngle <= 360f) || (player.groundAngle >= 0f && player.groundAngle <= 44f))
+        {
+            player.playerSprite.RotationDegrees = 0;
+            if (player.playerSprite.FlipH) player.groundSpeed -=  ATTACK_FORCE * delta;
+            else player.groundSpeed +=  ATTACK_FORCE * delta;
+        }
+        else if (player.groundAngle >= 45f && player.groundAngle <= 135f)
+        {
+            player.playerSprite.RotationDegrees = 90;
+            if (player.playerSprite.FlipH) player.groundSpeed +=  ATTACK_FORCE * delta;
+            else player.groundSpeed -=  ATTACK_FORCE * delta;
+        }
+        else if (player.groundAngle >= 136f && player.groundAngle <= 224f)
+        {
+            player.playerSprite.RotationDegrees = 180;
+            if (player.playerSprite.FlipH) player.groundSpeed +=  ATTACK_FORCE * delta;
+            else player.groundSpeed -=  ATTACK_FORCE * delta;
+        }
+        else 
+        {
+            player.playerSprite.RotationDegrees = 270;
+            if (player.playerSprite.FlipH) player.groundSpeed -=  ATTACK_FORCE * delta;
+            else player.groundSpeed +=  ATTACK_FORCE * delta;
+        }
+        
     }
 }

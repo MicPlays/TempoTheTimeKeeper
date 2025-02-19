@@ -94,22 +94,21 @@ public partial class TempoGrounded : PlayerGrounded
             wallDistance *= 60 * deltaTime;
 
             player.pc.SetSpeedOnGround(isVertical, wallDistance);
+            
+            //Move player
+            player.pc.MovePlayerObject();
 
             if (player.controlLockTimer == 0 && player.health > 0)
             {
                 if (Input.IsActionJustPressed("attack"))
                 {
-                    tpc.ApplyAttackForce(deltaTime);
-                    tcc.ToggleAttackHitbox(true);
-                    player.controlLockTimer = 20 * deltaTime;
-                    psm.TransitionState(new TempoGroundAttack());   
+                    if (Mathf.Abs(player.groundSpeed) >= tpc.LUNGE_ACTIVATE_SPEED * deltaTime)
+                    {
+                        psm.TransitionState(new TempoLunge());
+                        return;   
+                    }
                 }
             }
-
-            //Move player
-            player.pc.MovePlayerObject();
-
-            
                 
             if (!player.standingOnObject)
             {
