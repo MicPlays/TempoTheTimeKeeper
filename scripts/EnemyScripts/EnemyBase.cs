@@ -8,10 +8,12 @@ public abstract partial class EnemyBase : GameObject, IAttackable
     public VisibleOnScreenNotifier2D screenNotifier;
     [Export]
     public int mapLayer;
+    [Export]
+    public float health;
     public Vector2 spawnCoords;
 
     public abstract void EnableObject();
 
     public abstract void DisableObject();
-    public abstract void Damage();
+    public abstract void Damage(float damage);
 }

@@ -17,79 +17,102 @@ script = ExtResource("2_r5n0a")
 minutesPath = NodePath("Timer/Minutes")
 secondsPath = NodePath("Timer/Seconds")
 hundPath = NodePath("Timer/HundSec")
-noteCountPath = NodePath("Notes/NoteCount")
+noteCountPath = NodePath("TRHud/Notes/NoteCount")
 scorePath = NodePath("Score")
-healthPath = NodePath("Health")
+healthPath = NodePath("TRHud/Health")
 
 [node name="Timer" type="HBoxContainer" parent="."]
 layout_direction = 2
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -20.0
-offset_right = 20.0
-offset_bottom = 40.0
+anchors_preset = -1
+anchor_left = 0.4
+anchor_top = 0.02
+anchor_right = 0.6
+anchor_bottom = 0.07
 grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
 
 [node name="Minutes" type="Label" parent="Timer"]
 layout_mode = 2
+size_flags_vertical = 5
+theme = ExtResource("1_m3y2p")
 text = "00"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="MinSecDiv" type="Label" parent="Timer"]
 layout_mode = 2
+size_flags_vertical = 5
+theme = ExtResource("1_m3y2p")
 text = ":"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="Seconds" type="Label" parent="Timer"]
 layout_mode = 2
+size_flags_vertical = 5
+theme = ExtResource("1_m3y2p")
 text = "00"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="SecHunDiv" type="Label" parent="Timer"]
 layout_mode = 2
+size_flags_vertical = 5
+theme = ExtResource("1_m3y2p")
 text = ":"
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="HundSec" type="Label" parent="Timer"]
 layout_mode = 2
+size_flags_vertical = 5
+theme = ExtResource("1_m3y2p")
 text = "00"
+horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="Notes" type="HBoxContainer" parent="."]
-layout_direction = 2
+[node name="Score" type="Label" parent="."]
 layout_mode = 1
-offset_left = 10.0
-offset_top = 10.0
-offset_right = 50.0
-offset_bottom = 30.0
+anchors_preset = -1
+anchor_left = 0.7
+anchor_top = 0.02
+anchor_right = 0.95
+anchor_bottom = 0.07
+text = "000000000"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="TRHud" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.05
+anchor_top = 0.02
+anchor_right = 0.22
+anchor_bottom = 0.07
+theme_override_constants/separation = 5
 alignment = 1
 
-[node name="NoteIcon" type="TextureRect" parent="Notes"]
+[node name="Notes" type="HBoxContainer" parent="TRHud"]
+layout_direction = 2
+layout_mode = 2
+alignment = 1
+
+[node name="NoteIcon" type="TextureRect" parent="TRHud/Notes"]
 layout_mode = 2
 texture = ExtResource("2_6i0fl")
-stretch_mode = 3
+expand_mode = 2
+stretch_mode = 4
 
-[node name="NoteCount" type="Label" parent="Notes"]
+[node name="NoteCount" type="Label" parent="TRHud/Notes"]
 layout_direction = 2
 layout_mode = 2
 text = "0"
 
-[node name="Score" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
-anchor_right = 1.0
-offset_left = -78.0
-offset_top = 12.0
-offset_right = -12.0
-offset_bottom = 27.0
-grow_horizontal = 0
-text = "000000000"
-
-[node name="Health" type="HBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.13
-anchor_right = 0.13
-offset_top = 10.0
-offset_bottom = 30.0
+[node name="Health" type="HBoxContainer" parent="TRHud"]
+layout_mode = 2
+theme_override_constants/separation = 4
 script = ExtResource("3_86ewc")
 ActiveTexturePath = "res://sprites/ui/stickui.png"
 InactiveTexturePath = "res://sprites/ui/stickuidark.png"

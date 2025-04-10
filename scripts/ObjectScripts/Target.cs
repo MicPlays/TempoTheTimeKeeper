@@ -3,13 +3,18 @@ using System;
 
 public partial class Target : GameObject, IAttackable
 {
+    [Export]
+    public float health;
     public override void _Ready()
     {
         hitbox = GetNode<Area2D>(hitboxPath);
     }
 
-    public void Damage()
+    public void Damage(float damage)
     {
-        GD.Print("hit");
+        GD.Print(damage);
+        health -= damage;
+        if (health <= 0)
+            QueueFree();
     }
 }

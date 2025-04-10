@@ -83,7 +83,7 @@ public partial class LayerSwitcher : Node2D
 
     public override void _PhysicsProcess(double delta)
     {
-        if (!Engine.IsEditorHint())
+        if (!Engine.IsEditorHint() && player != null)
         {
             bool canSwitch = true;
             if (groundedOnly)

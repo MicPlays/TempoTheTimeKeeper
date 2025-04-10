@@ -28,10 +28,10 @@ public partial class MusicNoteFloat : GameObject, IRoutineGameObject
     public void Routine()
     {
         hitbox.SetDeferred("monitoring", false);
-        Player playerRef = GameController.Instance.GetPlayer();
+        Player playerRef = LevelManager.Instance.GetLevel().player;
         playerRef.noteCount++;
-        HUD.Instance.SetNoteCount(playerRef.noteCount);
-        GameController.Instance.AddScore(10);
+        LevelManager.Instance.GetLevel().hud.SetNoteCount(playerRef.noteCount);
+        LevelManager.Instance.GetLevel().AddScore(10);
         sprite.AnimationFinished += OnBurst;
         sprite.Play("burst");
     }

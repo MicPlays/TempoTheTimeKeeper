@@ -19,8 +19,9 @@ public partial class SolidObject : GameObject
     public override void _PhysicsProcess(double delta)
     {
         float deltaTime = (float)delta;
-        Player player = GameController.Instance.GetPlayer(); 
-
+        Player player = LevelManager.Instance.GetLevel().player; 
+        if (player.psm.CurrentState is PlayerDeath)
+            return;
         if (player.standingOnObject)
         {
             float xLeftDistance = (player.GlobalPosition.X - GlobalPosition.X) + combinedXRadius;
@@ -37,8 +38,19 @@ public partial class SolidObject : GameObject
         //vertical overlap
         float topDifference = (player.GlobalPosition.Y - GlobalPosition.Y) + 4 + combinedYRadius;
         if ((topDifference < 0) || (topDifference > combinedYRadius * 2))
+        {
+            if (player is Tempo)
+            {
+                Tempo tempo = (Tempo)player;
+                if (tempo.pushingAgainstObject)
+                {
+                    tempo.pushingAgainstObject = false;
+                    tempo.SetState((int)PlayerStates.Fall);
+                    tempo.playerSprite.Play("fall");
+                }
+            }
             return;
-        
+        }
         float xDistance;
         float yDistance;
         //right edge distance
@@ -93,11 +105,32 @@ public partial class SolidObject : GameObject
             {
                 if (player.xSpeed < 0 && xDistance < 0)
                 {
+                    if (player is Tempo) 
+                    {
+                        if (!player.cc.CheckIfGrounded())
+                        {
+                            ((Tempo)player).xSpeedBuffer = player.xSpeed;
+                            ((Tempo)player).pushingLeft = true;
+                            ((Tempo)player).pushingAgainstObject = true;
+                            player.SetState((int)TempoStates.WallJump); 
+                        }
+                    }
                     player.xSpeed = 0;
                     player.groundSpeed = 0;
                 }
                 else if (player.xSpeed > 0 && xDistance > 0)
                 {
+                    if (player is Tempo)
+                    {
+                        if (!player.cc.CheckIfGrounded())
+                        {
+                            ((Tempo)player).xSpeedBuffer = player.xSpeed;
+                            ((Tempo)player).pushingLeft = false;
+                            ((Tempo)player).pushingAgainstObject = true;
+                            player.SetState((int)TempoStates.WallJump); 
+                        }
+                        
+                    } 
                     player.xSpeed = 0;
                     player.groundSpeed = 0;
                 }
@@ -108,7 +141,7 @@ public partial class SolidObject : GameObject
 
     public void CalcCombinedRadius()
     {
-        Player player = GameController.Instance.GetPlayer(); 
+        Player player = LevelManager.Instance.GetLevel().player; 
         combinedXRadius = widthRadius + player.pushRadius + 1;
         combinedYRadius = heightRadius + player.heightRadius;
     }

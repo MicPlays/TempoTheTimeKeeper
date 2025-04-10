@@ -5,7 +5,6 @@ public partial class PlayerFall : BaseState
 {
     public override void Enter(BaseStateMachine sm)
     {
-        
     }
 
     public override void Run(BaseStateMachine sm, double delta)

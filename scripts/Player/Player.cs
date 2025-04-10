@@ -46,8 +46,6 @@ public partial class Player : GameObject, IAttackable
         ySpeed = 0f;
         groundAngle = 0f;
         groundSpeed = 0f;
-        widthRadius = 9;
-        heightRadius = 20;
         currentLayer = 0;
 
         //get player components
@@ -88,13 +86,13 @@ public partial class Player : GameObject, IAttackable
         }
     }
 
-    public virtual void Damage()
+    public virtual void Damage(float amount)
     {
         if (health == 0)
             psm.TransitionState(new PlayerDeath());
         else
         {
-            HUD.Instance.SetHealth(health - 1);
+            LevelManager.Instance.GetLevel().hud.SetHealth(health - 1);
             health--;
             psm.TransitionState(new PlayerHurt());
         }
@@ -107,7 +105,7 @@ public partial class Player : GameObject, IAttackable
             return false;
         else 
         {
-            HUD.Instance.SetHealth(health);
+            LevelManager.Instance.GetLevel().hud.SetHealth(health);
             health++;
             return true;
         }

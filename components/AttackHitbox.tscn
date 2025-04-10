@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://buq05uarfthrv"]
+
+[ext_resource type="Script" path="res://scripts/Framework/Interaction/AttackHitbox.cs" id="1_yt6tn"]
+
+[node name="AttackHitbox" type="Area2D"]
+script = ExtResource("1_yt6tn")

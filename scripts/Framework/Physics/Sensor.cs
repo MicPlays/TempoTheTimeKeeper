@@ -14,21 +14,7 @@ public partial class Sensor : Node2D
 
     public override void _Ready()
     {
-        //get all tilemaps in scene. set working tilemap to the one that matches the layer player is on
-        var tilemaps = GetTree().GetNodesInGroup("tilemaps");
-        int mapCounter = 0;
-        foreach (TileMap map in tilemaps)
-        {
-            if (mapCounter == 0)
-            {
-                int layer = (int)map.GetMeta("layer"); 
-                if (layer == 0)
-                { 
-                    this.tileMap = map;
-                    mapCounter++;
-                }
-            }
-        }
+        tileMap = LevelManager.Instance.GetLevel().tm;
     }
 
     //will seperate into another function that is called by parent object. will return data for collision
@@ -200,36 +186,17 @@ public partial class Sensor : Node2D
         {
             bool isHeight = false;
             int tileID = tileMap.GetCellAlternativeTile(layer, gridSquare);
-            //for flagged alt-tiles
-            if (tileID != 0)
-            {
-                //to get the data from the source tile, we need the TileSetAtlasSource to get the tile data from.
-                //to get this TileSetAtlasSource, we need the source ID of the tile, retrieved from the tilemap.
-                int tileSourceID = tileMap.GetCellSourceId(layer, gridSquare);
-                TileSetAtlasSource atlas = (TileSetAtlasSource)tileMap.TileSet.GetSource(tileSourceID);
-                //to get said tile data from the atlas source, we need the atlas coordinates, also retrieved from the tilemap.
-                Vector2I tileAtlasCoords = tileMap.GetCellAtlasCoords(layer, gridSquare);
-                TileData sourceTileData = atlas.GetTileData(tileAtlasCoords, 0);
 
-                if (direction == "left" || direction == "right")
-                    tileArray = (int[])sourceTileData.GetCustomData("width_array"); 
-                else 
-                {
-                    tileArray = (int[])sourceTileData.GetCustomData("height_array");
-                    isHeight = true;
-                }
-
-            }
-
+            int tileSourceID = tileMap.GetCellSourceId(layer, gridSquare);
+            TileSetAtlasSource atlas = (TileSetAtlasSource)tileMap.TileSet.GetSource(tileSourceID);
+            Vector2I tileAtlasCoords = tileMap.GetCellAtlasCoords(layer, gridSquare);
+            int tileNum = tileAtlasCoords.X + tileAtlasCoords.Y * 16;
+            if (direction == "left" || direction == "right")
+                tileArray = LevelManager.Instance.GetLevel().collisionData[tileNum][1]; 
             else 
             {
-                if (direction == "left" || direction == "right")
-                    tileArray = (int[])tileData.GetCustomData("width_array"); 
-                else 
-                {
-                    tileArray = (int[])tileData.GetCustomData("height_array");
-                    isHeight = true;
-                }
+                tileArray = (int[])LevelManager.Instance.GetLevel().collisionData[tileNum][0].Clone();
+                isHeight = true;
             }
 
             int index;
@@ -241,7 +208,6 @@ public partial class Sensor : Node2D
             {
                 hFlip = 1;
                 if (isHeight) Array.Reverse(tileArray);
-               
             }     
             if (tileID == 8192)
             {
@@ -258,7 +224,6 @@ public partial class Sensor : Node2D
 
             if (isHeight)  index = (int)(GlobalPosition.X - tilePos.X);
             else index = (int)(GlobalPosition.Y - tilePos.Y);
-
             return new int[] {index, tileArray[index], hFlip, vFlip};
         }
         else return new int[] {0, 0, 0, 0};

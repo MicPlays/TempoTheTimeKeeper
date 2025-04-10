@@ -32,9 +32,17 @@ public partial class TempoWallJump : BaseState
             if (Input.IsActionPressed("left"))
             {
                 bool isColliding = tcc.AirLeftWallCollisionCheck();
-                if (!isColliding)
+                if (!isColliding && !player.pushingAgainstObject)
                 {
                     player.pc.LeftAirForce(deltaTime);
+                    psm.TransitionState(new PlayerFall());
+                    player.playerSprite.Play("fall");
+                    return;
+                }
+                else if (player.pushingAgainstObject && !player.pushingLeft)
+                {
+                    player.pc.LeftAirForce(deltaTime);
+                    player.pushingAgainstObject = false;
                     psm.TransitionState(new PlayerFall());
                     player.playerSprite.Play("fall");
                     return;
@@ -44,9 +52,17 @@ public partial class TempoWallJump : BaseState
             if (Input.IsActionPressed("right"))
             {
                 bool isColliding = tcc.AirRightWallCollisionCheck();
-                if (!isColliding)
+                if (!isColliding && !player.pushingAgainstObject)
                 {
                     player.pc.RightAirForce(deltaTime);
+                    psm.TransitionState(new PlayerFall());
+                    player.playerSprite.Play("fall");
+                    return;
+                }
+                else if (player.pushingAgainstObject && player.pushingLeft)
+                {
+                    player.pc.RightAirForce(deltaTime);
+                    player.pushingAgainstObject = false;
                     psm.TransitionState(new PlayerFall());
                     player.playerSprite.Play("fall");
                     return;

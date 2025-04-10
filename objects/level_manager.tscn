@@ -1,9 +1,0 @@
-[gd_scene load_steps=3 format=3 uid="uid://cjkqt63vtin5t"]
-
-[ext_resource type="Script" path="res://scripts/Framework/GameController.cs" id="1_0oo6p"]
-[ext_resource type="PackedScene" uid="uid://dtqxbyrxrhfig" path="res://objects/collision_manager.tscn" id="2_baayd"]
-
-[node name="LevelManager" type="Node2D"]
-script = ExtResource("1_0oo6p")
-
-[node name="CollisionManager" parent="." instance=ExtResource("2_baayd")]

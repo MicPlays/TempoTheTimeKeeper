@@ -23,17 +23,15 @@ public partial class HUD : Control
     private static Label scoreText;
     private static HealthUIManager healthContainer;
 
-    public static HUD Instance {get; private set;}
-
     public override void _Ready()
     {
-        Instance = this;
         minutesText = GetNode<Label>(minutesPath);
         secondsText = GetNode<Label>(secondsPath);
         hundSecText = GetNode<Label>(hundPath);
         noteCountText = GetNode<Label>(noteCountPath);
         scoreText = GetNode<Label>(scorePath);
         healthContainer = GetNode<HealthUIManager>(healthPath);
+        BuildHealthBar();
     }
 
     public void SetTimer(int minutes, double timeSec, double hundSec)
@@ -71,10 +69,10 @@ public partial class HUD : Control
         noteCountText.Text = noteCount.ToString();
     }
 
-    public void BuildHealthBar(int maxHealth)
+    public void BuildHealthBar()
     {
         if (healthContainer != null)
-            healthContainer.Init(maxHealth);
+            healthContainer.Init(LevelManager.Instance.GetLevel().player.maxHealth);
         else GD.Print("error loading health UI");
     }
 

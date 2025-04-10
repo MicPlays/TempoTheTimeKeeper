@@ -54,8 +54,11 @@ public partial class TestEnemy : EnemyBase, IAttackable
         SetPhysicsProcess(false);
     }
 
-    public override void Damage()
+    public override void Damage(float damage)
     {
-        QueueFree();
+        GD.Print(damage);
+        health -= damage;
+        if (health <= 0)
+            QueueFree();
     }
 }

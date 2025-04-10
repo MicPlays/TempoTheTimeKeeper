@@ -3,5 +3,5 @@ using System;
 
 public interface IAttackable
 {
-    public void Damage();
+    public void Damage(float amount);
 }

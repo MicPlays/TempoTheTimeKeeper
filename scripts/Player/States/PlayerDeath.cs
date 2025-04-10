@@ -10,8 +10,8 @@ public partial class PlayerDeath : BaseState
             PlayerStateMachine psm = (PlayerStateMachine)sm;
             Player player = psm.player;
             player.pc.SetDeathSpeedAndDirection((float)player.GetPhysicsProcessDeltaTime());
-            GameController.Instance.playerCam.GlobalPosition = player.GlobalPosition;
-            //player.RemoveChild(GameController.Instance.playerCam);
+            if (LevelManager.Instance.GetLevel().activeCamera is PlayerCam)
+                ((PlayerCam)LevelManager.Instance.GetLevel().activeCamera).cameraLocked = true;
             player.hitbox.SetDeferred("monitorable", false);
         }
     }

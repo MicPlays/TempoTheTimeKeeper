@@ -38,7 +38,7 @@ public partial class TempoLunge : TempoGrounded
 
             if (lungeTimer == 0 || Input.IsActionJustPressed("attack"))
             {
-                tcc.ToggleAttackHitbox(true);
+                tcc.ToggleAttackHitbox(true, 100f);
                 player.xSpeed = 0;
                 player.groundSpeed = 0;
                 player.controlLockTimer = 8f * deltaTime;

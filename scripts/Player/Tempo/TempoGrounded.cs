@@ -38,7 +38,7 @@ public partial class TempoGrounded : PlayerGrounded
             }
             else 
             {
-                player.playerSprite.Play("windyidle");
+                player.playerSprite.Play("idle");
                 player.playerSprite.SpeedScale = 1.0f;
                 player.currentFrame = 0;
             }
@@ -106,6 +106,11 @@ public partial class TempoGrounded : PlayerGrounded
                     {
                         psm.TransitionState(new TempoLunge());
                         return;   
+                    }
+                    else
+                    {
+                        psm.TransitionState(new TempoAttackCombo());
+                        return;
                     }
                 }
             }

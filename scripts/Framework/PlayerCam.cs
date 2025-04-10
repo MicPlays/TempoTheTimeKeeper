@@ -1,22 +1,22 @@
 using Godot;
 using System;
+using System.Transactions;
 
-public partial class PlayerCam : Node2D
+public partial class PlayerCam : CameraHolder
 {
-    [Export]
-    public NodePath targetPath;
     public Node2D target;
-    public bool cameraLocked;
+    public bool cameraLocked = false;
 
-    public override void _Ready()
+    public override Camera2D GetCamera()
     {
-        
-        target = GetNode<Node2D>(targetPath);
+        if (IsInsideTree())
+            return (Camera2D)GetNodeOrNull("Camera2D");
+        else return null;
     }
 
-    public override void _PhysicsProcess(double delta)
+    public override void _Process(double delta)
     {
         if (!cameraLocked)
-            Position = target.GlobalPosition;
+            GlobalPosition = target.GlobalPosition;       
     }
 }

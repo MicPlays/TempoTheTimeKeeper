@@ -1,6 +1,5 @@
-[gd_scene load_steps=7 format=3 uid="uid://befiqwdkkto3g"]
+[gd_scene load_steps=6 format=3 uid="uid://befiqwdkkto3g"]
 
-[ext_resource type="Script" path="res://scripts/Framework/GameController.cs" id="1_hn4vv"]
 [ext_resource type="TileSet" uid="uid://d3yxyvce56afc" path="res://tilesets/debugTileset.tres" id="2_tnvqv"]
 [ext_resource type="PackedScene" uid="uid://ignf2bte5qdy" path="res://objects/player.tscn" id="3_32nit"]
 [ext_resource type="PackedScene" uid="uid://dg62a811grvq5" path="res://objects/UI/gamehud.tscn" id="4_cxx7y"]
@@ -8,9 +7,6 @@
 [ext_resource type="PackedScene" uid="uid://bmlbgok634e1w" path="res://objects/music_note.tscn" id="6_boht8"]
 
 [node name="DebugRoot" type="Node2D"]
-script = ExtResource("1_hn4vv")
-playerPath = NodePath("Player")
-layerSwitcherContainerPath = NodePath("LayerSwitchers")
 
 [node name="TileMap" type="TileMap" parent="." groups=["tilemaps"]]
 tile_set = ExtResource("2_tnvqv")

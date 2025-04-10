@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bqltsnjfrb22x"
-path="res://.godot/imported/countrytiles.png-3cf1454662998e0da742c613326e4705.ctex"
+uid="uid://c3mvfh7bfyrf1"
+path="res://.godot/imported/temposlowrun.png-0ba8472b88feedc2f4908bfaaf9c7e10.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tilesets/countrytiles.png"
-dest_files=["res://.godot/imported/countrytiles.png-3cf1454662998e0da742c613326e4705.ctex"]
+source_file="res://sprites/tempo/newtempo/temposlowrun.png"
+dest_files=["res://.godot/imported/temposlowrun.png-0ba8472b88feedc2f4908bfaaf9c7e10.ctex"]
 
 [params]
 

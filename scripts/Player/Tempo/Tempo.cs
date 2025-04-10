@@ -7,26 +7,32 @@ public partial class Tempo : Player
     public float speedBoostInputTimer = 0;
     public float xSpeedBuffer = 0;
     [Export]
+    public int maxAttackCombo;
+    [Export]
     public int attackRadius;
     [Export]
     public NodePath attackBoxPath {get; set;}
-    public Area2D attackBox;
+    public AttackHitbox attackBox;
     [Export]
     public NodePath regularSpritePath;
     [Export]
     public NodePath sticklessSpritePath;
     [Export]
+    public float comboTimerMax;
+    [Export]
     public float lungeTimerMax;
     public AnimatedSprite2D regularSprite;
     public AnimatedSprite2D sticklessSprite;
+    public bool pushingAgainstObject;
+    public bool pushingLeft;
 
     public override void _Ready()
     {
         base._Ready();
-        attackBox = GetNode<Area2D>(attackBoxPath);
+        attackBox = GetNode<AttackHitbox>(attackBoxPath);
         attackBox.AreaEntered += AttackBoxCollision;
         TempoCollisionComponent tcc = (TempoCollisionComponent)cc;
-        tcc.ToggleAttackHitbox(false);
+        tcc.ToggleAttackHitbox(false, 0);
 
         regularSprite = GetNode<AnimatedSprite2D>(regularSpritePath);
         sticklessSprite = GetNode<AnimatedSprite2D>(sticklessSpritePath);
@@ -40,7 +46,7 @@ public partial class Tempo : Player
         if (attackable != null)
         {
             if (attackable.parentObject is IAttackable)
-                ((IAttackable)attackable.parentObject).Damage();
+                ((IAttackable)attackable.parentObject).Damage(attackBox.damage);
         }
     }
 
@@ -60,13 +66,13 @@ public partial class Tempo : Player
         }
     }
 
-    public override void Damage()
+    public override void Damage(float amount)
     {
         if (health == 0)
             psm.TransitionState(new PlayerDeath());
         else
         {
-            HUD.Instance.SetHealth(health - 1);
+            LevelManager.Instance.GetLevel().hud.SetHealth(health - 1);
             health--;
             if (health == 0)
                 ToggleSticks(false);
@@ -81,7 +87,7 @@ public partial class Tempo : Player
         else 
         {
             if (health == 0) ToggleSticks(true);
-            HUD.Instance.SetHealth(health);
+            LevelManager.Instance.GetLevel().hud.SetHealth(health);
             health++;
             return true;
         }

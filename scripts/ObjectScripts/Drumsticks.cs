@@ -26,7 +26,7 @@ public partial class Drumsticks : GameObject, IRoutineGameObject
 
     public void Routine()
     {
-        Player playerRef = GameController.Instance.GetPlayer();
+        Player playerRef = LevelManager.Instance.GetLevel().player;
         bool healed = playerRef.Heal();
         if (healed)
         {

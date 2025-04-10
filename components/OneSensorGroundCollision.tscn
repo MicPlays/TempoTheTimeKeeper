@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://ruohm3rc2byk"]
 
-[ext_resource type="Script" path="res://scripts/Framework/SimpleGroundCollision.cs" id="1_fea4u"]
+[ext_resource type="Script" path="res://scripts/Framework/Physics/SimpleGroundCollision.cs" id="1_ck6rt"]
 
 [node name="OneSensorGroundCollision" type="Node2D"]
-script = ExtResource("1_fea4u")
+script = ExtResource("1_ck6rt")
