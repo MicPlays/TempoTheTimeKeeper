@@ -192,13 +192,12 @@ public partial class Sensor : Node2D
             Vector2I tileAtlasCoords = tileMap.GetCellAtlasCoords(layer, gridSquare);
             int tileNum = tileAtlasCoords.X + tileAtlasCoords.Y * 16;
             if (direction == "left" || direction == "right")
-                tileArray = LevelManager.Instance.GetLevel().collisionData[tileNum][1]; 
+                tileArray = (int[])LevelManager.Instance.GetLevel().collisionData[tileNum].wArray.Clone(); 
             else 
             {
-                tileArray = (int[])LevelManager.Instance.GetLevel().collisionData[tileNum][0].Clone();
+                tileArray = (int[])LevelManager.Instance.GetLevel().collisionData[tileNum].hArray.Clone();
                 isHeight = true;
             }
-
             int index;
             Vector2 tilePos = new Vector2(gridSquare.X * 16, gridSquare.Y * 16);
             int hFlip = -1;
@@ -275,8 +274,11 @@ public partial class Sensor : Node2D
     //get angle of tile, if tile is an alternative tile, calculates angle from source tile angle
     public float GetAngle(int layer, Vector2I gridSquare, bool hFlip, bool vFlip)
     {
-        TileData tileData = tileMap.GetCellTileData(layer, gridSquare);
-        float angle = (float)tileData.GetCustomData("angle");
+        int tileSourceID = tileMap.GetCellSourceId(layer, gridSquare);
+        TileSetAtlasSource atlas = (TileSetAtlasSource)tileMap.TileSet.GetSource(tileSourceID);
+        Vector2I tileAtlasCoords = tileMap.GetCellAtlasCoords(layer, gridSquare);
+        int tileNum = tileAtlasCoords.X + tileAtlasCoords.Y * 16;
+        float angle = LevelManager.Instance.GetLevel().collisionData[tileNum].angle; 
         if (hFlip && vFlip)
             return angle + 180;
         else if (hFlip)

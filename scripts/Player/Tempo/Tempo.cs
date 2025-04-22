@@ -21,6 +21,10 @@ public partial class Tempo : Player
     public float comboTimerMax;
     [Export]
     public float lungeTimerMax;
+    [Export]
+    public float airAttackMax;
+    [Export]
+    public float airAttackSpriteTime;
     public AnimatedSprite2D regularSprite;
     public AnimatedSprite2D sticklessSprite;
     public bool pushingAgainstObject;
@@ -46,7 +50,15 @@ public partial class Tempo : Player
         if (attackable != null)
         {
             if (attackable.parentObject is IAttackable)
+            {
                 ((IAttackable)attackable.parentObject).Damage(attackBox.damage);
+                if (psm.CurrentState is TempoAerialAttack)
+                {
+                    TempoPhysicsComponent tpc = (TempoPhysicsComponent)pc;
+                    tpc.AerialAttackHit();
+                }
+            }
+                
         }
     }
 
@@ -92,6 +104,34 @@ public partial class Tempo : Player
             return true;
         }
     }
+
+    public override void _Input(InputEvent @event)
+    {
+        if (@event.IsActionPressed("attack"))
+        {
+            if (psm.CurrentState is PlayerFall || psm.CurrentState is PlayerJump)
+            {
+                psm.TransitionState(new TempoAerialAttack());
+            }
+        }
+        if (Input.IsActionPressed("jump"))
+        {
+            if (psm.CurrentState is PlayerFall)
+            {
+                TempoPhysicsComponent tpc = (TempoPhysicsComponent)pc;
+                tpc.canBoostJump = false;
+            }
+        }
+        if (@event.IsActionReleased("jump"))
+        {
+            if (psm.CurrentState is PlayerFall)
+            {
+                TempoPhysicsComponent tpc = (TempoPhysicsComponent)pc;
+                tpc.canBoostJump = true;
+            }
+        }
+    }
+
     public override void SetState(int stateNum)
     {
         switch (stateNum)

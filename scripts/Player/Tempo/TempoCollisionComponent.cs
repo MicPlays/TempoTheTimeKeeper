@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 
 public partial class TempoCollisionComponent : PlayerCollisionComponent
 {
@@ -58,18 +59,40 @@ public partial class TempoCollisionComponent : PlayerCollisionComponent
         tempo.attackBox.SetDeferred("monitoring", toggle);
     }
 
+    public void ToggleAttackHitbox(float damage, int index)
+    {
+        Tempo tempo = (Tempo)player;
+        tempo.attackBox.damage = damage;
+        tempo.attackBox.SetDeferred("monitoring", true);
+        Godot.Collections.Array<Node> shapes = tempo.attackBox.GetChildren();
+        for (int i = 0; i < shapes.Count; i++)
+        {
+            CollisionShape2D cs = (CollisionShape2D)shapes[i];
+            if (i == index) cs.SetDeferred("disabled", false);
+            else cs.SetDeferred("disabled", true);
+        }
+    }
+
+    public enum AttackBoxes
+    {
+        GroundAttack,
+        AerialAttack
+    }
+
     public bool AttackCollisionProcess(float currentAngle)
     {
         Tempo tempo = (Tempo)player;
+        CollisionShape2D cs = (CollisionShape2D)tempo.attackBox.GetChild((int)AttackBoxes.GroundAttack);
+        float angle = Mathf.DegToRad(currentAngle);
+        cs.Rotation = -angle;
         if ((currentAngle >= 316f && currentAngle <= 360f) || (currentAngle >= 0f && currentAngle <= 44f))
         {
             sensorTable["E"].Position = new Vector2(-player.pushRadius, 0);
             sensorTable["E"].direction = "left";
             sensorTable["F"].Position = new Vector2(player.pushRadius, 0);
             sensorTable["F"].direction = "right";
-            player.groundAngle = 0;
-            if (player.playerSprite.FlipH) tempo.attackBox.Position = new Vector2(-tempo.attackRadius, 0);
-            else tempo.attackBox.Position = new Vector2(tempo.attackRadius, 0);
+            if (player.playerSprite.FlipH) cs.Position = new Vector2(Mathf.Cos(angle) * -tempo.attackRadius, Mathf.Sin(angle) * tempo.attackRadius);
+            else cs.Position = new Vector2(Mathf.Cos(angle) * tempo.attackRadius, Mathf.Sin(angle) * -tempo.attackRadius);;
             return false;
         }
         else if (currentAngle >= 45f && currentAngle <= 135f)
@@ -78,9 +101,8 @@ public partial class TempoCollisionComponent : PlayerCollisionComponent
             sensorTable["E"].direction = "down";
             sensorTable["F"].Position = new Vector2(0, -player.pushRadius);
             sensorTable["F"].direction = "up";
-            player.groundAngle = 90;
-            if (player.playerSprite.FlipH) tempo.attackBox.Position = new Vector2(0, tempo.attackRadius);
-            else tempo.attackBox.Position = new Vector2(0, -tempo.attackRadius);
+            if (player.playerSprite.FlipH) cs.Position = new Vector2(Mathf.Cos(angle) * -tempo.attackRadius, Mathf.Sin(angle) * tempo.attackRadius);
+            else cs.Position = new Vector2(Mathf.Cos(angle) * tempo.attackRadius, Mathf.Sin(angle) * -tempo.attackRadius);;
             return true;
         }
         else if (currentAngle >= 136f && currentAngle <= 224f)
@@ -89,9 +111,8 @@ public partial class TempoCollisionComponent : PlayerCollisionComponent
             sensorTable["E"].direction = "right";
             sensorTable["F"].Position = new Vector2(-player.pushRadius, 0);
             sensorTable["F"].direction = "left";
-            player.groundAngle = 180;
-            if (player.playerSprite.FlipH) tempo.attackBox.Position = new Vector2(tempo.attackRadius, 0);
-            else tempo.attackBox.Position = new Vector2(-tempo.attackRadius, 0);
+            if (player.playerSprite.FlipH) cs.Position = new Vector2(Mathf.Cos(angle) * tempo.attackRadius, Mathf.Sin(angle) * -tempo.attackRadius);
+            else cs.Position = new Vector2(Mathf.Cos(angle) * -tempo.attackRadius, Mathf.Sin(angle) * tempo.attackRadius);;
             return false;
         }
         else 
@@ -100,9 +121,8 @@ public partial class TempoCollisionComponent : PlayerCollisionComponent
             sensorTable["E"].direction = "up";
             sensorTable["F"].Position = new Vector2(0, player.pushRadius);
             sensorTable["F"].direction = "down";
-            player.groundAngle = 270;
-            if (player.playerSprite.FlipH) tempo.attackBox.Position = new Vector2(0, -tempo.attackRadius);
-            else tempo.attackBox.Position = new Vector2(0, tempo.attackRadius);
+            if (player.playerSprite.FlipH) cs.Position = new Vector2(Mathf.Cos(angle) * -tempo.attackRadius, Mathf.Sin(angle) * tempo.attackRadius);
+            else cs.Position = new Vector2(Mathf.Cos(angle) * tempo.attackRadius, Mathf.Sin(angle) * -tempo.attackRadius);;
             return true;
         }
     }

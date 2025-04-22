@@ -20,22 +20,34 @@ public partial class TempoPhysicsComponent : PlayerPhysicsComponent
     private float ATTACK_FORCE {get; set;} = 50f;
     [Export]
     public float LUNGE_ACTIVATE_SPEED {get; set;} = 180f;
+    [Export]
+    public float AERIAL_ATTACK_BOUNCE_FORCE {get; set;} = 180f;
+    [Export]
+    public float AERIAL_ATTACK_FORWARD_FORCE {get; set;} = 50f;
+    [Export]
+    public float AERIAL_ATTACK_MAX_BOUNCE_HEIGHT {get; set;} = 40f;
+
+    //triggered false if button is held before landing
+    public bool canBoostJump = true;
 
     public override void Jump(float delta)
     {
         Tempo tempo = (Tempo)player;
         player.xSpeed -= JUMP_FORCE * (float)delta * Mathf.Sin(Mathf.DegToRad(player.groundAngle));
-        if (tempo.speedBoostInputTimer < SUPER_SPEED_BOOST_TIME_WINDOW * delta)
+        if (canBoostJump)
         {
-            GD.Print("superjump");
-            player.xSpeed += Mathf.Sign(player.xSpeed) * (GROUND_JUMP_BOOST * delta);
-        }
-        else if (tempo.speedBoostInputTimer < SPEED_BOOST_TIME_WINDOW * delta)
-        {
-            GD.Print("boosted jump");
-            player.xSpeed += Mathf.Sign(player.xSpeed) * (GROUND_JUMP_BOOST * delta);
-            if (Mathf.Abs(player.xSpeed) < TOP_SPEED)
-                player.xSpeed = Mathf.Sign(player.xSpeed) * Mathf.Abs(player.xSpeed);
+            if (tempo.speedBoostInputTimer < SUPER_SPEED_BOOST_TIME_WINDOW * delta)
+            {
+                GD.Print("superjump");
+                player.xSpeed += Mathf.Sign(player.xSpeed) * (GROUND_JUMP_BOOST * delta);
+            }
+            else if (tempo.speedBoostInputTimer < SPEED_BOOST_TIME_WINDOW * delta)
+            {
+                GD.Print("boosted jump");
+                player.xSpeed += Mathf.Sign(player.xSpeed) * (GROUND_JUMP_BOOST * delta);
+                if (Mathf.Abs(player.xSpeed) < TOP_SPEED)
+                    player.xSpeed = Mathf.Sign(player.xSpeed) * Mathf.Abs(player.xSpeed);
+            }
         }
         player.ySpeed -= JUMP_FORCE * delta * Mathf.Cos(Mathf.DegToRad(player.groundAngle));
         if (Mathf.Abs(player.xSpeed) / (360 * delta) > 1)
@@ -101,5 +113,20 @@ public partial class TempoPhysicsComponent : PlayerPhysicsComponent
             else player.groundSpeed +=  ATTACK_FORCE * delta;
         }
         
+    }
+
+    public void AerialAttackHit()
+    {
+        float deltaTime = (float)GetPhysicsProcessDeltaTime();
+        if (player.ySpeed < 0)
+            player.ySpeed -= Mathf.Abs(player.ySpeed / 4);
+        else 
+        {
+            if (player.ySpeed < AERIAL_ATTACK_MAX_BOUNCE_HEIGHT * deltaTime)
+                player.ySpeed -= AERIAL_ATTACK_BOUNCE_FORCE * deltaTime;
+            else 
+                player.ySpeed -= Mathf.Abs(player.ySpeed * 2);
+        }
+        player.xSpeed += Mathf.Sign(player.xSpeed) * AERIAL_ATTACK_FORWARD_FORCE * deltaTime;
     }
 }

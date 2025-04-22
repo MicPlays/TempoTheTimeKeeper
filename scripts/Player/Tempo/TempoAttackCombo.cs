@@ -15,7 +15,7 @@ public partial class TempoAttackCombo : BaseState
             TempoPhysicsComponent tpc = (TempoPhysicsComponent)player.pc;
             TempoCollisionComponent tcc = (TempoCollisionComponent)player.cc;
             comboStep = 1;
-            tcc.ToggleAttackHitbox(true, 40);
+            tcc.ToggleAttackHitbox(40, (int)TempoCollisionComponent.AttackBoxes.GroundAttack);
             player.playerSprite.AnimationFinished += AttackFinished;
         }
     }
@@ -89,6 +89,20 @@ public partial class TempoAttackCombo : BaseState
                 player.playerSprite.SpeedScale = 1.0f;
                 return;
             }
+            if (player.controlLockTimer == 0)
+            {
+                bool falling = player.pc.CheckForSlip(deltaTime);
+                if (falling)
+                {
+                    player.cc.SwitchGroundCollisionMode(0);
+                    player.cc.SwitchPushCollisionMode(0);
+                    player.playerSprite.Play("airtransition");
+                    player.playerSprite.SpeedScale = 1.0f;
+                    player.currentFrame = 0;
+                    return;
+                }
+            }
+            else player.controlLockTimer = Mathf.Clamp(player.controlLockTimer - deltaTime, 0, 30 * deltaTime);
         }
     }
 

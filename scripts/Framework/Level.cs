@@ -24,15 +24,13 @@ public partial class Level : GameScene
     [Export]
     public NodePath layerSwitcherContainer;
 
-    public Dictionary<int, List<int[]>> collisionData = new Dictionary<int, List<int[]>>();
+    public Dictionary<int, StoredTileData> collisionData = new Dictionary<int, StoredTileData>();
     public TileMap tm;
 
     public override void Init()
     {
         collisionDataPath = ProjectSettings.GlobalizePath(collisionDataPath);
         LoadCollisionData();
-        GD.Print("col data loaded");
-        GD.Print(collisionData[1][0]);
         var tms = GetTree().GetNodesInGroup("tilemap");
         tm = (TileMap)tms[0];
 
@@ -82,9 +80,8 @@ public partial class Level : GameScene
                     tileKey = Int32.Parse(s);
                     lineCounter++;
                 }
-                else
+                else if (lineCounter < 3)
                 {
-                    
                     string[] strings = s.Split(":");
                     string dataStr = strings[1];
                     string[] data = dataStr.Split(",");
@@ -93,15 +90,15 @@ public partial class Level : GameScene
                         cArr[i] = Int32.Parse(data[i]);
                     cArrs.Add(cArr);
                     lineCounter++;
-                    if (lineCounter > 2)
-                    {
-                        List<int[]> arrs = new List<int[]>();
-                        arrs.Add(cArrs[0]);
-                        arrs.Add(cArrs[1]);
-                        collisionData.Add(tileKey, arrs);
-                        cArrs.Clear();
-                        lineCounter = 0;
-                    }
+                }
+                else
+                {
+                    string[] strings = s.Split(":");
+                    float angle = float.Parse(strings[1]);
+                    StoredTileData tile = new StoredTileData(cArrs[0], cArrs[1], angle); 
+                    collisionData.Add(tileKey, tile);
+                    cArrs.Clear();
+                    lineCounter = 0;
                 }
             }
         }
@@ -139,5 +136,31 @@ public partial class Level : GameScene
         else if (node is Camera2D)
             return (Camera2D)node;
         else return null;
+    }
+}
+
+public class StoredTileData
+{
+    public StoredTileData(int[] hArray, int[] wArray, float angle)
+    {
+        this.hArray = hArray;
+        this.wArray = wArray;
+        this.angle = angle;
+    }
+    public int[] hArray;
+    public int[] wArray;
+    public float angle;
+
+    public override string ToString()
+    {
+        string s= "";
+        for (int i = 0; i < 16; i++)
+            s += hArray[i] + ",";
+        s += "\n";
+        for (int i = 0; i < 16; i++)
+            s += wArray[i] + ",";
+        s += "\n";
+        s += angle;
+        return s;
     }
 }

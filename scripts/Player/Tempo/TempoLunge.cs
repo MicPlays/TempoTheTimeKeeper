@@ -27,7 +27,7 @@ public partial class TempoLunge : TempoGrounded
             Tempo player = (Tempo)psm.player;
             TempoPhysicsComponent tpc = (TempoPhysicsComponent)player.pc;
             TempoCollisionComponent tcc = (TempoCollisionComponent)player.cc;
-
+            
             //wall collision
             bool isVertical = tcc.AttackCollisionProcess(player.groundAngle);
             float wallDistance = player.cc.PushCollisionProcess(isVertical);
@@ -58,6 +58,20 @@ public partial class TempoLunge : TempoGrounded
                 player.playerSprite.SpeedScale = 1.0f;
                 return;
             }
+            if (player.controlLockTimer == 0)
+            {
+                bool falling = player.pc.CheckForSlip(deltaTime);
+                if (falling)
+                {
+                    player.cc.SwitchGroundCollisionMode(0);
+                    player.cc.SwitchPushCollisionMode(0);
+                    player.playerSprite.Play("airtransition");
+                    player.playerSprite.SpeedScale = 1.0f;
+                    player.currentFrame = 0;
+                    return;
+                }
+            }
+            else player.controlLockTimer = Mathf.Clamp(player.controlLockTimer - deltaTime, 0, 30 * deltaTime);
             lungeTimer = Mathf.Clamp(lungeTimer - deltaTime, 0, player.lungeTimerMax * deltaTime);
         }
     }

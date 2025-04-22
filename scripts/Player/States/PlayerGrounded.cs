@@ -37,7 +37,7 @@ public partial class PlayerGrounded : BaseState
             }
             else 
             {
-                player.playerSprite.Play("windyidle");
+                player.playerSprite.Play("idle");
                 player.playerSprite.SpeedScale = 1.0f;
                 player.currentFrame = 0;
             }
@@ -45,7 +45,7 @@ public partial class PlayerGrounded : BaseState
             player.pc.FactorSlope(deltaTime);
 
             //jump check
-            if (Input.IsActionJustPressed("jump"))
+            if (Input.IsActionPressed("jump"))
             {
                 //activate ceiling sensors for one frame before jump. if ceiling is as close
                 //as 6 pixels from the player, don't jump.
