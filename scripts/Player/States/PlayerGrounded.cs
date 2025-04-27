@@ -22,7 +22,15 @@ public partial class PlayerGrounded : BaseState
             PlayerStateMachine psm = (PlayerStateMachine)sm;
             Player player = psm.player;
 
-            if (player.groundSpeed != 0)
+            if (Mathf.Abs(player.groundSpeed) >= 300 * deltaTime )
+            {
+                if (player.currentFrame == 0)
+                    player.playerSprite.Play("fastrun");
+                if (player.groundSpeed < 0)
+                    player.playerSprite.FlipH = true;
+                else if (player.groundSpeed > 0) player.playerSprite.FlipH = false;
+            }
+            else if (player.groundSpeed != 0)
             {
                 if (player.currentFrame == 0)
                     player.playerSprite.Play("jog");

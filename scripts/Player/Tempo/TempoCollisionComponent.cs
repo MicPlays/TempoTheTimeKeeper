@@ -51,15 +51,16 @@ public partial class TempoCollisionComponent : PlayerCollisionComponent
         return landed;
     }
 
-    public void ToggleAttackHitbox(bool toggle, float damage)
+    public void ToggleAttackHitbox(bool toggle, float damage, float knockbackAmount)
     {
         Tempo tempo = (Tempo)player;
         tempo.attackBox.damage = damage;
+        tempo.attackBox.knockbackAmount = knockbackAmount;
         tempo.attackBox.SetDeferred("monitorable", toggle);
         tempo.attackBox.SetDeferred("monitoring", toggle);
     }
 
-    public void ToggleAttackHitbox(float damage, int index)
+    public void ToggleAttackHitbox(float damage, float knockbackAmount, int index)
     {
         Tempo tempo = (Tempo)player;
         tempo.attackBox.damage = damage;

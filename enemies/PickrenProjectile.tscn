@@ -1,0 +1,99 @@
+[gd_scene load_steps=14 format=3 uid="uid://bb0pe5j7r4r6r"]
+
+[ext_resource type="Texture2D" uid="uid://cr5t3wdofcu5f" path="res://sprites/enemies/pickren/pickrenprojectile.png" id="1_dilwg"]
+[ext_resource type="Script" path="res://scripts/EnemyScripts/PickrenProjectile.cs" id="1_o24td"]
+[ext_resource type="PackedScene" uid="uid://dnp1jk3tg6u6w" path="res://components/hitbox.tscn" id="2_k8k5q"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w13c7"]
+atlas = ExtResource("1_dilwg")
+region = Rect2(0, 0, 14, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gqomu"]
+atlas = ExtResource("1_dilwg")
+region = Rect2(14, 0, 14, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mqx6i"]
+atlas = ExtResource("1_dilwg")
+region = Rect2(28, 0, 14, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rn6ar"]
+atlas = ExtResource("1_dilwg")
+region = Rect2(42, 0, 14, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_vx5yo"]
+atlas = ExtResource("1_dilwg")
+region = Rect2(56, 0, 14, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y2367"]
+atlas = ExtResource("1_dilwg")
+region = Rect2(70, 0, 14, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jxvtv"]
+atlas = ExtResource("1_dilwg")
+region = Rect2(84, 0, 14, 18)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qwpi8"]
+atlas = ExtResource("1_dilwg")
+region = Rect2(98, 0, 14, 18)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_0u4ok"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w13c7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gqomu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mqx6i")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rn6ar")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vx5yo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y2367")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_jxvtv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qwpi8")
+}],
+"loop": true,
+"name": &"move",
+"speed": 10.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_b1ays"]
+size = Vector2(15, 18)
+
+[node name="PickrenProjectile" type="Node2D"]
+script = ExtResource("1_o24td")
+screenNotifierPath = NodePath("VisibleOnScreenNotifier2D")
+spritePath = NodePath("AnimatedSprite2D")
+projectileSpeed = 120.0
+widthRadius = 7
+heightRadius = 9
+hitboxPath = NodePath("Hitbox")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_0u4ok")
+animation = &"move"
+frame = 7
+frame_progress = 0.848301
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(1, -0.5)
+scale = Vector2(1, 1.05)
+
+[node name="Hitbox" parent="." instance=ExtResource("2_k8k5q")]
+collision_layer = 4
+parentObjectPath = NodePath("..")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+position = Vector2(1, 0)
+shape = SubResource("RectangleShape2D_b1ays")

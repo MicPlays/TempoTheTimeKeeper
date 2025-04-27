@@ -141,6 +141,8 @@ public partial class Player : GameObject, IAttackable
                 break;
         }
     }
+
+    public void ApplyKnockback(float knockbackAmount, Vector2 knockbackDirection){}
 }
 
 public enum PlayerStates
@@ -151,3 +153,5 @@ public enum PlayerStates
     Hurt,
     Death
 }
+
+

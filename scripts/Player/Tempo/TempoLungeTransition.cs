@@ -20,7 +20,7 @@ public partial class TempoLungeTransition : BaseState
 
             if (player.controlLockTimer == 0) 
             {
-                tcc.ToggleAttackHitbox(false, 0);
+                tcc.ToggleAttackHitbox(false, 0, 0);
                 player.SetState((int)PlayerStates.Grounded);
             }
             player.controlLockTimer = Mathf.Clamp(player.controlLockTimer - deltaTime, 0, 30 * deltaTime);

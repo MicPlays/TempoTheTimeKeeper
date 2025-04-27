@@ -13,7 +13,7 @@ public partial class TempoAerialAttack : PlayerFall
             Tempo player = (Tempo)psm.player;
             player.playerSprite.Play("airattack");
             TempoCollisionComponent tcc = (TempoCollisionComponent)player.cc;
-            tcc.ToggleAttackHitbox(0, (int)TempoCollisionComponent.AttackBoxes.AerialAttack);
+            tcc.ToggleAttackHitbox(player.AERIAL_ATTACK_DAMAGE, 20, (int)TempoCollisionComponent.AttackBoxes.AerialAttack);
             attackTimer = player.airAttackMax;
             spriteTimer = player.airAttackSpriteTime;
         }
@@ -31,7 +31,7 @@ public partial class TempoAerialAttack : PlayerFall
             attackTimer = Mathf.Clamp(attackTimer - deltaTime, 0, player.airAttackMax * deltaTime);
             spriteTimer = Mathf.Clamp(spriteTimer - deltaTime, 0, player.airAttackSpriteTime * deltaTime);
             if (attackTimer <= 0)
-                tcc.ToggleAttackHitbox(false, 0);
+                tcc.ToggleAttackHitbox(false, 0, 0);
             if (spriteTimer <= 0)
                 psm.TransitionState(new PlayerFall());
             base.Run(sm, delta);
@@ -47,7 +47,7 @@ public partial class TempoAerialAttack : PlayerFall
             Player player = psm.player;
             player.playerSprite.Play("airattack");
             TempoCollisionComponent tcc = (TempoCollisionComponent)player.cc;
-            tcc.ToggleAttackHitbox(false, 0);
+            tcc.ToggleAttackHitbox(false, 0, 0);
             player.playerSprite.Play("airtransition");
         }
     }

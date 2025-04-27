@@ -30,13 +30,20 @@ public partial class Tempo : Player
     public bool pushingAgainstObject;
     public bool pushingLeft;
 
+    [Export]
+    public float ATTACK_COMBO_BASE_DAMAGE = 30f;
+    [Export]
+    public float ATTACK_COMBO_END_DAMAGE = 50f;
+    [Export]
+    public float AERIAL_ATTACK_DAMAGE = 60f;
+
     public override void _Ready()
     {
         base._Ready();
         attackBox = GetNode<AttackHitbox>(attackBoxPath);
         attackBox.AreaEntered += AttackBoxCollision;
         TempoCollisionComponent tcc = (TempoCollisionComponent)cc;
-        tcc.ToggleAttackHitbox(false, 0);
+        tcc.ToggleAttackHitbox(false, 0, 0);
 
         regularSprite = GetNode<AnimatedSprite2D>(regularSpritePath);
         sticklessSprite = GetNode<AnimatedSprite2D>(sticklessSpritePath);
@@ -52,13 +59,19 @@ public partial class Tempo : Player
             if (attackable.parentObject is IAttackable)
             {
                 ((IAttackable)attackable.parentObject).Damage(attackBox.damage);
-                if (psm.CurrentState is TempoAerialAttack)
-                {
-                    TempoPhysicsComponent tpc = (TempoPhysicsComponent)pc;
-                    tpc.AerialAttackHit();
-                }
             }
-                
+            else if (attackable.parentObject is IAttackableKnockback)
+            {
+                GD.Print("damage");
+                Vector2 knockDirection = (area.GlobalPosition - GlobalPosition).Normalized();
+                ((IAttackableKnockback)attackable.parentObject).Damage(attackBox.damage, attackBox.knockbackAmount, knockDirection);
+            }
+            if (psm.CurrentState is TempoAerialAttack)
+            {
+                GD.Print("aerial");
+                TempoPhysicsComponent tpc = (TempoPhysicsComponent)pc;
+                tpc.AerialAttackHit();
+            }
         }
     }
 

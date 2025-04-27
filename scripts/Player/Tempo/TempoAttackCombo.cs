@@ -15,7 +15,7 @@ public partial class TempoAttackCombo : BaseState
             TempoPhysicsComponent tpc = (TempoPhysicsComponent)player.pc;
             TempoCollisionComponent tcc = (TempoCollisionComponent)player.cc;
             comboStep = 1;
-            tcc.ToggleAttackHitbox(40, (int)TempoCollisionComponent.AttackBoxes.GroundAttack);
+            tcc.ToggleAttackHitbox(player.ATTACK_COMBO_BASE_DAMAGE, 0, (int)TempoCollisionComponent.AttackBoxes.GroundAttack);
             player.playerSprite.AnimationFinished += AttackFinished;
         }
     }
@@ -64,10 +64,10 @@ public partial class TempoAttackCombo : BaseState
                         comboStep++;
                         if (comboStep >= player.maxAttackCombo)
                         {
-                            tcc.ToggleAttackHitbox(true, 60);
+                            tcc.ToggleAttackHitbox(true, player.ATTACK_COMBO_END_DAMAGE, 10);
                             tpc.ApplyAttackForce(deltaTime);
                         }
-                        else tcc.ToggleAttackHitbox(true, 40);
+                        else tcc.ToggleAttackHitbox(true, player.ATTACK_COMBO_BASE_DAMAGE, 0);
                     }
                 }
                 transitionTimer = Mathf.Clamp(transitionTimer - deltaTime, 0, player.comboTimerMax * deltaTime);
@@ -116,7 +116,7 @@ public partial class TempoAttackCombo : BaseState
             TempoCollisionComponent tcc = (TempoCollisionComponent)player.cc;
             comboStep = 1;
             player.playerSprite.AnimationFinished -= AttackFinished;
-            tcc.ToggleAttackHitbox(false, 0);
+            tcc.ToggleAttackHitbox(false, 0, 0);
         }
     }
 
@@ -126,7 +126,7 @@ public partial class TempoAttackCombo : BaseState
         PlayerStateMachine psm = LevelManager.Instance.GetLevel().player.psm;
         Tempo player = (Tempo)psm.player;
         TempoCollisionComponent tcc = (TempoCollisionComponent)player.cc;
-        tcc.ToggleAttackHitbox(false, 0);
+        tcc.ToggleAttackHitbox(false, 0, 0);
         if (comboStep >= player.maxAttackCombo)
             comboStep = 0;
         transitionTimer = player.comboTimerMax * (float)player.GetPhysicsProcessDeltaTime();

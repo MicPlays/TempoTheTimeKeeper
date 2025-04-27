@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://dt4fbtchk67j4"]
+[gd_scene load_steps=12 format=3 uid="uid://dt4fbtchk67j4"]
 
 [ext_resource type="Script" path="res://scripts/Framework/Level.cs" id="1_mbthd"]
 [ext_resource type="TileSet" uid="uid://k1wnidgqaqet" path="res://tilesets/countrytiles.tres" id="1_x3und"]
@@ -6,10 +6,11 @@
 [ext_resource type="PackedScene" uid="uid://54ipwnic1bc0" path="res://objects/layer_switcher.tscn" id="6_htrjs"]
 [ext_resource type="PackedScene" uid="uid://bmlbgok634e1w" path="res://objects/music_note.tscn" id="7_00hab"]
 [ext_resource type="PackedScene" uid="uid://dhqooaj0ldjev" path="res://objects/spikes.tscn" id="8_rf4c1"]
-[ext_resource type="PackedScene" uid="uid://b5rqqrfnpotbp" path="res://objects/target.tscn" id="9_c4ltg"]
 [ext_resource type="PackedScene" uid="uid://1437i3u14ghp" path="res://objects/drumsticks.tscn" id="10_ub5rj"]
+[ext_resource type="PackedScene" uid="uid://cutnsf800ad4w" path="res://enemies/Pickren.tscn" id="11_e1065"]
 [ext_resource type="PackedScene" uid="uid://c4jypd5a275xj" path="res://objects/pushblock.tscn" id="11_i55sl"]
-[ext_resource type="PackedScene" uid="uid://duywtd1f1vctd" path="res://enemies/TestEnemy.tscn" id="12_652ln"]
+[ext_resource type="PackedScene" uid="uid://uokaygbwrdos" path="res://enemies/tambaroo.tscn" id="12_3208x"]
+[ext_resource type="PackedScene" uid="uid://cpirvkhxrhgx6" path="res://enemies/beluba.tscn" id="13_nkl4g"]
 
 [node name="DemoLevel" type="Node2D" node_paths=PackedStringArray("playerSpawnPoint")]
 script = ExtResource("1_mbthd")
@@ -1234,22 +1235,23 @@ position = Vector2(8556, 1005)
 [node name="MusicNote344" parent="Notes" instance=ExtResource("7_00hab")]
 position = Vector2(8582, 1005)
 
-[node name="Target" parent="." instance=ExtResource("9_c4ltg")]
-position = Vector2(411, 909)
-health = 100.0
-
 [node name="Drumsticks" parent="." instance=ExtResource("10_ub5rj")]
 position = Vector2(663, 874)
 
 [node name="PushBlock" parent="." instance=ExtResource("11_i55sl")]
-position = Vector2(803, 887)
+position = Vector2(1172, 887)
 
 [node name="Spikes" parent="." instance=ExtResource("8_rf4c1")]
-position = Vector2(773, 960)
-
-[node name="TestEnemy" parent="." instance=ExtResource("12_652ln")]
-position = Vector2(1287, 965)
-health = 100.0
+position = Vector2(1255, 960)
 
 [node name="PlayerSpawnMarker" type="Node2D" parent="."]
 position = Vector2(99, 1007)
+
+[node name="Pickren" parent="." instance=ExtResource("11_e1065")]
+position = Vector2(526, 973)
+
+[node name="Tambaroo" parent="." instance=ExtResource("12_3208x")]
+position = Vector2(792, 946)
+
+[node name="Beluba" parent="." instance=ExtResource("13_nkl4g")]
+position = Vector2(347, 944)

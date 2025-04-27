@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bik7dhhisbe44"]
+
+[ext_resource type="Script" path="res://scripts/EnemyScripts/BelubaPhysics.cs" id="1_62hnd"]
+
+[node name="BelubaPhysics" type="Node2D"]
+script = ExtResource("1_62hnd")

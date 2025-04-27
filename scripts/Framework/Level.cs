@@ -17,6 +17,8 @@ public partial class Level : GameScene
 
     [Export]
     public string collisionDataPath = "";
+    
+    public Node2D projectileContainer;
 
     [Export]
     public Node2D playerSpawnPoint;
@@ -62,6 +64,10 @@ public partial class Level : GameScene
             layerSwitcher.player = player;
         }
         timerActive = true;
+
+        projectileContainer = new Node2D();
+        AddChild(projectileContainer);
+        Pickren.LoadResources();
     }
 
     public void LoadCollisionData()

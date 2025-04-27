@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public abstract partial class EnemyBase : GameObject, IAttackable
+public abstract partial class EnemyBase : GameObject
 {
     [Export]
     public NodePath screenNotifierPath;
@@ -15,5 +15,4 @@ public abstract partial class EnemyBase : GameObject, IAttackable
     public abstract void EnableObject();
 
     public abstract void DisableObject();
-    public abstract void Damage(float damage);
 }
