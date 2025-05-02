@@ -30,6 +30,7 @@ public partial class Beluba : EnemyBase, IAttackableKnockback
 
     public override void _Ready()
     {
+        SetPhysicsProcess(false);
         screenNotifier = GetNode<VisibleOnScreenNotifier2D>(screenNotifierPath);
         screenNotifier.ScreenEntered += EnableObject;
         screenNotifier.ScreenExited += DisableObject;
@@ -114,6 +115,7 @@ public partial class Beluba : EnemyBase, IAttackableKnockback
 
     public void Damage(float damage, float knockbackForce, Vector2 knockbackDirection)
     {
+        LevelManager.Instance.GetLevel().AddScore(200);
         ToggleAttackHitbox(false);
         health -= damage;
         physics.ApplyKnockback(knockbackForce, Vector2.Down, (float)GetPhysicsProcessDeltaTime());

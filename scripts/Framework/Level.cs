@@ -9,11 +9,13 @@ public partial class Level : GameScene
     public PlayerCam playerCam;
     public CameraHolder activeCamera;
     public HUD hud;
+    [Export]
+    public float killbarrierY;
 
-    private static bool timerActive;
-    private static double timeSec;
-    private static int minutes;
-    private static int score;
+    public bool timerActive;
+    public double timeSec;
+    public int minutes;
+    public int score;
 
     [Export]
     public string collisionDataPath = "";
@@ -55,6 +57,7 @@ public partial class Level : GameScene
         if (activeCamera is PlayerCam) ((PlayerCam)activeCamera).target = player;
         Camera2D cam = GetCameraFromNode(activeCamera);
         cam.LimitLeft = 0;
+        cam.LimitRight = 11465;
 
         //set up layer switchers
         var layerSwitchNodes = GetNode<Node2D>(layerSwitcherContainer).GetChildren();

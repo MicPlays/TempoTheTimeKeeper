@@ -30,6 +30,7 @@ public partial class Tambaroo : EnemyBase, IAttackableKnockback
 
     public override void _Ready()
     {
+        SetPhysicsProcess(false);
         screenNotifier = GetNode<VisibleOnScreenNotifier2D>(screenNotifierPath);
         screenNotifier.ScreenEntered += EnableObject;
         screenNotifier.ScreenExited += DisableObject;
@@ -125,6 +126,7 @@ public partial class Tambaroo : EnemyBase, IAttackableKnockback
         physics.ApplyKnockback(knockbackForce, knockbackDirection, (float)GetPhysicsProcessDeltaTime());
         if (health <= 0)
         {
+            LevelManager.Instance.GetLevel().AddScore(200);
             stunned = true;
             stunTimer.Paused = true;
             stunTimer.Timeout -= OnStunTimeout;

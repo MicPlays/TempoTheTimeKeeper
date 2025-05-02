@@ -23,6 +23,7 @@ public partial class PlayerDeath : BaseState
             PlayerStateMachine psm = (PlayerStateMachine)sm;
             Player player = psm.player;
             float deltaTime = (float)delta;
+            player.playerSprite.Play("death");
             player.pc.MovePlayerObject();
             player.pc.ApplyGravity(deltaTime);
         }

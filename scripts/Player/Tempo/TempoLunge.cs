@@ -15,6 +15,7 @@ public partial class TempoLunge : TempoGrounded
             lungeTimer = player.lungeTimerMax;
             tpc.ApplyAttackForce((float)player.GetPhysicsProcessDeltaTime());
             player.controlLockTimer = 20 * (float)player.GetPhysicsProcessDeltaTime();
+            player.playerSprite.Play("lungewindup");
         }
     }
 
@@ -41,7 +42,7 @@ public partial class TempoLunge : TempoGrounded
                 tcc.ToggleAttackHitbox(true, 100f, 25f);
                 player.xSpeed = 0;
                 player.groundSpeed = 0;
-                player.controlLockTimer = 8f * deltaTime;
+                player.controlLockTimer = 20f * deltaTime;
                 lungeTimer = 20;
                 player.psm.TransitionState(new TempoLungeTransition());
             }

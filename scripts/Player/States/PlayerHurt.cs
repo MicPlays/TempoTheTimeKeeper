@@ -13,7 +13,7 @@ public partial class PlayerHurt : BaseState
             player.cc.SwitchGroundCollisionMode(0);
             player.cc.SwitchPushCollisionMode(0);
             player.pc.ApplyHurtForce((float)player.GetPhysicsProcessDeltaTime());
-            player.hitbox.SetCollisionLayerValue(1, false);
+            player.hitbox.SetCollisionMaskValue(3, false);
         }
     }
 
@@ -33,6 +33,7 @@ public partial class PlayerHurt : BaseState
             
             player.cc.AirPushCollisionProcess();
             player.cc.DetermineAirCollisionMode(airAngle);
+            player.playerSprite.Play("hurt");
         }
     }
 

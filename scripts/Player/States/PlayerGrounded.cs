@@ -22,7 +22,7 @@ public partial class PlayerGrounded : BaseState
             PlayerStateMachine psm = (PlayerStateMachine)sm;
             Player player = psm.player;
 
-            if (Mathf.Abs(player.groundSpeed) >= 300 * deltaTime )
+            if (Mathf.Abs(player.groundSpeed) >= 300 * deltaTime)
             {
                 if (player.currentFrame == 0)
                     player.playerSprite.Play("fastrun");
@@ -32,16 +32,26 @@ public partial class PlayerGrounded : BaseState
             }
             else if (player.groundSpeed != 0)
             {
-                if (player.currentFrame == 0)
-                    player.playerSprite.Play("jog");
-                if (player.currentFrame != player.playerSprite.Frame)
+                if (player.playerSprite.Animation == "fastrun" && (player.groundSpeed < 300 * deltaTime))
                 {
-                    player.playerSprite.SpeedScale = Mathf.Floor(Mathf.Max(1, Mathf.Abs(player.groundSpeed)));
-                    player.currentFrame = player.playerSprite.Frame;
+                    GD.Print("here");
+                    player.playerSprite.Play("skid");
                 }
-                if (player.groundSpeed < 0)
-                    player.playerSprite.FlipH = true;
-                else if (player.groundSpeed > 0) player.playerSprite.FlipH = false;
+                else if (player.playerSprite.Animation != "skid")
+                {
+                    if (player.currentFrame == 0)
+                        player.playerSprite.Play("jog");
+                    if (player.currentFrame != player.playerSprite.Frame)
+                    {
+                        player.playerSprite.SpeedScale = Mathf.Floor(Mathf.Max(1, Mathf.Abs(player.groundSpeed)));
+                        player.currentFrame = player.playerSprite.Frame;
+                    }
+                    if (player.groundSpeed < 0)
+                        player.playerSprite.FlipH = true;
+                    else if (player.groundSpeed > 0) player.playerSprite.FlipH = false;
+                }
+                else if (player.playerSprite.Frame == 2 && (Mathf.Abs(player.groundSpeed) <= 250 * deltaTime))
+                    player.playerSprite.Play("jog");
             }
             else 
             {

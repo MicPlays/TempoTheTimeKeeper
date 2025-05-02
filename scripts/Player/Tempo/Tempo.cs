@@ -25,6 +25,8 @@ public partial class Tempo : Player
     public float airAttackMax;
     [Export]
     public float airAttackSpriteTime;
+    [Export]
+    public float wallMagnetTimerMax = 5f;
     public AnimatedSprite2D regularSprite;
     public AnimatedSprite2D sticklessSprite;
     public bool pushingAgainstObject;
@@ -49,6 +51,7 @@ public partial class Tempo : Player
         sticklessSprite = GetNode<AnimatedSprite2D>(sticklessSpritePath);
         playerSprite = regularSprite;
         sticklessSprite.Visible = false;
+        playerSprite.AnimationFinished += OnAnimFinished;
     }
 
     public void AttackBoxCollision(Area2D area)
@@ -93,15 +96,18 @@ public partial class Tempo : Player
 
     public override void Damage(float amount)
     {
-        if (health == 0)
-            psm.TransitionState(new PlayerDeath());
-        else
+        if (!isInvuln)
         {
-            LevelManager.Instance.GetLevel().hud.SetHealth(health - 1);
-            health--;
             if (health == 0)
-                ToggleSticks(false);
-            psm.TransitionState(new PlayerHurt());
+                psm.TransitionState(new PlayerDeath());
+            else
+            {
+                LevelManager.Instance.GetLevel().hud.SetHealth(health - 1);
+                health--;
+                //if (health == 0)
+                // ToggleSticks(false);
+                psm.TransitionState(new PlayerHurt());
+            }
         }
     }
 
@@ -122,7 +128,7 @@ public partial class Tempo : Player
     {
         if (@event.IsActionPressed("attack"))
         {
-            if (psm.CurrentState is PlayerFall || psm.CurrentState is PlayerJump)
+            if ((psm.CurrentState is PlayerFall || psm.CurrentState is PlayerJump) && !(psm.CurrentState is TempoAerialAttack))
             {
                 psm.TransitionState(new TempoAerialAttack());
             }
@@ -143,6 +149,14 @@ public partial class Tempo : Player
                 tpc.canBoostJump = true;
             }
         }
+    }
+
+    public void OnAnimFinished()
+    {
+        if (playerSprite.Animation == "walljump")
+            playerSprite.Play("wallair");
+        else if (playerSprite.Animation == "lungewindup")
+            playerSprite.Play("lunging");
     }
 
     public override void SetState(int stateNum)

@@ -35,6 +35,10 @@ public partial class PlayerJump : PlayerFall
     }
     public override void Exit(BaseStateMachine sm)
     {
-        
+         if (sm is PlayerStateMachine)
+        {
+            PlayerStateMachine psm = (PlayerStateMachine)sm;
+            Player player = psm.player;
+        }
     }
 }

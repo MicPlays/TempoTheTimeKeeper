@@ -55,7 +55,7 @@ public partial class Spikes : SolidObject
                 switch (facing)
                 {
                     case Facing.Left:
-                        if (attackable.parentObject.xSpeed <= 0)
+                        if (attackable.parentObject.xSpeed >= 0)
                             otherObject.Damage(9999);
                         break;
                     case Facing.Right:
@@ -63,7 +63,7 @@ public partial class Spikes : SolidObject
                             otherObject.Damage(9999);
                         break;
                     case Facing.Up:
-                        if (attackable.parentObject.ySpeed >= 0 && (GlobalPosition.Y - 8 - attackable.parentObject.GlobalPosition.Y) > 0)
+                        if (attackable.parentObject.ySpeed >= 0 && ((GlobalPosition.Y - 9) - attackable.parentObject.GlobalPosition.Y) > 0)
                             otherObject.Damage(9999);
                         break;
                     case Facing.Down:

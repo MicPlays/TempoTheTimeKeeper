@@ -5,7 +5,12 @@ public partial class TempoLungeTransition : BaseState
 {
     public override void Enter(BaseStateMachine sm)
     {
-
+        if (sm is PlayerStateMachine)
+        {
+            PlayerStateMachine psm = (PlayerStateMachine)sm;
+            Tempo player = (Tempo)psm.player;
+            player.playerSprite.Play("lungeattack");
+        }
     }
 
     public override void Run(BaseStateMachine sm, double delta)

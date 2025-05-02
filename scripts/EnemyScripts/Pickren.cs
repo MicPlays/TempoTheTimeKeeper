@@ -32,6 +32,7 @@ public partial class Pickren : EnemyBase, IAttackableKnockback
 
     public override void _Ready()
     {
+        SetPhysicsProcess(false);
         screenNotifier = GetNode<VisibleOnScreenNotifier2D>(screenNotifierPath);
         screenNotifier.ScreenEntered += EnableObject;
         screenNotifier.ScreenExited += DisableObject;
@@ -144,6 +145,7 @@ public partial class Pickren : EnemyBase, IAttackableKnockback
         physics.ApplyKnockback(knockbackForce, knockbackDirection, (float)GetPhysicsProcessDeltaTime());
         if (health <= 0)
         {
+            LevelManager.Instance.GetLevel().AddScore(200);
             stunTimer.Paused = true;
             stunTimer.Timeout -= OnStunTimeout;
             projectileSpawnTimer.Paused = true;
@@ -180,7 +182,6 @@ public partial class Pickren : EnemyBase, IAttackableKnockback
 
     public void OnProjectileTimer()
     {
-        GD.Print("spawn projectile");
         PickrenProjectile proj = (PickrenProjectile)projectile.Instantiate();
         LevelManager.Instance.GetLevel().projectileContainer.AddChild(proj);
         if (sprite.FlipH)

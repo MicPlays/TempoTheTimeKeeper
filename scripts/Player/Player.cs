@@ -81,20 +81,27 @@ public partial class Player : GameObject, IAttackable
                 invulnTimer = 0;
                 invulnFlashTimer = 0;
                 flashActive = false;
-                hitbox.SetCollisionLayerValue(1, true);
+                hitbox.SetCollisionMaskValue(3, true);
             }
+        }
+        if (GlobalPosition.Y >= LevelManager.Instance.GetLevel().killbarrierY && !(psm.CurrentState is PlayerDeath))
+        {
+            psm.TransitionState(new PlayerDeath());
         }
     }
 
     public virtual void Damage(float amount)
     {
-        if (health == 0)
-            psm.TransitionState(new PlayerDeath());
-        else
+        if (!isInvuln)
         {
-            LevelManager.Instance.GetLevel().hud.SetHealth(health - 1);
-            health--;
-            psm.TransitionState(new PlayerHurt());
+            if (health == 0)
+                psm.TransitionState(new PlayerDeath());
+            else
+            {
+                LevelManager.Instance.GetLevel().hud.SetHealth(health - 1);
+                health--;
+                psm.TransitionState(new PlayerHurt());
+            }
         }
         
     }
@@ -141,7 +148,7 @@ public partial class Player : GameObject, IAttackable
                 break;
         }
     }
-
+    
     public void ApplyKnockback(float knockbackAmount, Vector2 knockbackDirection){}
 }
 

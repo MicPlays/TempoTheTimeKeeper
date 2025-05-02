@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c5cn6uctnyoam"
-path="res://.godot/imported/countrytiles.png-3cf1454662998e0da742c613326e4705.ctex"
+uid="uid://28gqd4y0buft"
+path="res://.godot/imported/goal.png-e9802a44f86853c03fdbd298d9f96665.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://tilesets/countrytiles.png"
-dest_files=["res://.godot/imported/countrytiles.png-3cf1454662998e0da742c613326e4705.ctex"]
+source_file="res://sprites/objects/goal.png"
+dest_files=["res://.godot/imported/goal.png-e9802a44f86853c03fdbd298d9f96665.ctex"]
 
 [params]
 

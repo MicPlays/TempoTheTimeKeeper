@@ -4,6 +4,7 @@ using System;
 public partial class TempoWallJump : BaseState
 {
     bool isSliding = false;
+    public float wallMagnetTimer;
     public override void Enter(BaseStateMachine sm)
     {
         if (sm is PlayerStateMachine)
@@ -15,6 +16,7 @@ public partial class TempoWallJump : BaseState
             if (player.xSpeedBuffer < 0)
                 player.playerSprite.FlipH = false;
             else player.playerSprite.FlipH = true;
+            wallMagnetTimer = player.wallMagnetTimerMax;
         }
     }
 
@@ -29,46 +31,50 @@ public partial class TempoWallJump : BaseState
             TempoPhysicsComponent tpc = (TempoPhysicsComponent)player.pc;
             player.speedBoostInputTimer += Mathf.Clamp((float)delta, 0, 10f * deltaTime);
 
-            if (Input.IsActionPressed("left"))
+            if (wallMagnetTimer == 0)
             {
-                bool isColliding = tcc.AirLeftWallCollisionCheck();
-                if (!isColliding && !player.pushingAgainstObject)
+                if (Input.IsActionPressed("left"))
                 {
-                    player.pc.LeftAirForce(deltaTime);
-                    psm.TransitionState(new PlayerFall());
-                    player.playerSprite.Play("fall");
-                    return;
+                    bool isColliding = tcc.AirLeftWallCollisionCheck();
+                    if (!isColliding && !player.pushingAgainstObject)
+                    {
+                        player.pc.LeftAirForce(deltaTime);
+                        psm.TransitionState(new PlayerFall());
+                        player.playerSprite.Play("fall");
+                        return;
+                    }
+                    else if (player.pushingAgainstObject && !player.pushingLeft)
+                    {
+                        player.pc.LeftAirForce(deltaTime);
+                        player.pushingAgainstObject = false;
+                        psm.TransitionState(new PlayerFall());
+                        player.playerSprite.Play("fall");
+                        return;
+                    }
+                    
                 }
-                else if (player.pushingAgainstObject && !player.pushingLeft)
+                if (Input.IsActionPressed("right"))
                 {
-                    player.pc.LeftAirForce(deltaTime);
-                    player.pushingAgainstObject = false;
-                    psm.TransitionState(new PlayerFall());
-                    player.playerSprite.Play("fall");
-                    return;
-                }
-                
-            }
-            if (Input.IsActionPressed("right"))
-            {
-                bool isColliding = tcc.AirRightWallCollisionCheck();
-                if (!isColliding && !player.pushingAgainstObject)
-                {
-                    player.pc.RightAirForce(deltaTime);
-                    psm.TransitionState(new PlayerFall());
-                    player.playerSprite.Play("fall");
-                    return;
-                }
-                else if (player.pushingAgainstObject && player.pushingLeft)
-                {
-                    player.pc.RightAirForce(deltaTime);
-                    player.pushingAgainstObject = false;
-                    psm.TransitionState(new PlayerFall());
-                    player.playerSprite.Play("fall");
-                    return;
+                    bool isColliding = tcc.AirRightWallCollisionCheck();
+                    if (!isColliding && !player.pushingAgainstObject)
+                    {
+                        player.pc.RightAirForce(deltaTime);
+                        psm.TransitionState(new PlayerFall());
+                        player.playerSprite.Play("fall");
+                        return;
+                    }
+                    else if (player.pushingAgainstObject && player.pushingLeft)
+                    {
+                        player.pc.RightAirForce(deltaTime);
+                        player.pushingAgainstObject = false;
+                        psm.TransitionState(new PlayerFall());
+                        player.playerSprite.Play("fall");
+                        return;
+                    }
                 }
             }
 
+            wallMagnetTimer = Mathf.Clamp(wallMagnetTimer - deltaTime, 0, player.wallMagnetTimerMax);
             player.pc.MovePlayerObject();
             player.pc.ApplyGravity(deltaTime);
 
@@ -98,5 +104,6 @@ public partial class TempoWallJump : BaseState
     public override void Exit(BaseStateMachine sm)
     {
         isSliding = false;
+        wallMagnetTimer = 0;
     }
 }
