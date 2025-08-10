@@ -200,6 +200,7 @@ public partial class PlayerCollisionComponent : Hitbox
                 player.groundAngle = (Mathf.Round(player.groundAngle / 90) % 4) * 90;
             else
                 player.groundAngle = groundData.angle;
+            //add snapping for normal tiles if abs diff between player angle and tile angle > 45 deg
             SwitchGroundCollisionMode(player.groundAngle);
         }
         else 

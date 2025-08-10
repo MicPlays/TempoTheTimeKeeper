@@ -1239,14 +1239,16 @@ spritePath = NodePath("PlayerSprite")
 stateMachinePath = NodePath("PlayerStateMachine")
 collisionPath = NodePath("TempoCollisionComponent")
 physicsPath = NodePath("TempoPhysicsComponent")
+screenNotiferPath = NodePath("VisibleOnScreenNotifier2D")
 pushRadius = 12
+deathTransitionTime = 80.0
 widthRadius = 10
 heightRadius = 25
 hitboxPath = NodePath("")
 
 [node name="PlayerSprite" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_c63du")
-animation = &"death"
+animation = &"idle"
 
 [node name="SticklessSprite" type="AnimatedSprite2D" parent="."]
 visible = false
@@ -1309,3 +1311,7 @@ debug_color = Color(0.678431, 0.501961, 0.129412, 0.419608)
 [node name="aerialAttack" type="CollisionShape2D" parent="AttackHitbox"]
 shape = SubResource("RectangleShape2D_hnsty")
 debug_color = Color(0.843137, 0.298039, 0.615686, 0.419608)
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(0.999999, -2)
+rect = Rect2(-30, -40, 60, 80)

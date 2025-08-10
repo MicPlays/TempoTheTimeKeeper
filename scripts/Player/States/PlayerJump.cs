@@ -9,7 +9,7 @@ public partial class PlayerJump : PlayerFall
         {
             PlayerStateMachine psm = (PlayerStateMachine)sm;
             Player player = psm.player;
-
+            
             player.cc.SwitchGroundCollisionMode(0);
             player.cc.SwitchPushCollisionMode(0);
         }

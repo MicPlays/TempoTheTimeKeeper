@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Menu : GameScene
+public partial class Menu : Node2D
 {
     [Export]
     public NodePath controlPath;
@@ -12,7 +12,7 @@ public partial class Menu : GameScene
 
     [Export]
     public string nextScenePath;
-    public override void Init()
+    public override void _Ready()
     {
         menuControl = GetNode<Control>(controlPath);
         recentTime = (HBoxContainer)menuControl.GetChild(0); 

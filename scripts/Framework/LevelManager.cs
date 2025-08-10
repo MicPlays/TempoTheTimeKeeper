@@ -11,7 +11,7 @@ public partial class LevelManager : Node
     public string currentTime = "99:99:99";
     public static LevelManager Instance { get; private set; }
     private int currentLevelIndex = 0;
-    private GameScene currentGameScene;
+    private Level currentGameScene;
 
 
     public override void _Ready()
@@ -26,37 +26,6 @@ public partial class LevelManager : Node
                 bestTime = sr.ReadLine();
             }
         }
-        
-        var sceneRoot = GetTree().Root.GetChildren();
-        for (int i = 0; i < sceneRoot.Count; i++)
-        {
-            if (sceneRoot[i] is GameScene)
-            {
-                GameScene gs = (GameScene)sceneRoot[i];
-                currentGameScene = gs;
-                //if menu, do menu load operations
-                if (gs is Level)
-                {
-                    LevelLoad((Level)gs);
-                }
-                else if (gs is Menu)
-                {
-                    MenuLoad((Menu)gs);
-                } 
-            }
-        }
-    }
-
-    public void MenuLoad(Menu menu)
-    {
-        menu.Init();
-    }
-
-    public void LevelLoad(Level level)
-    {
-        currentLevelIndex = level.index;
-        GD.Print("load level");
-        level.Init();
     }
 
     public Level GetLevel()
@@ -69,24 +38,11 @@ public partial class LevelManager : Node
     public void SwapScene(string scene)
     {
         GetTree().ChangeSceneToFile(scene);
-        var sceneRoot = GetTree().Root.GetChildren();
-        for (int i = 0; i < sceneRoot.Count; i++)
-        {
-            if (sceneRoot[i] is GameScene)
-            {
-                GameScene gs = (GameScene)sceneRoot[i];
-                currentGameScene = gs;
-                //if menu, do menu load operations
-                if (gs is Level)
-                {
-                    LevelLoad((Level)gs);
-                }
-                else if (gs is Menu)
-                {
-                    MenuLoad((Menu)gs);
-                } 
-            }
-        }
+    }
+
+    public void ReloadCurrentLevel()
+    {
+        GetTree().ChangeSceneToFile("res://levels/demo_level.tscn");
     }
 
     public string GetBestTime()
@@ -108,7 +64,7 @@ public partial class LevelManager : Node
         if (hundString.Length < 4)
             hundString = "0" + hundString.Substring(2, 1);
         else hundString = hundString.Substring(2, 2);
-        
+
         string secString = seconds.ToString();
         if (secString.Length == 1)
             secString = "0" + secString;
@@ -117,7 +73,7 @@ public partial class LevelManager : Node
         if (minuteString.Length == 1)
             minuteString = "0" + minuteString;
 
-        string time = minuteString + ":" + secString + ":" + hundString; 
+        string time = minuteString + ":" + secString + ":" + hundString;
 
         string[] bestStrings = bestTime.Split(":");
         bool canSave = false;
@@ -125,12 +81,12 @@ public partial class LevelManager : Node
             canSave = true;
         else if (Int32.Parse(minuteString) == Int32.Parse(bestStrings[0]))
         {
-            if (Int32.Parse(secString) < Int32.Parse(bestStrings[1])) 
+            if (Int32.Parse(secString) < Int32.Parse(bestStrings[1]))
                 canSave = true;
             else if (Int32.Parse(secString) == Int32.Parse(bestStrings[1]))
             {
                 if (Int32.Parse(hundString) < Int32.Parse(bestStrings[2]))
-                canSave = true;
+                    canSave = true;
             }
         }
         if (canSave)
@@ -143,5 +99,10 @@ public partial class LevelManager : Node
             }
         }
         currentTime = time;
+    }
+
+    public void SetGameScene(Level gameScene)
+    {
+        currentGameScene = gameScene;
     }
 }

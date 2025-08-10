@@ -9,7 +9,6 @@
 script = ExtResource("1_ou2m6")
 controlPath = NodePath("CanvasLayer/Control")
 nextScenePath = "res://levels/demo_level.tscn"
-index = 1
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 

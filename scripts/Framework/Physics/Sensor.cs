@@ -14,7 +14,12 @@ public partial class Sensor : Node2D
 
     public override void _Ready()
     {
-        tileMap = LevelManager.Instance.GetLevel().tm;
+        var nodes = GetTree().GetNodesInGroup("tilemap");
+        TileMap tm = (TileMap)nodes[0];
+        if (tm != null)
+        {
+            tileMap = tm;
+        }
     }
 
     //will seperate into another function that is called by parent object. will return data for collision

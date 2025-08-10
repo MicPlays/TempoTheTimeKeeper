@@ -14,11 +14,14 @@ public partial class Player : GameObject, IAttackable
     [Export]
     public NodePath physicsPath;
     [Export]
+    public NodePath screenNotiferPath;
+    [Export]
     public int pushRadius = 10;
     public PlayerCollisionComponent cc;
     public PlayerPhysicsComponent pc;
     public PlayerStateMachine psm;
     public AnimatedSprite2D playerSprite;
+    public VisibleOnScreenNotifier2D screenNotifer;
     //player's current collision layer
     public int currentLayer;
     public int currentFrame;
@@ -26,6 +29,7 @@ public partial class Player : GameObject, IAttackable
     public float invulnTimer = 0;
     public bool isInvuln = false;
     public float invulnFlashTimer;
+    public float deathTimer = 0;
     public bool flashActive = false;
     [Export]
     public float invulnLength {get; set;} = 120f;
@@ -33,6 +37,8 @@ public partial class Player : GameObject, IAttackable
     public float invulnFlashInterval {get; set;} = 30f;
     [Export]
     public int maxHealth = 3;
+    [Export]
+    public float deathTransitionTime { get; set; } = 120f;
     public int health = 3;
     public bool standingOnObject = false;
 
@@ -59,6 +65,7 @@ public partial class Player : GameObject, IAttackable
         psm = GetNode<PlayerStateMachine>(stateMachinePath);
         psm.player = this;
         psm.SetState(new PlayerFall());
+        screenNotifer = GetNode<VisibleOnScreenNotifier2D>(screenNotiferPath);
     }
 
     public override void _PhysicsProcess(double delta)

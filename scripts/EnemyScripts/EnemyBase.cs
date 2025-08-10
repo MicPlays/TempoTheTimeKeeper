@@ -15,4 +15,5 @@ public abstract partial class EnemyBase : GameObject
     public abstract void EnableObject();
 
     public abstract void DisableObject();
+    
 }

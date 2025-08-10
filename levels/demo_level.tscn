@@ -1099,7 +1099,7 @@ position = Vector2(8455, 804)
 position = Vector2(8481, 804)
 
 [node name="PlayerSpawnMarker" type="Node2D" parent="."]
-position = Vector2(144, 989)
+position = Vector2(145, 974)
 
 [node name="Health" type="Node2D" parent="."]
 
