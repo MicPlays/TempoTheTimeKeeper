@@ -45,7 +45,7 @@ public partial class Tempo : Player
         attackBox = GetNode<AttackHitbox>(attackBoxPath);
         attackBox.AreaEntered += AttackBoxCollision;
         TempoCollisionComponent tcc = (TempoCollisionComponent)cc;
-        tcc.ToggleAttackHitbox(false, 0, 0);
+        tcc.Init();
 
         regularSprite = GetNode<AnimatedSprite2D>(regularSpritePath);
         sticklessSprite = GetNode<AnimatedSprite2D>(sticklessSpritePath);

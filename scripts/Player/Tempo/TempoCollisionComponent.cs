@@ -4,6 +4,19 @@ using System.Collections.Generic;
 
 public partial class TempoCollisionComponent : PlayerCollisionComponent
 {
+    [Export]
+    public NodePath cspath;
+    public CollisionShape2D cs;
+    [Export]
+    public float hitboxX {get; set;} = 20f;
+    [Export]
+    public float hitboxY {get; set;} = 50f;
+    public override void Init()
+    {
+        ToggleAttackHitbox(false, 0, 0);
+        cs = GetNode<CollisionShape2D>(cspath);
+    }
+
     public override void AirPushCollisionProcess()
     {
         Tempo tempo = (Tempo)player;
@@ -186,5 +199,13 @@ public partial class TempoCollisionComponent : PlayerCollisionComponent
                 groundCollision = false;
         }
         return groundCollision;
+    }
+
+    public void SetHitboxSize(Vector2 size)
+    {
+		Vector2 hitboxSize = cs.Shape.GetRect().Size;
+		RectangleShape2D newHitbox = new RectangleShape2D();
+		newHitbox.Size = size;  
+        cs.Shape = newHitbox;
     }
 }

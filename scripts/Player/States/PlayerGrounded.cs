@@ -34,7 +34,7 @@ public partial class PlayerGrounded : BaseState
             {
                 if (player.playerSprite.Animation == "fastrun" && (player.groundSpeed < 300 * deltaTime))
                 {
-                    GD.Print("here");
+                    //GD.Print("here");
                     player.playerSprite.Play("skid");
                 }
                 else if (player.playerSprite.Animation != "skid")

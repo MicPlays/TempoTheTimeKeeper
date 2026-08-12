@@ -34,6 +34,11 @@ public partial class TempoGrounded : PlayerGrounded
                     return;
                 }
             }
+            if (Input.IsActionPressed("crouch"))
+            {
+                player.psm.TransitionState(new TempoCrouch());
+                return;
+            }
             player.speedBoostInputTimer += Mathf.Clamp((float)delta, 0, 10f * (float)delta);
             base.Run(sm, delta);
         }

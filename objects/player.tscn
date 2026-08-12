@@ -1291,6 +1291,7 @@ AERIAL_ATTACK_MAX_BOUNCE_HEIGHT = 300.0
 [node name="TempoCollisionComponent" parent="." instance=ExtResource("13_35ij4")]
 collision_mask = 4
 monitoring = true
+cspath = NodePath("CollisionShape2D")
 sensorContainerPath = NodePath("../Sensors")
 parentObjectPath = NodePath("..")
 
